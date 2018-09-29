@@ -1,0 +1,56 @@
+{
+  "name": "vue-gantt-chart",
+  "version": "1.0.0",
+  "description": "vue-app",
+  "scripts": {
+    "dev": "webpack-dev-server --progress --color --inline --config build/dev.conf.js -w -p -d",
+    "pack": "webpack --progress --inline --config build/dev.conf.js -w -p -d",
+    "start": "npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/w1301625107/Vue-Gantt-chart.git"
+  },
+  "author": "wuc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/w1301625107/Vue-Gantt-chart/issues"
+  },
+  "homepage": "https://github.com/w1301625107/Vue-Gantt-chart#readme",
+  "dependencies": {
+    "vue": "^2.5.17",
+    "webpack-cli": "^3.1.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.1.1",
+    "babel-core": "^6.26.3",
+    "babel-helper-vue-jsx-merge-props": "^2.0.3",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-plugin-transform-vue-jsx": "^3.7.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.5.2",
+    "css-loader": "^1.0.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^1.1.11",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.4.1",
+    "node-sass": "^4.9.3",
+    "postcss-loader": "^3.0.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.22.1",
+    "uglifyjs-webpack-plugin": "^1.3.0",
+    "url-loader": "^1.1.0",
+    "vue-loader": "^15.3.0",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.5.17",
+    "webpack": "^4.16.5",
+    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-dev-server": "^3.1.5",
+    "webpack-merge": "^4.1.4"
+  }
+}
