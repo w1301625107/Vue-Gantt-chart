@@ -93,7 +93,6 @@ export default {
       } else {
         temp = this.countHour(0, 24);
       }
-      console.log(temp);
       return temp;
     },
     countHour(start, end) {

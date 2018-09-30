@@ -332,3 +332,11 @@ var ganttData = [{
     ]
   }
 ];
+
+// export {
+//   ganttData
+// }export {
+//   ganttData
+// }
+// 正确
+export var a = 1;

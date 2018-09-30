@@ -26,16 +26,16 @@ body {
   width: 100%;
   border: 1px solid $grey;
   overflow: auto;
+  overflow-x: scroll;
 
 
   &-header {
     display: flex;
     border-bottom: 1px solid $grey;
+    width: 100%;
   }
 
-  &-desc {
-    min-width: $W-desc;
-  }
+  &-desc {}
 
   &-timeline {
     display: flex;
