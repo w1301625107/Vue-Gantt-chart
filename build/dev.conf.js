@@ -53,7 +53,7 @@ module.exports = {
     overlay: true,
     //publicPath: assetsPath(),
     //quiet: true, // necessary for FriendlyErrorsPlugin
-    
+
   },
 
   // 加载器
@@ -74,9 +74,10 @@ module.exports = {
         use: [{
           loader: "style-loader" // creates style nodes from JS strings
         }, {
-          loader: "css-loader" // translates CSS into CommonJS
+          loader: "css-loader", // translates CSS into CommonJS
         }, {
           loader: "postcss-loader",
+
         }, {
           loader: "sass-loader" // compiles Sass to CSS
         }]
@@ -141,7 +142,11 @@ module.exports = {
       root: resolve(''),
       verbose: true,
       dry: false
-    })
+    }),
+    new webpack.ContextReplacementPlugin(
+      /moment[\\\/]locale$/,
+      /^\.\/(zh-cn)$/
+    ),
 
   ],
   performance: {

@@ -1,1 +1,69 @@
 @import "./normalize.css";
+
+$W-desc: 200px;
+$W-header: 30px;
+$grey:#f0f0f0;
+
+body {
+  font: 12px;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #abcdef, #f3f5f7);
+}
+
+#app {
+  padding: 0 10px;
+}
+
+.top-bar {
+  height: $W-header;
+}
+
+.gantt {
+  height: calc(100vh - 30px - 30px);
+  width: 100%;
+  border: 1px solid $grey;
+  overflow: auto;
+
+
+  &-header {
+    display: flex;
+    border-bottom: 1px solid $grey;
+  }
+
+  &-desc {
+    min-width: $W-desc;
+  }
+
+  &-timeline {
+    display: flex;
+    flex-direction: row;
+
+    &-day {
+      text-align: center;
+      outline: 1px solid $grey;
+    }
+
+    &-hours {
+      display: flex;
+      flex-direction: row;
+      font-size: 0.8rem;
+    }
+
+    &-hour {
+      text-align: center;
+      font-size: 0.8rem;
+      outline: 1px solid $grey;
+    }
+  }
+
+  &-grid {}
+
+  &-block {}
+}
+
+.main-footer {
+  height: $W-header;
+}

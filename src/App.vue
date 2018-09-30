@@ -1,11 +1,15 @@
 <template>
   <div id="app">
-    <div>hello vue.js</div>
+    <header class="top-bar">Vue-Gantt-Chart</header>
+    <gantt></gantt>
+    <footer class="main-footer">wuchouchou</footer>
   </div>
 </template>
 
 <script>
+import Gantt from '@views/gantt.vue'
 export default {
   name: "App",
+  components:{Gantt}
 };
 </script>
