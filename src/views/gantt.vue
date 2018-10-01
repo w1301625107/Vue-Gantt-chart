@@ -9,7 +9,8 @@
         <timeline :start="start"
                   :end="end"
                   :cellWidth="cellWidth"
-                  :cellHeight="cellHeight"></timeline>
+                  :cellHeight="cellHeight"
+                  :scale="scale"></timeline>
 
       </div>
       <div class="gantt-body"
@@ -41,25 +42,30 @@ export default {
       end: moment()
         .add(6, "d")
         .add(1, "s"),
-      cellWidth: 20,
+      cellWidth: 50,
       cellHeight: 20,
       headerHeight: 20,
       descWidth: 200,
+      scale: 2,
       datas
     };
   },
   computed: {
     totalWidth() {
-      let timelineWidth = (this.end.diff(this.start, "h") + 1) * this.cellWidth;
+      let timelineWidth =
+        Math.ceil((this.end.diff(this.start, "h") + 1) / this.scale) *
+        this.cellWidth;
       return this.descWidth + timelineWidth;
     }
   },
   created() {
     console.log(datas);
+    console.log(
+      "moment({ hour:15, minute:10 }):",
+      moment({ hour: 15, minute: 10 })
+    );
   },
-  mounted() {
-    console.log(this.end.diff(this.start, "h")), console.log();
-  }
+  mounted() {}
 };
 </script>
 

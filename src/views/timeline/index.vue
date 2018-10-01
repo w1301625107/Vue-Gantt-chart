@@ -10,7 +10,6 @@
       <div class="gantt-timeline-hours">
         <div class="gantt-timeline-hour"
              :style="{width:cellWidth+'px',height:cellHeight+'px','line-height':cellHeight+'px'}"
-      
              v-for="(hour,index) in getHourList(day)"
              :key="index">{{hour}}</div>
       </div>
@@ -37,12 +36,26 @@ export default {
     },
     end: {
       required: true
+    },
+    scale: {
+      type: Number,
+      default: 1
     }
   },
   data() {
-    return {};
+    return {
+      //可用缩放尺度
+      scaleList: [0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 3, 4, 6, 8, 12, 24]
+    };
   },
   computed: {
+    currentScale() {
+      let val = 1;
+      if (-1 != this.scaleList.indexOf(this.scale)) {
+        val = this.scale;
+      }
+      return val;
+    },
     startTime() {
       return moment(this.start);
     },
@@ -54,10 +67,12 @@ export default {
       let temp = [];
       let start = this.startTime.clone();
       let end = this.endTime.format("MM/DD");
+
       for (; start.format("MM/DD") != end; start.add(1, "d")) {
         temp.push(start.clone());
       }
       temp.push(start.clone());
+
       return temp;
     }
   },
@@ -65,19 +80,21 @@ export default {
   methods: {
     //计算每天的MM/DD的block长度
     getMonthWith(date) {
-      let width;
+      let hours;
       let start = this.startTime;
       let end = this.endTime;
       let cellWidth = this.cellWidth;
 
       if (date.format("MM/DD") == start.format("MM/DD")) {
-        width = 24 - start.hour();
+        hours = 24 - start.hour();
       } else if (date.format("MM/DD") == end.format("MM/DD")) {
-        width = end.hour() + 1;
+        hours = end.hour() + 1;
       } else {
-        width = 24;
+        hours = 24;
       }
-      return width * cellWidth;
+
+      let blocks = Math.ceil(hours / this.currentScale);
+      return blocks * cellWidth;
     },
     getHourList(date) {
       let temp = [];
@@ -85,23 +102,29 @@ export default {
       let end = this.endTime;
 
       if (date.format("MM/DD") == start.format("MM/DD")) {
-        //width = 24 - start.hour();
         temp = this.countHour(start.hour(), 24);
       } else if (date.format("MM/DD") == end.format("MM/DD")) {
-        //width = end.hour() + 1;
         temp = this.countHour(0, end.hour() + 1);
       } else {
         temp = this.countHour(0, 24);
       }
+
       return temp;
     },
     countHour(start, end) {
-      let temp = [];
-      while (start < end) {
-        temp.push(start);
-        start += 1;
+      let totalblock = [];
+
+      for (let i = 0; i < 24; i += this.currentScale) {
+        if (start - this.currentScale < i && i <= end) {
+          let val = moment({
+            hour: Math.floor(i / 1),
+            minute: (i % 1) * 60
+          }).format("HH:mm");
+          totalblock.push(val);
+        }
       }
-      return temp;
+
+      return totalblock;
     }
   }
 };
