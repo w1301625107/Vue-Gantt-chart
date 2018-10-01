@@ -1,7 +1,7 @@
 @import "./normalize.css";
 $W-desc: 200px;
 $W-header: 30px;
-$grey: #f0f0f0;
+$gray: #f0f0f0;
 body {
   font: 12px;
   margin: 0;
@@ -22,7 +22,7 @@ body {
 .gantt {
   height: calc(100vh - 30px - 30px);
   width: 100%;
-  outline: 1px solid $grey;
+  outline: 1px solid $gray;
   &-chart {
     height: 100%;
     width: 100%;
@@ -32,7 +32,7 @@ body {
   }
   &-header {
     display: flex;
-    outline: 1px solid $grey; //width: 100%;
+    outline: 1px solid $gray; //width: 100%;
     position: absolute;
     top: 0;
   }
@@ -43,13 +43,17 @@ body {
     padding-top: 40px;
     padding-right: 17px; //margin-left: -17px;
   }
-  &-desc {}
+  &-desc {
+  }
   &-timeline {
-    display: flex;
-    flex-direction: row;
+    position: relative;
+    &-blocks {
+      display: flex;
+      flex-direction: row;
+    }
     &-day {
       text-align: center;
-      outline: 1px solid $grey;
+      outline: 1px solid $gray;
     }
     &-hours {
       display: flex;
@@ -59,12 +63,19 @@ body {
     &-hour {
       text-align: center;
       font-size: 0.8rem;
-      outline: 1px solid $grey;
+      outline: 1px solid $gray;
+    }
+    &-forbiddens {
+      position: absolute;
+      z-index: -1;
+    }
+    &-forbidden {
+      background-color: #fc4948;
     }
   }
   &-itemHeader {
     box-sizing: border-box;
-    border-right: 1px solid $grey;
+    border-right: 1px solid $gray;
     &-item {
       display: flex;
     }
@@ -75,14 +86,16 @@ body {
       width: $W-desc/2;
       display: flex;
       flex-direction: column;
-      &>div {
+      & > div {
         box-sizing: border-box;
-        border-bottom: 1px solid $grey;
+        border-bottom: 1px solid $gray;
       }
     }
   }
-  &-grid {}
-  &-block {}
+  &-grid {
+  }
+  &-block {
+  }
 }
 
 .main-footer {

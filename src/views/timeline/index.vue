@@ -1,19 +1,28 @@
 <template>
   <div class="gantt-timeline">
-    <div class="gantt-timeline-blocks"
-         v-for="(day,index) in dateDiff"
-         :key="index"
-         :style="{width:getMonthWith(day)+'px'}">
-      <div class="gantt-timeline-day"
-           :style="{height:cellHeight+'px',
+    <div class="gantt-timeline-blocks">
+      <div class="gantt-timeline-block"
+           v-for="(day,index) in dateDiff"
+           :key="index"
+           :style="{width:getMonthWith(day)+'px'}">
+        <div class="gantt-timeline-day"
+             :style="{height:cellHeight+'px',
            'line-height':cellHeight+'px'}">{{day.format("MM/DD")}}</div>
-      <div class="gantt-timeline-hours">
-        <div class="gantt-timeline-hour"
-             :style="{width:cellWidth+'px',height:cellHeight+'px','line-height':cellHeight+'px'}"
-             v-for="(hour,index) in getHourList(day)"
-             :key="index">{{hour}}</div>
-      </div>
+        <div class="gantt-timeline-hours">
+          <div class="gantt-timeline-hour"
+               :style="{width:cellWidth+'px',height:cellHeight+'px','line-height':cellHeight+'px'}"
+               v-for="(hour,index) in getHourList(day)"
+               :key="index">{{hour}}</div>
+        </div>
 
+      </div>
+    </div>
+    <div class="gantt-timeline-forbiddens"
+         :style="{top:cellHeight+'px',height:cellHeight+'px'}">
+      <div class="gantt-timeline-forbidden"
+           v-for="(item,index) in forbidden"
+           :key="index"
+           :style="{width:getForbiddenBlockwidth(item)+'px',height:cellHeight+'px','margin-left':getForbiddenBlockMargin(item)+'px'}"></div>
     </div>
   </div>
 </template>
@@ -40,6 +49,10 @@ export default {
     scale: {
       type: Number,
       default: 1
+    },
+    forbidden: {
+      type: Array,
+      default: []
     }
   },
   data() {
@@ -74,10 +87,38 @@ export default {
       temp.push(start.clone());
 
       return temp;
+    },
+    //获取开始时间块的时间
+    startBlockTime() {
+      let start = this.startTime.clone();
+      let hours = start.hours();
+      let date;
+
+      for (let i = 0; i < 24; i += this.currentScale) {
+        if (hours - this.currentScale < i) {
+          date = start.hours(Math.floor(i / 1)).minutes((i % 1) * 60);
+          break;
+        }
+      }
+      console.log("date:", date.format("HH:mm"));
+      return date;
     }
   },
   created() {},
   methods: {
+    //计算禁止使用时间块长度
+    getForbiddenBlockwidth(block) {
+      let { start, end } = block;
+      let width = end.diff(start, "h", true) / this.currentScale;
+      return width * this.cellWidth;
+    },
+    //计算禁止使用时间块偏移
+    getForbiddenBlockMargin(block) {
+      let { start } = block;
+      let width =
+        start.diff(this.startBlockTime, "h", true) / this.currentScale;
+      return width * this.cellWidth;
+    },
     //计算每天的MM/DD的block长度
     getMonthWith(date) {
       let hours;

@@ -10,7 +10,8 @@
                   :end="end"
                   :cellWidth="cellWidth"
                   :cellHeight="cellHeight"
-                  :scale="scale"></timeline>
+                  :scale="scale"
+                  :forbidden="forbidden"></timeline>
 
       </div>
       <div class="gantt-body"
@@ -47,6 +48,16 @@ export default {
       headerHeight: 20,
       descWidth: 200,
       scale: 2,
+      forbidden: [
+        {
+          start: moment()
+            .add(5, "h")
+            .add(10, "m"),
+          end: moment()
+            .add(9, "h")
+            .add(29, "m")
+        }
+      ],
       datas
     };
   },
@@ -58,13 +69,7 @@ export default {
       return this.descWidth + timelineWidth;
     }
   },
-  created() {
-    console.log(datas);
-    console.log(
-      "moment({ hour:15, minute:10 }):",
-      moment({ hour: 15, minute: 10 })
-    );
-  },
+  created() {},
   mounted() {}
 };
 </script>
