@@ -1,9 +1,7 @@
 @import "./normalize.css";
-
 $W-desc: 200px;
 $W-header: 30px;
-$grey:#f0f0f0;
-
+$grey: #f0f0f0;
 body {
   font: 12px;
   margin: 0;
@@ -24,43 +22,66 @@ body {
 .gantt {
   height: calc(100vh - 30px - 30px);
   width: 100%;
-  border: 1px solid $grey;
-  overflow: auto;
-  overflow-x: scroll;
-
-
+  outline: 1px solid $grey;
+  &-chart {
+    height: 100%;
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    position: relative;
+  }
   &-header {
     display: flex;
-    border-bottom: 1px solid $grey;
-    width: 100%;
+    outline: 1px solid $grey; //width: 100%;
+    position: absolute;
+    top: 0;
   }
-
+  &-body {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: 100%;
+    padding-top: 40px;
+    padding-right: 17px; //margin-left: -17px;
+  }
   &-desc {}
-
   &-timeline {
     display: flex;
     flex-direction: row;
-
     &-day {
       text-align: center;
       outline: 1px solid $grey;
     }
-
     &-hours {
       display: flex;
       flex-direction: row;
       font-size: 0.8rem;
     }
-
     &-hour {
       text-align: center;
       font-size: 0.8rem;
       outline: 1px solid $grey;
     }
   }
-
+  &-itemHeader {
+    box-sizing: border-box;
+    border-right: 1px solid $grey;
+    &-item {
+      display: flex;
+    }
+    &-name {
+      width: $W-desc/2;
+    }
+    &-series {
+      width: $W-desc/2;
+      display: flex;
+      flex-direction: column;
+      &>div {
+        box-sizing: border-box;
+        border-bottom: 1px solid $grey;
+      }
+    }
+  }
   &-grid {}
-
   &-block {}
 }
 
