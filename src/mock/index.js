@@ -13,8 +13,8 @@ var template = {
       temp.push({
         'id': Mock.Random.natural(1000, 9999),
         'name': Mock.Random.word(2, 3),
-        'start': moment().add(Mock.Random.natural(1, 5), 'h'),
-        'end': moment().add(Mock.Random.natural(5, 10), 'h')
+        'start': moment().add(Mock.Random.natural(1, 9), 'h'),
+        'end': moment().add(Mock.Random.natural(10, 15), 'h')
       })
       i++;
     }
@@ -52,7 +52,7 @@ var template = {
 }
 let datas = [];
 for (let i = 0,
-    j = Mock.Random.natural(15, 20); i < j; i++) {
+    j = Mock.Random.natural(200, 201); i < j; i++) {
   datas.push(Mock.mock(template))
 }
 

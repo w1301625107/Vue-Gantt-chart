@@ -3,7 +3,7 @@
     <div class="gantt-chart"
          :style="{}">
       <div class="gantt-header"
-           :style="{height:headerHeight*2+'px',width:totalWidth+'px'}">
+           :style="{width:totalWidth+'px'}">
         <div class="gantt-desc"
              :style="{'min-width':descWidth+'px'}"></div>
         <timeline :start="start"
@@ -15,13 +15,22 @@
 
       </div>
       <div class="gantt-body"
-           :style="{width:totalWidth+'px'}">
-        <item-header :datas="datas"
-                     :style="{'width':descWidth+'px'}"></item-header>
-        <div class="gantt-grid">
-          <!-- <div :style="{width:3080+'px'}"></div> -->
-        </div>
-        <div class="gantt-block"></div>
+           :style="{width:totalWidth+'px','padding-top':cellHeight*2+'px'}">
+        <!-- <item-header :datas="datas"
+                     :style="{'width':descWidth+'px'}"></item-header> -->
+        <!-- <div class="gantt-grid">
+        </div> -->
+        <!-- <div class="gantt-blocks"></div> -->
+        <blocks :cellWidth="cellWidth"
+                :cellHeight="cellHeight"
+                :datas="datas"
+                :scale="scale"
+                :totalBlocks="totalBlocks"
+                :forbidden="forbidden"
+                :startBlockTime="startBlockTime"
+                :showProject="showProject"
+                :showPlan="showPlan"
+                :showActual="showActual"></blocks>
 
       </div>
 
@@ -34,17 +43,22 @@ import { datas } from "@src/mock/index";
 import moment from "moment";
 import Timeline from "@views/timeline/index.vue";
 import ItemHeader from "@views/itemheader/index.vue";
+import Blocks from "@views/blocks/index.vue";
 export default {
   name: "Gantt",
-  components: { Timeline, ItemHeader },
+  components: { Timeline, ItemHeader, Blocks },
   data() {
     return {
+      showProject: true,
+      showPlan: true,
+      showActual: true,
       start: moment(),
       end: moment()
-        .add(6, "d")
-        .add(1, "s"),
-      cellWidth: 50,
-      cellHeight: 20,
+        .add(4, "d")
+        .add(2, "h")
+        .add(5, "s"),
+      cellWidth: 20,
+      cellHeight: 10,
       headerHeight: 20,
       descWidth: 200,
       scale: 2,
@@ -55,6 +69,14 @@ export default {
             .add(10, "m"),
           end: moment()
             .add(9, "h")
+            .add(29, "m")
+        },
+        {
+          start: moment()
+            .add(11, "h")
+            .add(10, "m"),
+          end: moment()
+            .add(16, "h")
             .add(29, "m")
         }
       ],
@@ -67,6 +89,23 @@ export default {
         Math.ceil((this.end.diff(this.start, "h") + 1) / this.scale) *
         this.cellWidth;
       return this.descWidth + timelineWidth;
+    },
+    totalBlocks() {
+      return Math.ceil((this.end.diff(this.start, "h") + 1) / this.scale);
+    },
+    //获取开始时间块的时间
+    startBlockTime() {
+      let start = this.start.clone();
+      let hours = start.hours();
+      let date;
+
+      for (let i = 0; i < 24; i += this.scale) {
+        if (hours - this.scale < i) {
+          date = start.hours(Math.floor(i / 1)).minutes((i % 1) * 60);
+          break;
+        }
+      }
+      return date;
     }
   },
   created() {},

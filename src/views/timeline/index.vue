@@ -22,7 +22,7 @@
       <div class="gantt-timeline-forbidden"
            v-for="(item,index) in forbidden"
            :key="index"
-           :style="{width:getForbiddenBlockwidth(item)+'px',height:cellHeight+'px','margin-left':getForbiddenBlockMargin(item)+'px'}"></div>
+           :style="{width:getBlockwidth(item)+'px',height:cellHeight+'px','margin-left':getBlockMargin(item)+'px'}"></div>
     </div>
   </div>
 </template>
@@ -106,14 +106,14 @@ export default {
   },
   created() {},
   methods: {
-    //计算禁止使用时间块长度
-    getForbiddenBlockwidth(block) {
+    //计算时间块长度
+    getBlockwidth(block) {
       let { start, end } = block;
       let width = end.diff(start, "h", true) / this.currentScale;
       return width * this.cellWidth;
     },
-    //计算禁止使用时间块偏移
-    getForbiddenBlockMargin(block) {
+    //计算时间块偏移
+    getBlockMargin(block) {
       let { start } = block;
       let width =
         start.diff(this.startBlockTime, "h", true) / this.currentScale;
@@ -156,7 +156,7 @@ export default {
       let totalblock = [];
 
       for (let i = 0; i < 24; i += this.currentScale) {
-        if (start - this.currentScale < i && i <= end) {
+        if (start - this.currentScale < i && i < end) {
           let val = moment({
             hour: Math.floor(i / 1),
             minute: (i % 1) * 60
