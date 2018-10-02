@@ -30,7 +30,8 @@
                 :startBlockTime="startBlockTime"
                 :showProject="showProject"
                 :showPlan="showPlan"
-                :showActual="showActual"></blocks>
+                :showActual="showActual"
+                :showTimeBlock="showTimeBlock"></blocks>
 
       </div>
 
@@ -49,6 +50,7 @@ export default {
   components: { Timeline, ItemHeader, Blocks },
   data() {
     return {
+      showTimeBlock: false,
       showProject: true,
       showPlan: true,
       showActual: true,

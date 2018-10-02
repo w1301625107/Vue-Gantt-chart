@@ -11,7 +11,8 @@
              :style="{height:cellHeight+'px'}">
           <div class="gantt-block-series-name">Planned</div>
           <div class="gantt-block-timeline">
-            <div class="gantt-block-timeline-blocks">
+            <div v-if="showTimeBlock"
+                 class="gantt-block-timeline-blocks">
               <div class="gantt-block-timeline-block"
                    v-for="i in totalBlocks"
                    :key="i"
@@ -38,7 +39,8 @@
              :style="{height:cellHeight+'px'}">
           <div class="gantt-block-series-name">Projected</div>
           <div class="gantt-block-timeline">
-            <div class="gantt-block-timeline-blocks">
+            <div v-if="showTimeBlock"
+                 class="gantt-block-timeline-blocks">
               <div class="gantt-block-timeline-block"
                    v-for="i in totalBlocks"
                    :key="i"
@@ -65,7 +67,8 @@
              :style="{height:cellHeight+'px'}">
           <div class="gantt-block-series-name">Actual</div>
           <div class="gantt-block-timeline">
-            <div class="gantt-block-timeline-blocks">
+            <div v-if="showTimeBlock"
+                 class="gantt-block-timeline-blocks">
               <div class="gantt-block-timeline-block"
                    v-for="i in totalBlocks"
                    :key="i"
@@ -138,6 +141,10 @@ export default {
     },
     startBlockTime: {
       required: true
+    },
+    showTimeBlock: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
