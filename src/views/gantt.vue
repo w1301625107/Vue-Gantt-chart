@@ -1,7 +1,6 @@
 <template>
   <div class="gantt">
-    <div class="gantt-chart"
-         :style="{}">
+    <div class="gantt-chart">
       <div class="gantt-header"
            :style="{width:totalWidth+'px'}">
         <div class="gantt-desc"
@@ -14,13 +13,9 @@
                   :forbidden="forbidden"></timeline>
 
       </div>
-      <div class="gantt-body"
+      <div @scroll="handleChartScroll"
+           class="gantt-body"
            :style="{width:totalWidth+'px','padding-top':cellHeight*2+'px'}">
-        <!-- <item-header :datas="datas"
-                     :style="{'width':descWidth+'px'}"></item-header> -->
-        <!-- <div class="gantt-grid">
-        </div> -->
-        <!-- <div class="gantt-blocks"></div> -->
         <blocks :cellWidth="cellWidth"
                 :cellHeight="cellHeight"
                 :datas="datas"
@@ -32,10 +27,15 @@
                 :showPlan="showPlan"
                 :showActual="showActual"
                 :showTimeBlock="showTimeBlock"></blocks>
-
       </div>
 
     </div>
+    <fix-left :datas="datas"
+              :cellHeight="cellHeight"
+              :showProject="showProject"
+              :showPlan="showPlan"
+              :showActual="showActual"
+              :style="{'width':descWidth+'px'}"></fix-left>
   </div>
 </template>
 
@@ -43,27 +43,27 @@
 import { datas } from "@src/mock/index";
 import moment from "moment";
 import Timeline from "@views/timeline/index.vue";
-import ItemHeader from "@views/itemheader/index.vue";
+import FixLeft from "@views/fixleft/index.vue";
 import Blocks from "@views/blocks/index.vue";
 export default {
   name: "Gantt",
-  components: { Timeline, ItemHeader, Blocks },
+  components: { Timeline, FixLeft, Blocks },
   data() {
     return {
-      showTimeBlock: false,
+      showTimeBlock: true,
       showProject: true,
       showPlan: true,
       showActual: true,
       start: moment(),
       end: moment()
-        .add(4, "d")
+        .add(1, "d")
         .add(2, "h")
         .add(5, "s"),
-      cellWidth: 20,
-      cellHeight: 10,
+      cellWidth: 50,
+      cellHeight: 20,
       headerHeight: 20,
       descWidth: 200,
-      scale: 2,
+      scale: 1,
       forbidden: [
         {
           start: moment()
@@ -111,7 +111,29 @@ export default {
     }
   },
   created() {},
-  mounted() {}
+  mounted() {
+    this.resize();
+    window.onresize = () => this.resize();
+  },
+  methods: {
+    handleChartScroll(event) {
+      this.$nextTick(() => {
+        document.querySelector(".gantt-fixleft-items").scrollTop =
+          event.target.scrollTop;
+      });
+    },
+    resize() {
+      let scrollSize = 16;
+      let bodyHeight = document.querySelector(".gantt").clientHeight;
+      let headerHeight = document.querySelector(".gantt-header").clientHeight;
+      document.querySelector(".gantt-body").style.height =
+        bodyHeight - headerHeight - scrollSize + "px";
+      document.querySelector(".gantt-fixleft").style.height =
+        bodyHeight - scrollSize + "px";
+      document.querySelector(".gantt-fixleft-items").style.height =
+        bodyHeight - headerHeight - scrollSize + "px";
+    }
+  }
 };
 </script>
 

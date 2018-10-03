@@ -1,10 +1,10 @@
 <template>
   <div class="gantt-blocks">
     <div class="gantt-block"
-         v-for="(item,index) in datas"
+         v-for="(data,index) in datas"
          :key="index">
       <div class="gantt-block-name"
-           :style="{height:cellHeight+'px'}">{{item.name}}</div>
+           :style="{height:cellHeight+'px'}">{{data.name}}</div>
       <div class="gantt-block-series">
         <div v-if="showPlan"
              class="gantt-block-series-plan"
@@ -20,10 +20,10 @@
             </div>
             <div class="gantt-block-contains">
               <div class="gantt-block-contains-block"
-                   v-for="(item,index) in item.Planned"
+                   v-for="(item,index) in data.Planned"
                    :key="index"
                    :style="{width:getBlockwidth(item)+'px',
-                   'margin-left':getBlockMargin(item)+'px'}"></div>
+                   'margin-left':getBlockMargin(item)+'px'}">{{data.name}}</div>
             </div>
             <div class="gantt-block-forbiddens">
               <div class="gantt-block-forbidden"
@@ -48,7 +48,7 @@
             </div>
             <div class="gantt-block-contains">
               <div class="gantt-block-contains-block"
-                   v-for="(item,index) in item.Projected"
+                   v-for="(item,index) in data.Projected"
                    :key="index"
                    :style="{width:getBlockwidth(item)+'px',
                    'margin-left':getBlockMargin(item)+'px'}"></div>
@@ -76,7 +76,7 @@
             </div>
             <div class="gantt-block-contains">
               <div class="gantt-block-contains-block"
-                   v-for="(item,index) in item.Actual"
+                   v-for="(item,index) in data.Actual"
                    :key="index"
                    :style="{width:getBlockwidth(item)+'px',
                    'margin-left':getBlockMargin(item)+'px'}"></div>

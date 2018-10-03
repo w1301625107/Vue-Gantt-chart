@@ -23,6 +23,7 @@ body {
   height: calc(100vh - 30px - 30px);
   width: 100%;
   outline: 1px solid $gray;
+  position: relative;
   &-chart {
     height: 100%;
     width: 100%;
@@ -44,8 +45,7 @@ body {
     height: 100%;
     padding-right: 17px; //margin-left: -17px;
   }
-  &-desc {
-  }
+  &-desc {}
   &-timeline {
     position: relative;
     &-blocks {
@@ -75,9 +75,37 @@ body {
       position: absolute;
     }
   }
-  &-itemHeader {
+  &-fixleft {
     box-sizing: border-box;
     border-right: 1px solid $gray;
+    width: 200px;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    background: rgb(255, 255, 255);
+    &-header {
+      width: 100%;
+      background: #000;
+      position: relative;
+      z-index: 100;
+      top: 0px;
+      left: 0px;
+      overflow-x: hidden;
+      overflow-y: hidden;
+    }
+    &-items {
+      width: 200px;
+      position: absolute;
+      top: 20px;
+      left: 0px;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: hidden;
+      background: rgb(255, 255, 255);
+    }
     &-item {
       display: flex;
     }
@@ -88,14 +116,13 @@ body {
       width: $W-desc/2;
       display: flex;
       flex-direction: column;
-      & > div {
+      &>div {
         box-sizing: border-box;
         border-bottom: 1px solid $gray;
       }
     }
   }
-  &-grid {
-  }
+  &-grid {}
   &-block {
     display: flex;
     &-name {

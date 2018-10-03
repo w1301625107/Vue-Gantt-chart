@@ -1,19 +1,22 @@
 <template>
-  <div class="gantt-itemHeader">
-    <div class="gantt-itemHeader-items">
-      <div class="gantt-itemHeader-item"
-           v-for="item in datas"
+  <div class="gantt-fixleft">
+    <div class="gantt-fixleft-header"
+         :style="{height:cellHeight*2+'px'}"></div>
+    <div class="gantt-fixleft-items"
+         :style="{top:cellHeight*2+'px','padding-bottom':cellHeight*2+'px'}">
+      <div class="gantt-fixleft-item"
+           v-for="(item,index) in datas"
            :key="item.id">
-        <div class="gantt-itemHeader-name"
-             :style="{height:cellHeight+'px'}">{{item.name}}</div>
-        <div class="gantt-itemHeader-series"
+        <div class="gantt-fixleft-name"
+             :style="{height:cellHeight+'px'}">{{index}}.{{item.name}}</div>
+        <div class="gantt-fixleft-series"
              v-if="showPlan">
-          <div class="gantt-itemHeader-series-plan"
+          <div class="gantt-fixleft-series-plan"
                v-if="showProject"
                :style="{height:cellHeight+'px'}">Planned</div>
-          <div class="gantt-itemHeader-series-project"
+          <div class="gantt-fixleft-series-project"
                :style="{height:cellHeight+'px'}">Projected</div>
-          <div class="gantt-itemHeader-series-actual"
+          <div class="gantt-fixleft-series-actual"
                v-if="showActual"
                :style="{height:cellHeight+'px'}">Actual</div>
         </div>
@@ -24,7 +27,7 @@
   
 <script>
 export default {
-  name: "ItemHeader",
+  name: "fixLeft",
   props: {
     cellHeight: {
       type: Number,
