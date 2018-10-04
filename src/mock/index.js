@@ -52,7 +52,7 @@ var template = {
 }
 let datas = [];
 for (let i = 0,
-    j = Mock.Random.natural(50, 50); i < j; i++) {
+    j = Mock.Random.natural(10, 10); i < j; i++) {
   datas.push(Mock.mock(template))
 }
 

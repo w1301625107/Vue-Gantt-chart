@@ -27,6 +27,11 @@
                 :showPlan="showPlan"
                 :showActual="showActual"
                 :showTimeBlock="showTimeBlock"></blocks>
+        <mark-line :cellWidth="cellWidth"
+                   :scale="scale"
+                   :startBlockTime="startBlockTime"
+                   :time="time"
+                   color="red"></mark-line>
       </div>
 
     </div>
@@ -42,18 +47,24 @@
 <script>
 import { datas } from "@src/mock/index";
 import moment from "moment";
-import Timeline from "@views/timeline/index.vue";
-import FixLeft from "@views/fixleft/index.vue";
+import Timeline from "@views/time-line/index.vue";
+import FixLeft from "@views/fix-left/index.vue";
 import Blocks from "@views/blocks/index.vue";
+import MarkLine from "@views/mark-line/index.vue";
 export default {
   name: "Gantt",
-  components: { Timeline, FixLeft, Blocks },
+  components: { Timeline, FixLeft, Blocks, MarkLine },
   data() {
     return {
       showTimeBlock: true,
       showProject: true,
       showPlan: true,
       showActual: true,
+      time: {
+        start: moment()
+          .add(6, "h")
+          .add(5, "s")
+      },
       start: moment(),
       end: moment()
         .add(1, "d")
