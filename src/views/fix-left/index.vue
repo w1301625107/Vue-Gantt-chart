@@ -1,24 +1,21 @@
 <template>
-  <div class="gantt-fixleft">
+  <div class="gantt-fixleft"
+       :style="{width:descWidth+'px'}">
     <div class="gantt-fixleft-header"
          :style="{height:cellHeight*2+'px'}"></div>
     <div class="gantt-fixleft-items"
-         :style="{top:cellHeight*2+'px','padding-bottom':cellHeight*2+'px'}">
+         :style="{top:cellHeight*2+'px'}">
       <div class="gantt-fixleft-item"
            v-for="(item,index) in datas"
            :key="item.id">
-        <div class="gantt-fixleft-name"
-             :style="{height:cellHeight+'px'}">{{index}}.{{item.name}}</div>
-        <div class="gantt-fixleft-series"
-             v-if="showPlan">
-          <div class="gantt-fixleft-series-plan"
-               v-if="showProject"
-               :style="{height:cellHeight+'px'}">Planned</div>
-          <div class="gantt-fixleft-series-project"
-               :style="{height:cellHeight+'px'}">Projected</div>
-          <div class="gantt-fixleft-series-actual"
-               v-if="showActual"
-               :style="{height:cellHeight+'px'}">Actual</div>
+        <div class="gantt-fixleft-name gantt-cell-height">{{index}}.{{item.name}}</div>
+        <div class="gantt-fixleft-series">
+          <div v-if="showPlan"
+               class="gantt-fixleft-series-plan gantt-cell-height">Planned</div>
+          <div v-if="showProject"
+               class="gantt-fixleft-series-project gantt-cell-height">Projected</div>
+          <div v-if="showActual"
+               class="gantt-fixleft-series-actual gantt-cell-height">Actual</div>
         </div>
       </div>
     </div>
@@ -48,6 +45,9 @@ export default {
     datas: {
       type: Array,
       required: true
+    },
+    descWidth: {
+      type: Number
     }
   }
 };

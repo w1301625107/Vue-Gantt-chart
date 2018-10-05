@@ -1,11 +1,11 @@
 <template>
   <div v-show="visible"
        class="gantt-markline"
-       :style="{'background-color':color,'margin-left':calcMargin()+'px'}"></div>
+       :style="{'background-color':color,'margin-left':getBlockMargin()+'px'}"></div>
 </template>
 
 <script>
-import { getBlockMargin } from "@src/utils/calc-margin.js";
+import { calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "MarkLine",
   props: {
@@ -44,20 +44,20 @@ export default {
     };
   },
   methods: {
-    calcMargin() {
+    getBlockMargin() {
       if (this.time == null) {
         this.visible = false;
         return;
       } else {
-        console.log("excuse me");
-
         this.visible = true;
-        return this.baseMargin + getBlockMargin(this.time, this.options);
+        let block = {
+          start: this.time
+        };
+        return this.baseMargin + calcBlockMargin(block, this.options);
       }
     }
   }
 };
 </script>
 
-<style>
-</style>
+

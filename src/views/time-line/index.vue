@@ -5,40 +5,40 @@
            v-for="(day,index) in dateDiff"
            :key="index"
            :style="{width:getMonthWith(day)+'px'}">
-        <div class="gantt-timeline-day"
-             :style="{height:cellHeight+'px',
-           'line-height':cellHeight+'px'}">{{day.format("MM/DD")}}</div>
-        <div class="gantt-timeline-hours">
-          <div class="gantt-timeline-hour"
-               :style="{width:cellWidth+'px',height:cellHeight+'px','line-height':cellHeight+'px'}"
+        <div class="gantt-timeline-day gantt-cell-height"
+             :style="{'line-height':cellHeight+'px'}">{{day.format("MM/DD")}}</div>
+        <div class="gantt-timeline-hours gantt-cell-height"
+             :style="{
+           'line-height':cellHeight+'px'}">
+          <div class="gantt-timeline-hour gantt-cell-width"
                v-for="(hour,index) in getHourList(day)"
                :key="index">{{hour}}</div>
         </div>
-
       </div>
     </div>
-    <div class="gantt-timeline-forbiddens"
-         :style="{top:cellHeight+'px',height:cellHeight+'px'}">
+    <div class="gantt-timeline-forbiddens gantt-cell-height"
+         :style="{top:cellHeight+'px'}">
       <div class="gantt-timeline-forbidden"
            v-for="(item,index) in forbidden"
            :key="index"
-           :style="{width:getBlockwidth(item)+'px',height:cellHeight+'px','margin-left':getBlockMargin(item)+'px'}"></div>
+           :style="{width:getBlockwidth(item)+'px','margin-left':getBlockMargin(item)+'px'}"></div>
     </div>
   </div>
 </template>
 
 <script>
 import moment from "moment";
+import { calcBlockwidth, calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "Timeline",
   props: {
     cellWidth: {
       type: Number,
-      default: 20
+      required: true
     },
     cellHeight: {
       type: Number,
-      default: 20
+      required: true
     },
     start: {
       required: true
@@ -48,38 +48,25 @@ export default {
     },
     scale: {
       type: Number,
-      default: 1
+      required: true
     },
     forbidden: {
       type: Array,
       default: []
+    },
+    startBlockTime: {
+      required: true
     }
   },
   data() {
-    return {
-      //可用缩放尺度
-      scaleList: [0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 3, 4, 6, 8, 12, 24]
-    };
+    return {};
   },
   computed: {
-    currentScale() {
-      let val = 1;
-      if (-1 != this.scaleList.indexOf(this.scale)) {
-        val = this.scale;
-      }
-      return val;
-    },
-    startTime() {
-      return moment(this.start);
-    },
-    endTime() {
-      return moment(this.end);
-    },
     //天列表
     dateDiff() {
       let temp = [];
-      let start = this.startTime.clone();
-      let end = this.endTime.format("MM/DD");
+      let start = this.start.clone();
+      let end = this.end.format("MM/DD");
 
       for (; start.format("MM/DD") != end; start.add(1, "d")) {
         temp.push(start.clone());
@@ -87,44 +74,31 @@ export default {
       temp.push(start.clone());
 
       return temp;
-    },
-    //获取开始时间块的时间
-    startBlockTime() {
-      let start = this.startTime.clone();
-      let hours = start.hours();
-      let date;
-
-      for (let i = 0; i < 24; i += this.currentScale) {
-        if (hours - this.currentScale < i) {
-          date = start.hours(Math.floor(i / 1)).minutes((i % 1) * 60);
-          break;
-        }
-      }
-      console.log("date:", date.format("HH:mm"));
-      return date;
     }
   },
   created() {},
   methods: {
     //计算时间块长度
     getBlockwidth(block) {
-      let { start, end } = block;
-      let width = end.diff(start, "h", true) / this.currentScale;
-      return width * this.cellWidth;
+      let options = {
+        scale: this.scale,
+        cellWidth: this.cellWidth
+      };
+      return calcBlockwidth(block, options);
     },
     //计算时间块偏移
     getBlockMargin(block) {
-      let { start } = block;
-      let width =
-        start.diff(this.startBlockTime, "h", true) / this.currentScale;
-      return width * this.cellWidth;
+      let options = {
+        scale: this.scale,
+        cellWidth: this.cellWidth,
+        startBlockTime: this.startBlockTime
+      };
+      return calcBlockMargin(block, options);
     },
     //计算每天的MM/DD的block长度
     getMonthWith(date) {
       let hours;
-      let start = this.startTime;
-      let end = this.endTime;
-      let cellWidth = this.cellWidth;
+      let { start, end, cellWidth } = this;
 
       if (date.format("MM/DD") == start.format("MM/DD")) {
         hours = 24 - start.hour();
@@ -134,13 +108,12 @@ export default {
         hours = 24;
       }
 
-      let blocks = Math.ceil(hours / this.currentScale);
+      let blocks = Math.ceil(hours / this.scale);
       return blocks * cellWidth;
     },
     getHourList(date) {
       let temp = [];
-      let start = this.startTime;
-      let end = this.endTime;
+      let { start, end } = this;
 
       if (date.format("MM/DD") == start.format("MM/DD")) {
         temp = this.countHour(start.hour(), 24);
@@ -155,8 +128,8 @@ export default {
     countHour(start, end) {
       let totalblock = [];
 
-      for (let i = 0; i < 24; i += this.currentScale) {
-        if (start - this.currentScale < i && i < end) {
+      for (let i = 0; i < 24; i += this.scale) {
+        if (start - this.scale < i && i < end) {
           let val = moment({
             hour: Math.floor(i / 1),
             minute: (i % 1) * 60
@@ -171,5 +144,3 @@ export default {
 };
 </script>
 
-<style>
-</style>

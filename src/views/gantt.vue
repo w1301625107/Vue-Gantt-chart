@@ -9,7 +9,8 @@
                   :end="end"
                   :cellWidth="cellWidth"
                   :cellHeight="cellHeight"
-                  :scale="scale"
+                  :startBlockTime="startBlockTime"
+                  :scale="correctScale"
                   :forbidden="forbidden"></timeline>
 
       </div>
@@ -19,7 +20,7 @@
         <blocks :cellWidth="cellWidth"
                 :cellHeight="cellHeight"
                 :datas="datas"
-                :scale="scale"
+                :scale="correctScale"
                 :totalBlocks="totalBlocks"
                 :forbidden="forbidden"
                 :startBlockTime="startBlockTime"
@@ -28,7 +29,7 @@
                 :showActual="showActual"
                 :showTimeBlock="showTimeBlock"></blocks>
         <mark-line :cellWidth="cellWidth"
-                   :scale="scale"
+                   :scale="correctScale"
                    :startBlockTime="startBlockTime"
                    :time="time"
                    color="red"></mark-line>
@@ -40,6 +41,7 @@
               :showProject="showProject"
               :showPlan="showPlan"
               :showActual="showActual"
+              :descWidth="descWidth"
               :style="{'width':descWidth+'px'}"></fix-left>
   </div>
 </template>
@@ -60,11 +62,9 @@ export default {
       showProject: true,
       showPlan: true,
       showActual: true,
-      time: {
-        start: moment()
-          .add(6, "h")
-          .add(5, "s")
-      },
+      time: moment()
+        .add(6, "h")
+        .add(5, "s"),
       start: moment(),
       end: moment()
         .add(1, "d")
@@ -93,10 +93,23 @@ export default {
             .add(29, "m")
         }
       ],
+      //可用缩放尺度
+      scaleList: [0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 3, 4, 6, 8, 12, 24],
       datas
     };
   },
   computed: {
+    createCss() {
+      let { cellWidth, cellHeight } = this;
+      this.resetCss();
+    },
+    correctScale() {
+      let val = 1;
+      if (-1 != this.scaleList.indexOf(this.scale)) {
+        val = this.scale;
+      }
+      return val;
+    },
     totalWidth() {
       let timelineWidth =
         Math.ceil((this.end.diff(this.start, "h") + 1) / this.scale) *
@@ -125,14 +138,17 @@ export default {
   mounted() {
     this.resize();
     window.onresize = () => this.resize();
+    this.resetCss();
   },
   methods: {
+    //同步fixleft和block的滚动
     handleChartScroll(event) {
       this.$nextTick(() => {
         document.querySelector(".gantt-fixleft-items").scrollTop =
           event.target.scrollTop;
       });
     },
+    //修正滚动区域的高度
     resize() {
       let scrollSize = 16;
       let bodyHeight = document.querySelector(".gantt").clientHeight;
@@ -143,6 +159,20 @@ export default {
         bodyHeight - scrollSize + "px";
       document.querySelector(".gantt-fixleft-items").style.height =
         bodyHeight - headerHeight - scrollSize + "px";
+    },
+    //修改gantt-cell-height和gantt-cell-height样式数值
+    resetCss() {
+      let style = document.getElementById("gantt-cell-style");
+      let { cellWidth, cellHeight } = this;
+      if (null == style) {
+        let style = document.createElement("style");
+        style.setAttribute("id", "gantt-cell-style");
+        style.setAttribute("type", "text/css");
+        style.innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}`;
+        document.head.appendChild(style);
+      } else {
+        style.innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}`;
+      }
     }
   }
 };

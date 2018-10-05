@@ -1,5 +1,5 @@
 //计算时间块长度
-export function getBlockwidth(block, options) {
+export function calcBlockwidth(block, options) {
   let {
     start,
     end
@@ -13,7 +13,7 @@ export function getBlockwidth(block, options) {
 }
 
 //计算时间块偏移
-export function getBlockMargin(block, options) {
+export function calcBlockMargin(block, options) {
   let {
     start
   } = block;
