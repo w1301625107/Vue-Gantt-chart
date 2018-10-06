@@ -10,7 +10,7 @@
         <div class="gantt-timeline-hours "
              :style="{height:descHeight/2+'px',
            'line-height':descHeight/2+'px'}">
-          <div class="gantt-timeline-hour gantt-cell-width"
+          <div class="gantt-cell-width"
                v-for="(hour,index) in getHourList(day)"
                :key="index">{{hour}}</div>
         </div>
@@ -18,8 +18,7 @@
     </div>
     <div class="gantt-timeline-forbiddens "
          :style="{top:descHeight/2+'px',height:descHeight/2+'px'}">
-      <div class="gantt-timeline-forbidden"
-           v-for="(item,index) in forbidden"
+      <div v-for="(item,index) in forbidden"
            :key="index"
            :style="{width:getBlockwidth(item)+'px','margin-left':getBlockMargin(item)+'px'}"></div>
     </div>

@@ -16,17 +16,17 @@
       <div @scroll="syncScroll"
            class="gantt-body"
            :style="{width:totalWidth+'px','padding-top':descHeight+'px'}">
-        <blocks :cellWidth="cellWidth"
-                :cellHeight="cellHeight"
-                :datas="datas"
-                :scale="correctScale"
-                :totalBlocks="totalBlocks"
-                :forbidden="forbidden"
-                :startBlockTime="startBlockTime"
-                :showProject="showProject"
-                :showPlan="showPlan"
-                :showActual="showActual"
-                :showTimeBlock="showTimeBlock"></blocks>
+        <gt-table :cellWidth="cellWidth"
+                  :cellHeight="cellHeight"
+                  :datas="datas"
+                  :scale="correctScale"
+                  :totalBlocks="totalBlocks"
+                  :forbidden="forbidden"
+                  :startBlockTime="startBlockTime"
+                  :showProject="showProject"
+                  :showPlan="showPlan"
+                  :showActual="showActual"
+                  :showTimeBlock="showTimeBlock"></gt-table>
         <mark-line :cellWidth="cellWidth"
                    :scale="correctScale"
                    :startBlockTime="startBlockTime"
@@ -57,11 +57,11 @@ import { datas } from "@src/mock/index";
 import moment from "moment";
 import Timeline from "@views/time-line/index.vue";
 import LeftBar from "@views/left-bar/index.vue";
-import Blocks from "@views/blocks/index.vue";
+import GtTable from "@views/gt-table/index.vue";
 import MarkLine from "@views/mark-line/index.vue";
 export default {
   name: "Gantt",
-  components: { Timeline, LeftBar, Blocks, MarkLine },
+  components: { Timeline, LeftBar, GtTable, MarkLine },
   data() {
     return {
       showTimeBlock: true,
@@ -80,7 +80,7 @@ export default {
       cellHeight: 20,
       descHeight: 40,
       descWidth: 200,
-      scale: 1,
+      scale: 0.05,
       forbidden: [
         {
           start: moment()
@@ -100,7 +100,7 @@ export default {
         }
       ],
       //可用缩放尺度
-      scaleList: [0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 3, 4, 6, 8, 12, 24],
+      scaleList: [0.016, 0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 3, 4, 6, 8, 12, 24],
       datas
     };
   },
@@ -127,12 +127,14 @@ export default {
     },
     //获取开始时间块的时间
     startBlockTime() {
+      let scale = this.correctScale;
+      console.log(scale);
       let start = this.start.clone();
       let hours = start.hours();
       let date;
 
-      for (let i = 0; i < 24; i += this.scale) {
-        if (hours - this.scale < i) {
+      for (let i = 0; i < 24; i += scale) {
+        if (hours - scale < i) {
           date = start.hours(Math.floor(i / 1)).minutes((i % 1) * 60);
           break;
         }

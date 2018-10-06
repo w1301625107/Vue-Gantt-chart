@@ -1,3 +1,5 @@
+$gray: #f0f0f0;
+
 .gantt {
   height: calc(100vh - 30px - 30px);
   width: 100%;
@@ -15,7 +17,7 @@
 
   &-header {
     background-color: #fff;
-    outline: 1px solid $gray; //width: 100%;
+    outline: 1px solid $gray;
     position: absolute;
     z-index: 1000;
     top: 0;
@@ -25,45 +27,43 @@
     overflow-x: hidden;
     overflow-y: scroll;
     height: 100%;
-    padding-right: 16px; //margin-left: -17px;
+    padding-right: 16px;
   }
 
   &-timeline {
     position: relative;
+    text-align: center;
 
     &-blocks {
       display: flex;
-      flex-direction: row;
     }
 
     &-day {
-      text-align: center;
       outline: 1px solid $gray;
     }
 
     &-hours {
       display: flex;
-      flex-direction: row;
-      font-size: 0.8rem;
+
+      &>div {
+        height: 100%;
+        font-size: 0.8rem;
+        outline: 1px solid $gray;
+      }
     }
 
-    &-hour {
-      height: 100%;
-      text-align: center;
-      font-size: 0.8rem;
-      outline: 1px solid $gray;
-    }
 
     &-forbiddens {
       position: absolute;
       z-index: -1;
+
+      &>div {
+        height: 100%;
+        background-color: #879092;
+        position: absolute;
+      }
     }
 
-    &-forbidden {
-      height: 100%;
-      background-color: #879092;
-      position: absolute;
-    }
   }
 
   &-fixleft {
@@ -74,8 +74,7 @@
     z-index: 200;
     top: 0px;
     left: 0px;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow: hidden;
     background: rgb(255, 255, 255);
   }
 
@@ -84,7 +83,6 @@
     background: #747e80;
     color: #fff;
     text-align: center;
-
   }
 
   &-leftbar {
@@ -93,9 +91,9 @@
     overflow: hidden;
     background: rgb(255, 255, 255);
 
-
     &-item {
       display: flex;
+      outline: 1px solid $gray;
     }
 
     &-series {
@@ -124,27 +122,53 @@
     }
 
     &-series {
-      &-plan {
+      &>div {
         display: flex;
+      }
 
-        & .gantt-block-contains-block {
-          background-color: #fdb525;
+      &-container {
+        position: relative;
+        height: 100%;
+      }
+
+      &-timeline {
+        display: flex;
+        position: relative;
+        z-index: -1;
+        height: 100%;
+
+        &>div {
+          height: 100%;
+          outline: 1px solid $gray;
         }
       }
 
-      &-project {
-        display: flex;
+      &-blocks {
+        position: absolute;
+        height: 100%;
+        top: 0;
+        z-index: -1;
 
-        & .gantt-block-contains-block {
-          background-color: #29c432;
+        &>div {
+          position: absolute;
+          height: 100%;
+          box-sizing: border-box;
+          border: 1px solid $gray;
+          border-radius: 10px;
+          color: #fff;
         }
       }
 
-      &-actual {
-        display: flex;
+      &-forbiddens {
+        height: 100%;
+        position: absolute;
+        top: 0;
+        z-index: -2;
 
-        & .gantt-block-contains-block {
-          background-color: #94bae3;
+        &>div {
+          height: 100%;
+          background-color: #879092;
+          position: absolute;
         }
       }
 
@@ -153,50 +177,17 @@
         height: 100%;
       }
     }
-
-    &-timeline {
-      position: relative;
-      height: 100%;
-
-      &-blocks {
-        display: flex;
-        position: relative;
-        z-index: -1;
-        height: 100%;
-      }
-
-      &-block {
-        height: 100%;
-        outline: 1px solid $gray;
-      }
-    }
-
-    &-forbiddens {
-      height: 100%;
-      position: absolute;
-      top: 0;
-      z-index: -2;
-    }
-
-    &-forbidden {
-      height: 100%;
-      background-color: #879092;
-      position: absolute;
-    }
-
-    &-contains {
-      position: absolute;
-      height: 100%;
-      top: 0;
-      z-index: -1;
-    }
-
-    &-contains-block {
-      position: absolute;
-      height: 100%;
-      box-sizing: border-box;
-      border: 1px solid $gray;
-      border-radius: 10px;
-    }
   }
+}
+
+.project {
+  background-color: #fec536;
+}
+
+.plan {
+  background-color: #3c73f2;
+}
+
+.actual {
+  background-color: #fc4747;
 }
