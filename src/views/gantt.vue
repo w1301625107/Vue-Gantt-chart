@@ -3,7 +3,7 @@
     <div class="gantt-chart">
       <div class="gantt-header"
            :style="{width:totalWidth+'px'}">
-        <timeline :style="{left:descWidth+'px'}"
+        <timeline :style="{'margin-left':descWidth+'px'}"
                   :start="start"
                   :end="end"
                   :descHeight="descHeight"
@@ -13,7 +13,7 @@
                   :scale="correctScale"
                   :forbidden="forbidden"></timeline>
       </div>
-      <div @scroll="handleChartScroll"
+      <div @scroll="syncScroll"
            class="gantt-body"
            :style="{width:totalWidth+'px','padding-top':descHeight+'px'}">
         <blocks :cellWidth="cellWidth"
@@ -35,14 +35,20 @@
       </div>
 
     </div>
-    <fix-left :datas="datas"
-              :descHeight="descHeight"
-              :cellHeight="cellHeight"
-              :showProject="showProject"
-              :showPlan="showPlan"
-              :showActual="showActual"
-              :descWidth="descWidth"
-              :style="{'width':descWidth+'px'}"></fix-left>
+    <div class="gantt-fixleft"
+         :style="{width:descWidth+'px'}">
+      <div class="gantt-lefthearder"
+           :style="{'line-height':descHeight+'px',height:descHeight+'px'}">
+        Hello GanttChart</div>
+      <LeftBar :datas="datas"
+               :descHeight="descHeight"
+               :cellHeight="cellHeight"
+               :showProject="showProject"
+               :showPlan="showPlan"
+               :showActual="showActual"
+               :descWidth="descWidth"></LeftBar>
+    </div>
+    <!-- <fix-left ></fix-left> -->
   </div>
 </template>
 
@@ -50,12 +56,12 @@
 import { datas } from "@src/mock/index";
 import moment from "moment";
 import Timeline from "@views/time-line/index.vue";
-import FixLeft from "@views/fix-left/index.vue";
+import LeftBar from "@views/left-bar/index.vue";
 import Blocks from "@views/blocks/index.vue";
 import MarkLine from "@views/mark-line/index.vue";
 export default {
   name: "Gantt",
-  components: { Timeline, FixLeft, Blocks, MarkLine },
+  components: { Timeline, LeftBar, Blocks, MarkLine },
   data() {
     return {
       showTimeBlock: true,
@@ -142,9 +148,9 @@ export default {
   },
   methods: {
     //同步fixleft和block的滚动
-    handleChartScroll(event) {
+    syncScroll(event) {
       this.$nextTick(() => {
-        document.querySelector(".gantt-fixleft-items").scrollTop =
+        document.querySelector(".gantt-leftbar").scrollTop =
           event.target.scrollTop;
       });
     },
@@ -157,7 +163,7 @@ export default {
         bodyHeight - headerHeight - scrollSize + "px";
       document.querySelector(".gantt-fixleft").style.height =
         bodyHeight - scrollSize + "px";
-      document.querySelector(".gantt-fixleft-items").style.height =
+      document.querySelector(".gantt-leftbar").style.height =
         bodyHeight - headerHeight - scrollSize + "px";
     },
     //修改gantt-cell-height和gantt-cell-height样式数值
