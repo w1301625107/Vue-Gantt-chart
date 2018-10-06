@@ -3,20 +3,19 @@
     <div class="gantt-chart">
       <div class="gantt-header"
            :style="{width:totalWidth+'px'}">
-        <div class="gantt-desc"
-             :style="{'min-width':descWidth+'px'}"></div>
-        <timeline :start="start"
+        <timeline :style="{left:descWidth+'px'}"
+                  :start="start"
                   :end="end"
+                  :descHeight="descHeight"
                   :cellWidth="cellWidth"
                   :cellHeight="cellHeight"
                   :startBlockTime="startBlockTime"
                   :scale="correctScale"
                   :forbidden="forbidden"></timeline>
-
       </div>
       <div @scroll="handleChartScroll"
            class="gantt-body"
-           :style="{width:totalWidth+'px','padding-top':cellHeight*2+'px'}">
+           :style="{width:totalWidth+'px','padding-top':descHeight+'px'}">
         <blocks :cellWidth="cellWidth"
                 :cellHeight="cellHeight"
                 :datas="datas"
@@ -37,6 +36,7 @@
 
     </div>
     <fix-left :datas="datas"
+              :descHeight="descHeight"
               :cellHeight="cellHeight"
               :showProject="showProject"
               :showPlan="showPlan"
@@ -72,7 +72,7 @@ export default {
         .add(5, "s"),
       cellWidth: 50,
       cellHeight: 20,
-      headerHeight: 20,
+      descHeight: 40,
       descWidth: 200,
       scale: 1,
       forbidden: [
@@ -100,7 +100,7 @@ export default {
   },
   computed: {
     createCss() {
-      let { cellWidth, cellHeight } = this;
+      let { descHeight } = this;
       this.resetCss();
     },
     correctScale() {

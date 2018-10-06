@@ -2,14 +2,16 @@
   <div class="gantt-fixleft"
        :style="{width:descWidth+'px'}">
     <div class="gantt-fixleft-header"
-         :style="{height:cellHeight*2+'px'}"></div>
+         :style="{height:descHeight+'px'}"></div>
     <div class="gantt-fixleft-items"
-         :style="{top:cellHeight*2+'px'}">
+         :style="{top:descHeight+'px'}">
       <div class="gantt-fixleft-item"
            v-for="(item,index) in datas"
            :key="item.id">
-        <div class="gantt-fixleft-name gantt-cell-height">{{index}}.{{item.name}}</div>
-        <div class="gantt-fixleft-series">
+        <div class="gantt-fixleft-name gantt-cell-height"
+             :style="{width:descWidth/2+'px'}">{{index}}.{{item.name}}</div>
+        <div class="gantt-fixleft-series"
+             :style="{width:descWidth/2+'px'}">
           <div v-if="showPlan"
                class="gantt-fixleft-series-plan gantt-cell-height">Planned</div>
           <div v-if="showProject"
@@ -26,6 +28,10 @@
 export default {
   name: "fixLeft",
   props: {
+    descHeight: {
+      type: Number,
+      required: true
+    },
     cellHeight: {
       type: Number,
       default: 20

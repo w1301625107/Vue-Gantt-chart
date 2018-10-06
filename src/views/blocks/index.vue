@@ -94,16 +94,10 @@ export default {
   name: "Blocks",
   props: {
     cellWidth: {
-      type: Number,
-      default: 20
+      type: Number
     },
     cellHeight: {
-      type: Number,
-      default: 20
-    },
-    descWidth: {
-      type: Number,
-      default: 200
+      type: Number
     },
     totalBlocks: {
       type: Number,
@@ -130,15 +124,13 @@ export default {
       default: true
     },
     scale: {
-      type: Number,
-      default: 1
+      type: Number
     },
     startBlockTime: {
       required: true
     },
     showTimeBlock: {
-      type: Boolean,
-      default: false
+      type: Boolean
     }
   },
   methods: {

@@ -5,19 +5,19 @@
            v-for="(day,index) in dateDiff"
            :key="index"
            :style="{width:getMonthWith(day)+'px'}">
-        <div class="gantt-timeline-day gantt-cell-height"
-             :style="{'line-height':cellHeight+'px'}">{{day.format("MM/DD")}}</div>
-        <div class="gantt-timeline-hours gantt-cell-height"
-             :style="{
-           'line-height':cellHeight+'px'}">
+        <div class="gantt-timeline-day "
+             :style="{height:descHeight/2+'px','line-height':descHeight/2+'px'}">{{day.format("MM/DD")}}</div>
+        <div class="gantt-timeline-hours "
+             :style="{height:descHeight/2+'px',
+           'line-height':descHeight/2+'px'}">
           <div class="gantt-timeline-hour gantt-cell-width"
                v-for="(hour,index) in getHourList(day)"
                :key="index">{{hour}}</div>
         </div>
       </div>
     </div>
-    <div class="gantt-timeline-forbiddens gantt-cell-height"
-         :style="{top:cellHeight+'px'}">
+    <div class="gantt-timeline-forbiddens "
+         :style="{top:descHeight/2+'px',height:descHeight/2+'px'}">
       <div class="gantt-timeline-forbidden"
            v-for="(item,index) in forbidden"
            :key="index"
@@ -32,6 +32,10 @@ import { calcBlockwidth, calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "Timeline",
   props: {
+    descHeight: {
+      type: Number,
+      required: true
+    },
     cellWidth: {
       type: Number,
       required: true
