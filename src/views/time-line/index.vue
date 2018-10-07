@@ -12,7 +12,7 @@
            'line-height':descHeight/2+'px'}">
           <div class="gantt-cell-width"
                v-for="(hour,index) in getHourList(day)"
-               :key="index">{{hour}}</div>
+               :key="index"><span>{{hour}}</span></div>
         </div>
       </div>
     </div>
@@ -91,27 +91,29 @@ export default {
     },
     //计算时间块偏移
     getBlockMargin(block) {
+      console.log("here");
       let options = {
         scale: this.scale,
         cellWidth: this.cellWidth,
         startBlockTime: this.startBlockTime
       };
+
       return calcBlockMargin(block, options);
     },
     //计算每天的MM/DD的block长度
     getMonthWith(date) {
-      let hours;
-      let { start, end, cellWidth } = this;
+      let blocks;
+      let { start, end, scale, cellWidth } = this;
 
       if (date.format("MM/DD") == start.format("MM/DD")) {
-        hours = 24 - start.hour();
+        blocks = ((24 - start.hour()) * 60) / scale;
+        blocks += 60 / scale - Math.floor(start.minutes() / scale);
       } else if (date.format("MM/DD") == end.format("MM/DD")) {
-        hours = end.hour() + 1;
+        blocks = (end.hour() * 60) / scale;
+        blocks += Math.ceil(end.minutes() / scale);
       } else {
-        hours = 24;
+        blocks = (24 * 60) / scale;
       }
-
-      let blocks = Math.ceil(hours / this.scale);
       return blocks * cellWidth;
     },
     getHourList(date) {
@@ -119,26 +121,64 @@ export default {
       let { start, end } = this;
 
       if (date.format("MM/DD") == start.format("MM/DD")) {
-        temp = this.countHour(start.hour(), 24);
+        temp = this.countHour(0);
       } else if (date.format("MM/DD") == end.format("MM/DD")) {
-        temp = this.countHour(0, end.hour() + 1);
+        temp = this.countHour(1);
       } else {
-        temp = this.countHour(0, 24);
+        temp = this.countHour(2);
       }
-
       return temp;
     },
-    countHour(start, end) {
+    countHour(type) {
       let totalblock = [];
+      let { start, end, scale, startBlockTime } = this;
+      let a, b;
+      switch (type) {
+        case 0:
+          a = startBlockTime.clone();
+          if (start.format("MM/DD") == end.format("MM/DD")) {
+            b = end;
+          } else {
+            b = start
+              .clone()
+              .hour(23)
+              .minutes(59)
+              .seconds(59);
+          }
 
-      for (let i = 0; i < 24; i += this.scale) {
-        if (start - this.scale < i && i < end) {
-          let val = moment({
-            hour: Math.floor(i / 1),
-            minute: (i % 1) * 60
-          }).format("HH:mm");
-          totalblock.push(val);
+          break;
+        case 1:
+          a = end
+            .clone()
+            .hour(0)
+            .minutes(0)
+            .seconds(0);
+          b = end
+            .clone()
+            .minutes(Math.ceil(end.minutes() / scale) * scale)
+            .seconds(0);
+          break;
+        case 2:
+          a = start
+            .clone()
+            .hour(0)
+            .minutes(0)
+            .seconds(0);
+          b = start
+            .clone()
+            .hour(23)
+            .minutes(59)
+            .seconds(59);
+          break;
+        default:
+          break;
+      }
+      while (!a.isAfter(b)) {
+        if (a.isSame(b)) {
+          break;
         }
+        totalblock.push(a.format("HH:mm"));
+        a.add(scale, "m");
       }
 
       return totalblock;

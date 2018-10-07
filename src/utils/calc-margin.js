@@ -8,7 +8,7 @@ export function calcBlockwidth(block, options) {
     scale,
     cellWidth
   } = options;
-  let width = end.diff(start, "h", true) / scale;
+  let width = end.diff(start, "m", true) / scale;
   return width * cellWidth;
 }
 
@@ -23,6 +23,6 @@ export function calcBlockMargin(block, options) {
     startBlockTime
   } = options;
   let width =
-    start.diff(startBlockTime, "h", true) / scale;
+    start.diff(startBlockTime, "m", true) / scale;
   return width * cellWidth;
 }

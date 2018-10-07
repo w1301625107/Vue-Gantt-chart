@@ -73,34 +73,34 @@ export default {
         .add(5, "s"),
       start: moment(),
       end: moment()
-        .add(1, "d")
+        .add(2, "d")
         .add(2, "h")
         .add(5, "s"),
       cellWidth: 50,
       cellHeight: 20,
       descHeight: 40,
       descWidth: 200,
-      scale: 0.05,
+      scale: 60,
       forbidden: [
-        {
-          start: moment()
-            .add(5, "h")
-            .add(10, "m"),
-          end: moment()
-            .add(9, "h")
-            .add(29, "m")
-        },
-        {
-          start: moment()
-            .add(11, "h")
-            .add(10, "m"),
-          end: moment()
-            .add(16, "h")
-            .add(29, "m")
-        }
+        // {
+        //   start: moment()
+        //     .add(5, "h")
+        //     .add(10, "m"),
+        //   end: moment()
+        //     .add(9, "h")
+        //     .add(29, "m")
+        // },
+        // {
+        //   start: moment()
+        //     .add(11, "h")
+        //     .add(10, "m"),
+        //   end: moment()
+        //     .add(16, "h")
+        //     .add(29, "m")
+        // }
       ],
       //可用缩放尺度
-      scaleList: [0.016, 0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 3, 4, 6, 8, 12, 24],
+      scaleList: [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60],
       datas
     };
   },
@@ -110,36 +110,30 @@ export default {
       this.resetCss();
     },
     correctScale() {
-      let val = 1;
+      let val = 60;
       if (-1 != this.scaleList.indexOf(this.scale)) {
         val = this.scale;
       }
       return val;
     },
     totalWidth() {
-      let timelineWidth =
-        Math.ceil((this.end.diff(this.start, "h") + 1) / this.scale) *
-        this.cellWidth;
-      return this.descWidth + timelineWidth;
+      let { descWidth, cellWidth, totalBlocks } = this;
+      return descWidth + cellWidth * totalBlocks;
     },
     totalBlocks() {
-      return Math.ceil((this.end.diff(this.start, "h") + 1) / this.scale);
+      let { start, end, scale } = this;
+      let hoursToBlock = ((end.diff(start, "h") - 1) * 60) / scale;
+      let startToBlock = 60 / scale - Math.floor(start.minutes() / scale);
+      let endToBlock = Math.ceil(end.minutes() / scale);
+      return hoursToBlock + endToBlock + startToBlock;
     },
     //获取开始时间块的时间
     startBlockTime() {
-      let scale = this.correctScale;
-      console.log(scale);
-      let start = this.start.clone();
-      let hours = start.hours();
-      let date;
-
-      for (let i = 0; i < 24; i += scale) {
-        if (hours - scale < i) {
-          date = start.hours(Math.floor(i / 1)).minutes((i % 1) * 60);
-          break;
-        }
-      }
-      return date;
+      let { start, end, scale } = this;
+      let startBlock = Math.floor(start.minutes() / scale);
+      let startClone = start.clone();
+      startClone.minutes(startBlock * scale).seconds(0);
+      return startClone;
     }
   },
   created() {},
