@@ -19,32 +19,11 @@
 </template>
   
 <script>
+import { mapState } from "vuex";
 export default {
   name: "LeftBar",
-  props: {
-    cellHeight: {
-      type: Number,
-      default: 20
-    },
-    showPlan: {
-      type: Boolean,
-      default: true
-    },
-    showProject: {
-      type: Boolean,
-      default: true
-    },
-    showActual: {
-      type: Boolean,
-      default: true
-    },
-    datas: {
-      type: Array,
-      required: true
-    },
-    descWidth: {
-      type: Number
-    }
+  computed: {
+    ...mapState(["datas", "descWidth", "showPlan", "showActual", "showProject"])
   }
 };
 </script>

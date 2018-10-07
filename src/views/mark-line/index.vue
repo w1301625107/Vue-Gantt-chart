@@ -5,14 +5,11 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex";
 import { calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "MarkLine",
   props: {
-    time: {
-      type: Object,
-      default: null
-    },
     baseMargin: {
       type: Number,
       default: 200
@@ -20,28 +17,16 @@ export default {
     color: {
       type: String,
       default: "green"
-    },
-    cellWidth: {
-      type: Number,
-      default: 20
-    },
-    scale: {
-      type: Number,
-      default: 1
-    },
-    startBlockTime: {
-      required: true
     }
   },
   data() {
     return {
-      visible: false,
-      options: {
-        cellWidth: this.cellWidth,
-        scale: this.scale,
-        startBlockTime: this.startBlockTime
-      }
+      visible: false
     };
+  },
+  computed: {
+    ...mapState(["cellWidth", "scale", "time"]),
+    ...mapGetters(["startBlockTime"])
   },
   methods: {
     getBlockMargin() {
@@ -50,10 +35,15 @@ export default {
         return;
       } else {
         this.visible = true;
+        let options = {
+          cellWidth: this.cellWidth,
+          scale: this.scale,
+          startBlockTime: this.startBlockTime
+        };
         let block = {
           start: this.time
         };
-        return this.baseMargin + calcBlockMargin(block, this.options);
+        return this.baseMargin + calcBlockMargin(block, options);
       }
     }
   }

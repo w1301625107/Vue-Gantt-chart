@@ -86,49 +86,26 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex";
 import { calcBlockwidth, calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "GtTable",
-  props: {
-    cellWidth: {
-      type: Number
-    },
-    cellHeight: {
-      type: Number
-    },
-    totalBlocks: {
-      type: Number,
-      required: true
-    },
-    forbidden: {
-      type: Array,
-      default: []
-    },
-    datas: {
-      type: Array,
-      default: []
-    },
-    showPlan: {
-      type: Boolean,
-      default: true
-    },
-    showProject: {
-      type: Boolean,
-      default: true
-    },
-    showActual: {
-      type: Boolean,
-      default: true
-    },
-    scale: {
-      type: Number
-    },
-    startBlockTime: {
-      required: true
-    },
-    showTimeBlock: {
-      type: Boolean
-    }
+  computed: {
+    ...mapState([
+      "datas",
+      "descHeight",
+      "cellWidth",
+      "start",
+      "end",
+      "scale",
+      "forbidden",
+      "showPlan",
+      "showActual",
+      "showProject",
+      "cellHeight",
+      "showTimeBlock"
+    ]),
+    ...mapGetters(["startBlockTime", "totalBlocks"])
   },
   methods: {
     //计算时间块长度

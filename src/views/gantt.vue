@@ -3,35 +3,13 @@
     <div class="gantt-chart">
       <div class="gantt-header"
            :style="{width:totalWidth+'px'}">
-        <timeline :style="{'margin-left':descWidth+'px'}"
-                  :start="start"
-                  :end="end"
-                  :descHeight="descHeight"
-                  :cellWidth="cellWidth"
-                  :cellHeight="cellHeight"
-                  :startBlockTime="startBlockTime"
-                  :scale="correctScale"
-                  :forbidden="forbidden"></timeline>
+        <timeline :style="{'margin-left':descWidth+'px'}"></timeline>
       </div>
       <div @scroll="syncScroll"
            class="gantt-body"
            :style="{width:totalWidth+'px','padding-top':descHeight+'px'}">
-        <gt-table :cellWidth="cellWidth"
-                  :cellHeight="cellHeight"
-                  :datas="datas"
-                  :scale="correctScale"
-                  :totalBlocks="totalBlocks"
-                  :forbidden="forbidden"
-                  :startBlockTime="startBlockTime"
-                  :showProject="showProject"
-                  :showPlan="showPlan"
-                  :showActual="showActual"
-                  :showTimeBlock="showTimeBlock"></gt-table>
-        <mark-line :cellWidth="cellWidth"
-                   :scale="correctScale"
-                   :startBlockTime="startBlockTime"
-                   :time="time"
-                   color="red"></mark-line>
+        <gt-table></gt-table>
+        <mark-line color="red"></mark-line>
       </div>
 
     </div>
@@ -40,13 +18,7 @@
       <div class="gantt-lefthearder"
            :style="{'line-height':descHeight+'px',height:descHeight+'px'}">
         Hello GanttChart</div>
-      <LeftBar :datas="datas"
-               :descHeight="descHeight"
-               :cellHeight="cellHeight"
-               :showProject="showProject"
-               :showPlan="showPlan"
-               :showActual="showActual"
-               :descWidth="descWidth"></LeftBar>
+      <LeftBar></LeftBar>
     </div>
     <!-- <fix-left ></fix-left> -->
   </div>
@@ -136,7 +108,9 @@ export default {
       return startClone;
     }
   },
-  created() {},
+  created() {
+    console.log(this.$store);
+  },
   mounted() {
     this.resize();
     window.onresize = () => this.resize();

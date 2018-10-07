@@ -26,45 +26,24 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex";
 import moment from "moment";
 import { calcBlockwidth, calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "Timeline",
-  props: {
-    descHeight: {
-      type: Number,
-      required: true
-    },
-    cellWidth: {
-      type: Number,
-      required: true
-    },
-    cellHeight: {
-      type: Number,
-      required: true
-    },
-    start: {
-      required: true
-    },
-    end: {
-      required: true
-    },
-    scale: {
-      type: Number,
-      required: true
-    },
-    forbidden: {
-      type: Array,
-      default: []
-    },
-    startBlockTime: {
-      required: true
-    }
-  },
   data() {
     return {};
   },
   computed: {
+    ...mapState([
+      "descHeight",
+      "cellWidth",
+      "start",
+      "end",
+      "scale",
+      "forbidden"
+    ]),
+    ...mapGetters(["startBlockTime"]),
     //天列表
     dateDiff() {
       let temp = [];
@@ -91,7 +70,6 @@ export default {
     },
     //计算时间块偏移
     getBlockMargin(block) {
-      console.log("here");
       let options = {
         scale: this.scale,
         cellWidth: this.cellWidth,
