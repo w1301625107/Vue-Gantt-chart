@@ -21,7 +21,7 @@
                    class="plan"
                    @click="blockClick(item)"
                    :style="{width:getBlockwidth(item)+'px',
-                   'margin-left':getBlockMargin(item)+'px'}">{{data.name}}{{item.start.format("HH:mm")}}</div>
+                   'margin-left':getBlockMargin(item)+'px'}">{{data.name}}{{item.start.format("HH:mm:ss")}}</div>
             </div>
             <div class="gantt-block-series-forbiddens">
               <div v-for="(item,index) in forbidden"

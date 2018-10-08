@@ -4,7 +4,6 @@ import {
   mockDatas
 } from '../mock/index.js'
 import moment from 'moment'
-
 Vue.use(Vuex)
 Vue.config.devtools = true;
 export default new Vuex.Store({
@@ -47,7 +46,7 @@ export default new Vuex.Store({
     scaleList: [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120, 180, 240,
       360, 720, 1440
     ],
-    datas: mockDatas(150)
+    datas: mockDatas(20)
   },
   getters: {
     //计算表格总宽度
@@ -71,19 +70,17 @@ export default new Vuex.Store({
 
       let hoursToBlock, startToBlock, endToBlock;
       if (scale > 60) {
+        let rate = scale / 60;
         startToBlock = (24 - Math.floor((start.hour() + start.minutes() /
-              60) /
-            (scale / 60)) * (
-            scale / 60)) /
-          (scale / 60);
-        endToBlock = Math.ceil((end.hour() + end.minutes() / 60) / (scale /
-          60));
+            60) /
+          rate) * rate) / rate;
+        endToBlock = Math.ceil((end.hour() + end.minutes() / 60) / rate);
         if (start.format("MM/DD") == end.format("MM/DD")) {
           hoursToBlock = 0
         } else {
           let sc = start.clone().hour(0).minutes(0).second(0);
           let ec = end.clone().hour(0).minutes(0).second(0);
-          hoursToBlock = 24 * (ec.diff(sc, "d") - 1) / (scale / 60)
+          hoursToBlock = 24 * (ec.diff(sc, "d") - 1) / rate
         }
       } else {
         hoursToBlock = ((end.diff(start, "h") - 1) * 60) / scale;

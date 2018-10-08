@@ -87,11 +87,11 @@ export default {
 
       if (date.format("MM/DD") == start.format("MM/DD")) {
         if (scale > 60) {
+          let rate = scale / 60;
           blocks =
             (24 -
-              Math.floor((start.hour() + start.minutes() / 60) / (scale / 60)) *
-                (scale / 60)) /
-            (scale / 60);
+              Math.floor((start.hour() + start.minutes() / 60) / rate) * rate) /
+            rate;
         } else {
           blocks = (24 - start.hour() - 1) * 60 / scale;
           blocks += 60 / scale - Math.floor(start.minutes() / scale);
@@ -176,7 +176,11 @@ export default {
         if (a.isSame(b)) {
           break;
         }
-        totalblock.push(a.format("HH:mm"));
+        if (scale >= 60) {
+          totalblock.push(a.format("HH"));
+        } else {
+          totalblock.push(a.format("HH:mm"));
+        }
         a.add(scale, "m");
       }
 
