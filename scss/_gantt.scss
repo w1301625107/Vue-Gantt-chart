@@ -1,4 +1,5 @@
 $gray: #f0f0f0;
+$font-gray:#777;
 
 .gantt {
   height: calc(100vh - 30px - 30px);
@@ -40,6 +41,7 @@ $gray: #f0f0f0;
 
     &-day {
       outline: 1px solid $gray;
+      color: $font-gray;
     }
 
     &-hours {
@@ -54,6 +56,7 @@ $gray: #f0f0f0;
           display: block;
           width: 100%;
           height: 100%;
+          color: $font-gray;
         }
       }
     }
@@ -65,7 +68,7 @@ $gray: #f0f0f0;
 
       &>div {
         height: 100%;
-        background-color: #879092;
+        background-color: #dde2ea;
         position: absolute;
       }
     }
@@ -96,6 +99,12 @@ $gray: #f0f0f0;
     height: 100%;
     overflow: hidden;
     background: rgb(255, 255, 255);
+    color: $font-gray;
+    font-size: 0.8rem;
+
+    &-name {
+      padding-left: 10px;
+    }
 
     &-item {
       display: flex;
@@ -160,8 +169,11 @@ $gray: #f0f0f0;
           height: 100%;
           box-sizing: border-box;
           border: 1px solid $gray;
-          border-radius: 10px;
+          border-radius: 5px;
           color: #fff;
+          padding-left: 5px;
+          font-size: 0.8rem;
+          opacity: .8;
         }
       }
 
@@ -173,7 +185,7 @@ $gray: #f0f0f0;
 
         &>div {
           height: 100%;
-          background-color: #879092;
+          background-color: #dde2ea;
           position: absolute;
         }
       }
@@ -187,13 +199,13 @@ $gray: #f0f0f0;
 }
 
 .project {
-  background-color: #fec536;
+  background-color: #67e0e3;
 }
 
 .plan {
-  background-color: #3c73f2;
+  background-color: #37a2da;
 }
 
 .actual {
-  background-color: #fc4747;
+  background-color: #ffdb5c;
 }

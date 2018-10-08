@@ -20,12 +20,11 @@
         Hello GanttChart</div>
       <LeftBar></LeftBar>
     </div>
-    <!-- <fix-left ></fix-left> -->
   </div>
 </template>
 
 <script>
-import { datas } from "@src/mock/index";
+import { mapState, mapGetters } from "vuex";
 import moment from "moment";
 import Timeline from "@views/time-line/index.vue";
 import LeftBar from "@views/left-bar/index.vue";
@@ -35,82 +34,30 @@ export default {
   name: "Gantt",
   components: { Timeline, LeftBar, GtTable, MarkLine },
   data() {
-    return {
-      showTimeBlock: true,
-      showProject: true,
-      showPlan: true,
-      showActual: true,
-      time: moment()
-        .add(6, "h")
-        .add(5, "s"),
-      start: moment(),
-      end: moment()
-        .add(2, "d")
-        .add(2, "h")
-        .add(5, "s"),
-      cellWidth: 50,
-      cellHeight: 20,
-      descHeight: 40,
-      descWidth: 200,
-      scale: 60,
-      forbidden: [
-        // {
-        //   start: moment()
-        //     .add(5, "h")
-        //     .add(10, "m"),
-        //   end: moment()
-        //     .add(9, "h")
-        //     .add(29, "m")
-        // },
-        // {
-        //   start: moment()
-        //     .add(11, "h")
-        //     .add(10, "m"),
-        //   end: moment()
-        //     .add(16, "h")
-        //     .add(29, "m")
-        // }
-      ],
-      //可用缩放尺度
-      scaleList: [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60],
-      datas
-    };
+    return {};
   },
   computed: {
-    createCss() {
-      let { descHeight } = this;
+    ...mapState([
+      "descWidth",
+      "descHeight",
+      "cellWidth",
+      "scale",
+      "cellHeight"
+    ]),
+    ...mapGetters(["startBlockTime", "totalBlocks", "totalWidth"])
+  },
+  watch: {
+    descHeight() {
+      this.resize();
+    },
+    cellWidth() {
       this.resetCss();
     },
-    correctScale() {
-      let val = 60;
-      if (-1 != this.scaleList.indexOf(this.scale)) {
-        val = this.scale;
-      }
-      return val;
-    },
-    totalWidth() {
-      let { descWidth, cellWidth, totalBlocks } = this;
-      return descWidth + cellWidth * totalBlocks;
-    },
-    totalBlocks() {
-      let { start, end, scale } = this;
-      let hoursToBlock = ((end.diff(start, "h") - 1) * 60) / scale;
-      let startToBlock = 60 / scale - Math.floor(start.minutes() / scale);
-      let endToBlock = Math.ceil(end.minutes() / scale);
-      return hoursToBlock + endToBlock + startToBlock;
-    },
-    //获取开始时间块的时间
-    startBlockTime() {
-      let { start, end, scale } = this;
-      let startBlock = Math.floor(start.minutes() / scale);
-      let startClone = start.clone();
-      startClone.minutes(startBlock * scale).seconds(0);
-      return startClone;
+    cellHeight() {
+      this.resetCss();
     }
   },
-  created() {
-    console.log(this.$store);
-  },
+  created() {},
   mounted() {
     this.resize();
     window.onresize = () => this.resize();

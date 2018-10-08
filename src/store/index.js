@@ -6,7 +6,7 @@ import {
 import moment from 'moment'
 
 Vue.use(Vuex)
-
+Vue.config.devtools = true;
 export default new Vuex.Store({
   state: {
     showTimeBlock: true,
@@ -59,12 +59,14 @@ export default new Vuex.Store({
       }
       return val;
     },
-    totalWidth: state => {
+    totalWidth: (state, getters) => {
       let {
         descWidth,
         cellWidth,
-        totalBlocks
       } = state;
+      let {
+        totalBlocks
+      } = getters;
       return descWidth + cellWidth * totalBlocks;
     },
     totalBlocks: state => {
@@ -89,5 +91,34 @@ export default new Vuex.Store({
       startClone.minutes(startBlock * scale).seconds(0);
       return startClone;
     }
+  },
+  mutations: {
+    updateShowTimeBlock(state, value) {
+      state.showTimeBlock = value
+    },
+    updateShowProject(state, value) {
+      state.showProject = value
+    },
+    updateShowPlan(state, value) {
+      state.showPlan = value
+    },
+    updateShowActual(state, value) {
+      state.showActual = value
+    },
+    updateCellWidth(state, value) {
+      state.cellWidth = value
+    },
+    updateCellHeight(state, value) {
+      state.cellHeight = value
+    },
+    updateDescHeight(state, value) {
+      state.descHeight = value
+    },
+    updateDescWidth(state, value) {
+      state.descWidth = value
+    },
+    updateScale(state, value) {
+      state.scale = value
+    },
   }
 })
