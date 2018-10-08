@@ -37,6 +37,16 @@ $font-gray:#777;
 
     &-blocks {
       display: flex;
+
+
+    }
+
+    &-block:nth-child(odd) {
+      background-color: #d5e4f3;
+    }
+
+    &-block:nth-child(even) {
+      background-color: #cadbfc;
     }
 
     &-day {

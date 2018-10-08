@@ -83,20 +83,29 @@ export default {
     //计算每天的MM/DD的block长度
     getMonthWith(date) {
       let blocks;
-      let { start, end, scale, cellWidth } = this;
+      let { start, end, scale, cellWidth, startBlockTime } = this;
 
       if (date.format("MM/DD") == start.format("MM/DD")) {
-        blocks = (24 - start.hour() - 1) * 60 / scale;
-        console.log("ablocks:", blocks);
-        blocks += 60 / scale - Math.floor(start.minutes() / scale);
-        console.log("bblocks:", blocks);
+        if (scale > 60) {
+          blocks =
+            (24 -
+              Math.floor((start.hour() + start.minutes() / 60) / (scale / 60)) *
+                (scale / 60)) /
+            (scale / 60);
+        } else {
+          blocks = (24 - start.hour() - 1) * 60 / scale;
+          blocks += 60 / scale - Math.floor(start.minutes() / scale);
+        }
       } else if (date.format("MM/DD") == end.format("MM/DD")) {
-        blocks = end.hour() * 60 / scale;
-        blocks += Math.ceil(end.minutes() / scale);
+        if (scale > 60) {
+          blocks = Math.ceil((end.hour() + end.minutes() / 60) / (scale / 60));
+        } else {
+          blocks = end.hour() * 60 / scale;
+          blocks += Math.ceil(end.minutes() / scale);
+        }
       } else {
         blocks = 24 * 60 / scale;
       }
-      console.log("blocks:", blocks);
       return blocks * cellWidth;
     },
     //获取时间刻度数组
@@ -139,10 +148,14 @@ export default {
             .hour(0)
             .minutes(0)
             .seconds(0);
-          b = end
-            .clone()
-            .minutes(Math.ceil(end.minutes() / scale) * scale)
-            .seconds(0);
+          if (scale > 60) {
+            b = end.clone();
+          } else {
+            b = end
+              .clone()
+              .minutes(Math.ceil(end.minutes() / scale) * scale)
+              .seconds(0);
+          }
           break;
         case 2: //start和end中间的天
           a = start

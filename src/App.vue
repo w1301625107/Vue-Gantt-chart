@@ -29,7 +29,7 @@
         <option v-for="i in scaleList"
                 :key="i">{{i}}</option>
       </select>
-      <span>m</span>
+      <span>minute</span>
     </header>
     <gantt></gantt>
     <footer class="main-footer">wuchouchou</footer>
@@ -101,9 +101,6 @@ export default {
         this.$store.commit("updateScale", value);
       }
     }
-  },
-  created() {
-    console.log(this.$store.state.showTimeBlock);
   }
 };
 </script>

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {
-  datas
+  mockDatas
 } from '../mock/index.js'
 import moment from 'moment'
 
@@ -47,7 +47,7 @@ export default new Vuex.Store({
     scaleList: [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120, 180, 240,
       360, 720, 1440
     ],
-    datas
+    datas: mockDatas(150)
   },
   getters: {
     //计算表格总宽度
@@ -68,9 +68,28 @@ export default new Vuex.Store({
         end,
         scale
       } = state;
-      let hoursToBlock = ((end.diff(start, "h") - 1) * 60) / scale;
-      let startToBlock = 60 / scale - Math.floor(start.minutes() / scale);
-      let endToBlock = Math.ceil(end.minutes() / scale);
+
+      let hoursToBlock, startToBlock, endToBlock;
+      if (scale > 60) {
+        startToBlock = (24 - Math.floor((start.hour() + start.minutes() /
+              60) /
+            (scale / 60)) * (
+            scale / 60)) /
+          (scale / 60);
+        endToBlock = Math.ceil((end.hour() + end.minutes() / 60) / (scale /
+          60));
+        if (start.format("MM/DD") == end.format("MM/DD")) {
+          hoursToBlock = 0
+        } else {
+          let sc = start.clone().hour(0).minutes(0).second(0);
+          let ec = end.clone().hour(0).minutes(0).second(0);
+          hoursToBlock = 24 * (ec.diff(sc, "d") - 1) / (scale / 60)
+        }
+      } else {
+        hoursToBlock = ((end.diff(start, "h") - 1) * 60) / scale;
+        startToBlock = 60 / scale - Math.floor(start.minutes() / scale);
+        endToBlock = Math.ceil(end.minutes() / scale);
+      }
       return hoursToBlock + endToBlock + startToBlock;
     },
     //获取第一个时间块的时间
@@ -79,9 +98,17 @@ export default new Vuex.Store({
         start,
         scale
       } = state;
-      let startBlock = Math.floor(start.minutes() / scale);
+      let startBlock;
       let startClone = start.clone();
-      startClone.minutes(startBlock * scale).seconds(0);
+      if (scale > 60) {
+        startBlock = Math.floor(start.hour() / (scale / 60));
+        startClone.hour(startBlock * (scale / 60)).minute(0).seconds(0);
+      } else {
+        startBlock = Math.floor(start.minutes() / scale);
+
+        startClone.minutes(startBlock * scale).seconds(0);
+      }
+
       return startClone;
     }
   },

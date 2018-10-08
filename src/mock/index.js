@@ -50,14 +50,21 @@ var template = {
     return temp;
   }
 }
-let datas = [];
-for (let i = 0,
-    j = Mock.Random.natural(20, 20); i < j; i++) {
-  datas.push(Mock.mock(template))
+// let datas = [];
+// for (let i = 0,
+//     j = Mock.Random.natural(20, 20); i < j; i++) {
+//   datas.push(Mock.mock(template))
+// }
+
+function mockDatas(nums) {
+  let datas = [];
+  for (let i = 0,
+      j = Mock.Random.natural(nums, nums); i < j; i++) {
+    datas.push(Mock.mock(template))
+  }
+  return datas
 }
 
-
-
 export {
-  datas
+  mockDatas
 }
