@@ -13,7 +13,7 @@ export default new Vuex.Store({
     showProject: true,
     showPlan: true,
     showActual: true,
-    time: moment()
+    markLineTime: moment()
       .add(6, "h")
       .add(5, "s"),
     start: moment(),
@@ -44,21 +44,13 @@ export default new Vuex.Store({
       }
     ],
     //可用缩放尺度
-    scaleList: [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60],
+    scaleList: [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120, 180, 240,
+      360, 720, 1440
+    ],
     datas
   },
   getters: {
-    correctScale: state => {
-      let {
-        scale,
-        scaleList
-      } = state
-      let val = 60;
-      if (-1 != scaleList.indexOf(scale)) {
-        val = scale;
-      }
-      return val;
-    },
+    //计算表格总宽度
     totalWidth: (state, getters) => {
       let {
         descWidth,
@@ -69,6 +61,7 @@ export default new Vuex.Store({
       } = getters;
       return descWidth + cellWidth * totalBlocks;
     },
+    //计算时间块的数量
     totalBlocks: state => {
       let {
         start,
@@ -80,7 +73,7 @@ export default new Vuex.Store({
       let endToBlock = Math.ceil(end.minutes() / scale);
       return hoursToBlock + endToBlock + startToBlock;
     },
-    //获取开始时间块的时间
+    //获取第一个时间块的时间
     startBlockTime: state => {
       let {
         start,
@@ -118,7 +111,17 @@ export default new Vuex.Store({
       state.descWidth = value
     },
     updateScale(state, value) {
-      state.scale = value
+      let {
+        scaleList
+      } = state
+      let temp = 60;
+      if (-1 != scaleList.indexOf(value)) {
+        temp = value;
+      }
+      state.scale = temp;
+    },
+    updateMarkLineTime(state, value) {
+      state.markLineTime = value;
     },
   }
 })

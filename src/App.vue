@@ -25,19 +25,9 @@
              v-model.number="cellHeight">
       <label for="scale">scale</label>
       <select id="scale"
-              v-model="scale">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-        <option>6</option>
-        <option>10</option>
-        <option>12</option>
-        <option>15</option>
-        <option>20</option>
-        <option>30</option>
-        <option>60</option>
+              v-model.number="scale">
+        <option v-for="i in scaleList"
+                :key="i">{{i}}</option>
       </select>
       <span>m</span>
     </header>
@@ -52,6 +42,9 @@ export default {
   name: "App",
   components: { Gantt },
   computed: {
+    scaleList() {
+      return this.$store.state.scaleList;
+    },
     showTimeBlock: {
       get() {
         return this.$store.state.showTimeBlock;

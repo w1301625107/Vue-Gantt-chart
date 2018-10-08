@@ -1,3 +1,4 @@
+import 'es6-promise/auto' //兼容ie11
 import Vue from 'vue'
 import App from './App'
 import store from './store/index.js'

@@ -25,12 +25,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(["cellWidth", "scale", "time"]),
+    ...mapState(["cellWidth", "scale", "markLineTime"]),
     ...mapGetters(["startBlockTime"])
   },
   methods: {
     getBlockMargin() {
-      if (this.time == null) {
+      if (this.markLineTime == null) {
         this.visible = false;
         return;
       } else {
@@ -41,7 +41,7 @@ export default {
           startBlockTime: this.startBlockTime
         };
         let block = {
-          start: this.time
+          start: this.markLineTime
         };
         return this.baseMargin + calcBlockMargin(block, options);
       }

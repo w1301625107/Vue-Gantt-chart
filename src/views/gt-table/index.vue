@@ -19,8 +19,9 @@
               <div v-for="(item,index) in data.Planned"
                    :key="index"
                    class="plan"
+                   @click="blockClick(item)"
                    :style="{width:getBlockwidth(item)+'px',
-                   'margin-left':getBlockMargin(item)+'px'}">{{data.name}}</div>
+                   'margin-left':getBlockMargin(item)+'px'}">{{data.name}}{{item.start.format("HH:mm")}}</div>
             </div>
             <div class="gantt-block-series-forbiddens">
               <div v-for="(item,index) in forbidden"
@@ -44,6 +45,7 @@
               <div v-for="(item,index) in data.Projected"
                    :key="index"
                    class="project"
+                   @click="blockClick(item)"
                    :style="{width:getBlockwidth(item)+'px',
                    'margin-left':getBlockMargin(item)+'px'}"></div>
             </div>
@@ -69,6 +71,7 @@
               <div v-for="(item,index) in data.Actual"
                    :key="index"
                    class="actual"
+                   @click="blockClick(item)"
                    :style="{width:getBlockwidth(item)+'px',
                    'margin-left':getBlockMargin(item)+'px'}"></div>
             </div>
@@ -93,16 +96,12 @@ export default {
   computed: {
     ...mapState([
       "datas",
-      "descHeight",
       "cellWidth",
-      "start",
-      "end",
       "scale",
       "forbidden",
       "showPlan",
       "showActual",
       "showProject",
-      "cellHeight",
       "showTimeBlock"
     ]),
     ...mapGetters(["startBlockTime", "totalBlocks"])
@@ -124,6 +123,9 @@ export default {
         startBlockTime: this.startBlockTime
       };
       return calcBlockMargin(block, options);
+    },
+    blockClick(item) {
+      this.$store.commit("updateMarkLineTime", item.start);
     }
   }
 };

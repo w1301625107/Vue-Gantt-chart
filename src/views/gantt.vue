@@ -25,7 +25,6 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import moment from "moment";
 import Timeline from "@views/time-line/index.vue";
 import LeftBar from "@views/left-bar/index.vue";
 import GtTable from "@views/gt-table/index.vue";

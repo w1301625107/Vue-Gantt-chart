@@ -12,7 +12,9 @@
            'line-height':descHeight/2+'px'}">
           <div class="gantt-cell-width"
                v-for="(hour,index) in getHourList(day)"
-               :key="index"><span>{{hour}}</span></div>
+               :key="index">
+            <span>{{hour}}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -84,16 +86,20 @@ export default {
       let { start, end, scale, cellWidth } = this;
 
       if (date.format("MM/DD") == start.format("MM/DD")) {
-        blocks = ((24 - start.hour()) * 60) / scale;
+        blocks = (24 - start.hour() - 1) * 60 / scale;
+        console.log("ablocks:", blocks);
         blocks += 60 / scale - Math.floor(start.minutes() / scale);
+        console.log("bblocks:", blocks);
       } else if (date.format("MM/DD") == end.format("MM/DD")) {
-        blocks = (end.hour() * 60) / scale;
+        blocks = end.hour() * 60 / scale;
         blocks += Math.ceil(end.minutes() / scale);
       } else {
-        blocks = (24 * 60) / scale;
+        blocks = 24 * 60 / scale;
       }
+      console.log("blocks:", blocks);
       return blocks * cellWidth;
     },
+    //获取时间刻度数组
     getHourList(date) {
       let temp = [];
       let { start, end } = this;
@@ -107,13 +113,15 @@ export default {
       }
       return temp;
     },
+    //根据类型生成时间刻度数组
     countHour(type) {
       let totalblock = [];
       let { start, end, scale, startBlockTime } = this;
       let a, b;
       switch (type) {
-        case 0:
+        case 0: //和start同一天
           a = startBlockTime.clone();
+          //start和end同一天特殊处理
           if (start.format("MM/DD") == end.format("MM/DD")) {
             b = end;
           } else {
@@ -125,7 +133,7 @@ export default {
           }
 
           break;
-        case 1:
+        case 1: //和end 同一天
           a = end
             .clone()
             .hour(0)
@@ -136,7 +144,7 @@ export default {
             .minutes(Math.ceil(end.minutes() / scale) * scale)
             .seconds(0);
           break;
-        case 2:
+        case 2: //start和end中间的天
           a = start
             .clone()
             .hour(0)

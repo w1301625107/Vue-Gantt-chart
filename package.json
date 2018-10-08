@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "vue-app",
   "scripts": {
-    "dev": "webpack-dev-server --progress --color --inline --config build/dev.conf.js -w -p -d",
-    "pack": "webpack --progress --inline --config build/dev.conf.js -w -p -d",
+    "dev": "webpack-dev-server --progress --color --inline --config build/dev.conf.js -w -d",
+    "pack": "webpack --progress --color  --config build/prod.conf.js -p",
     "start": "npm run dev"
   },
   "repository": {
@@ -20,6 +20,7 @@
   "dependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
+    "es6-promise": "^4.2.5",
     "mockjs": "^1.0.1-beta3",
     "moment": "^2.22.2",
     "vue": "^2.5.17",
