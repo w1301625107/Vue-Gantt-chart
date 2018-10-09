@@ -37,8 +37,6 @@ $font-gray:#777;
 
     &-blocks {
       display: flex;
-
-
     }
 
     &-block:nth-child(odd) {
@@ -139,71 +137,54 @@ $font-gray:#777;
     top: 0;
   }
 
+  &-table {
+    background-image: url('../src/assets/block.png');
+    background-repeat: repeat;
+  }
+
   &-block {
-    display: flex;
+
+    &-container {
+      position: relative;
+      height: 100%;
+    }
+
+    &-blocks {
+      position: absolute;
+      height: 100%;
+      top: 0;
+
+      &>div {
+        position: absolute;
+        height: 100%;
+        box-sizing: border-box;
+        border: 1px solid $gray;
+        border-radius: 5px;
+        color: #fff;
+        padding-left: 5px;
+        font-size: 0.8rem;
+        opacity: .8;
+      }
+    }
+
+    &-forbiddens {
+      height: 100%;
+      position: absolute;
+      top: 0;
+      z-index: -2;
+
+      &>div {
+        height: 100%;
+        background-color: #dde2ea;
+        position: absolute;
+      }
+    }
 
     &-name {
-      min-width: 100px;
+      width: 100px;
+      height: 100%;
     }
 
-    &-series {
-      &>div {
-        display: flex;
-      }
-
-      &-container {
-        position: relative;
-        height: 100%;
-      }
-
-      &-timeline {
-        display: flex;
-        position: relative;
-        z-index: -1;
-        height: 100%;
-
-        &>div {
-          height: 100%;
-          outline: 1px solid $gray;
-        }
-      }
-
-      &-blocks {
-        position: absolute;
-        height: 100%;
-        top: 0;
-
-        &>div {
-          position: absolute;
-          height: 100%;
-          box-sizing: border-box;
-          border: 1px solid $gray;
-          border-radius: 5px;
-          color: #fff;
-          padding-left: 5px;
-          font-size: 0.8rem;
-          opacity: .8;
-        }
-      }
-
-      &-forbiddens {
-        height: 100%;
-        position: absolute;
-        top: 0;
-        z-index: -2;
-
-        &>div {
-          height: 100%;
-          background-color: #dde2ea;
-          position: absolute;
-        }
-      }
-
-      &-name {
-        width: 100px;
-        height: 100%;
-      }
-    }
   }
 }
 

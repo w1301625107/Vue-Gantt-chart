@@ -1,7 +1,7 @@
 import moment from "moment";
 import Mock from "mockjs";
 var template = {
-  'id': () => ('Plan ' + Mock.Random.natural(100, 999)),
+  'id': () => 'Plan ' + Mock.Random.natural(1000, 9999),
 
   'name': () => (Mock.Random.word(4, 5)),
   'Planned': () => {

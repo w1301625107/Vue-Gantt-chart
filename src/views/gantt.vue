@@ -8,7 +8,7 @@
       <div @scroll="syncScroll"
            class="gantt-body"
            :style="{width:totalWidth+'px','padding-top':descHeight+'px'}">
-        <gt-table></gt-table>
+        <gt-table :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></gt-table>
         <mark-line color="red"></mark-line>
       </div>
 
@@ -90,10 +90,10 @@ export default {
         let style = document.createElement("style");
         style.setAttribute("id", "gantt-cell-style");
         style.setAttribute("type", "text/css");
-        style.innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}`;
+        style.innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}.gantt-table{    background-size: ${cellWidth}px ${cellHeight}px;`;
         document.head.appendChild(style);
       } else {
-        style.innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}`;
+        style.innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}.gantt-table{    background-size: ${cellWidth}px ${cellHeight}px;`;
       }
     }
   }

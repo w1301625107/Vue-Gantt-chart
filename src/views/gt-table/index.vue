@@ -3,84 +3,60 @@
     <div class="gantt-block"
          v-for="(data,index) in datas"
          :key="index">
-      <div class="gantt-block-name gantt-cell-height">{{data.name}}</div>
-      <div class="gantt-block-series">
-        <div v-if="showPlan"
-             class=" gantt-cell-height">
-          <div class="gantt-block-series-name">Planned</div>
-          <div class="gantt-block-series-container">
-            <div v-if="showTimeBlock"
-                 class="gantt-block-series-timeline">
-              <div class=" gantt-cell-width"
-                   v-for="i in totalBlocks"
-                   :key="i"></div>
-            </div>
-            <div class="gantt-block-series-blocks">
-              <div v-for="(item,index) in data.Planned"
-                   :key="index"
-                   class="plan"
-                   @click="blockClick(item)"
-                   :style="{width:getBlockwidth(item)+'px',
+      <div v-if="showPlan"
+           class=" gantt-cell-height">
+        <div class="gantt-block-container">
+          <div class="gantt-block-blocks">
+            <div v-for="(item,index) in data.Planned"
+                 :key="index"
+                 class="plan"
+                 @click="blockClick(item)"
+                 :style="{width:getBlockwidth(item)+'px',
                    'margin-left':getBlockMargin(item)+'px'}">{{data.name}}{{item.start.format("HH:mm:ss")}}</div>
-            </div>
-            <div class="gantt-block-series-forbiddens">
-              <div v-for="(item,index) in forbidden"
-                   :key="index"
-                   :style="{width:getBlockwidth(item)+'px',
+          </div>
+          <div class="gantt-block-forbiddens">
+            <div v-for="(item,index) in forbidden"
+                 :key="index"
+                 :style="{width:getBlockwidth(item)+'px',
                    'margin-left':getBlockMargin(item)+'px'}"></div>
-            </div>
           </div>
         </div>
-        <div v-if="showProject"
-             class=" gantt-cell-height">
-          <div class="gantt-block-series-name">Projected</div>
-          <div class="gantt-block-series-container">
-            <div v-if="showTimeBlock"
-                 class="gantt-block-series-timeline">
-              <div class=" gantt-cell-width"
-                   v-for="i in totalBlocks"
-                   :key="i"></div>
-            </div>
-            <div class="gantt-block-series-blocks">
-              <div v-for="(item,index) in data.Projected"
-                   :key="index"
-                   class="project"
-                   @click="blockClick(item)"
-                   :style="{width:getBlockwidth(item)+'px',
+      </div>
+      <div v-if="showProject"
+           class=" gantt-cell-height">
+        <div class="gantt-block-container">
+          <div class="gantt-block-blocks">
+            <div v-for="(item,index) in data.Projected"
+                 :key="index"
+                 class="project"
+                 @click="blockClick(item)"
+                 :style="{width:getBlockwidth(item)+'px',
                    'margin-left':getBlockMargin(item)+'px'}"></div>
-            </div>
-            <div class="gantt-block-series-forbiddens">
-              <div v-for="(item,index) in forbidden"
-                   :key="index"
-                   :style="{width:getBlockwidth(item)+'px',
+          </div>
+          <div class="gantt-block-forbiddens">
+            <div v-for="(item,index) in forbidden"
+                 :key="index"
+                 :style="{width:getBlockwidth(item)+'px',
                    'margin-left':getBlockMargin(item)+'px'}"></div>
-            </div>
           </div>
         </div>
-        <div v-if="showActual"
-             class=" gantt-cell-height">
-          <div class="gantt-block-series-name">Actual</div>
-          <div class="gantt-block-series-container">
-            <div v-if="showTimeBlock"
-                 class="gantt-block-series-timeline">
-              <div class=" gantt-cell-width"
-                   v-for="i in totalBlocks"
-                   :key="i"></div>
-            </div>
-            <div class="gantt-block-series-blocks">
-              <div v-for="(item,index) in data.Actual"
-                   :key="index"
-                   class="actual"
-                   @click="blockClick(item)"
-                   :style="{width:getBlockwidth(item)+'px',
+      </div>
+      <div v-if="showActual"
+           class=" gantt-cell-height">
+        <div class="gantt-block-container">
+          <div class="gantt-block-blocks">
+            <div v-for="(item,index) in data.Actual"
+                 :key="index"
+                 class="actual"
+                 @click="blockClick(item)"
+                 :style="{width:getBlockwidth(item)+'px',
                    'margin-left':getBlockMargin(item)+'px'}"></div>
-            </div>
-            <div class="gantt-block-series-forbiddens">
-              <div v-for="(item,index) in forbidden"
-                   :key="index"
-                   :style="{width:getBlockwidth(item)+'px',
+          </div>
+          <div class="gantt-block-forbiddens">
+            <div v-for="(item,index) in forbidden"
+                 :key="index"
+                 :style="{width:getBlockwidth(item)+'px',
                    'margin-left':getBlockMargin(item)+'px'}"></div>
-            </div>
           </div>
         </div>
       </div>
@@ -104,7 +80,7 @@ export default {
       "showProject",
       "showTimeBlock"
     ]),
-    ...mapGetters(["startBlockTime", "totalBlocks"])
+    ...mapGetters(["startBlockTime"])
   },
   methods: {
     //计算时间块长度
