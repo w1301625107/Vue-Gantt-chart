@@ -3,7 +3,7 @@
     <div class="gantt-block"
          v-for="(data,index) in datas"
          :key="index">
-      <div v-if="showPlan"
+      <div v-show="showPlan"
            class=" gantt-cell-height">
         <div class="gantt-block-container">
           <div class="gantt-block-blocks">
@@ -22,7 +22,7 @@
           </div>
         </div>
       </div>
-      <div v-if="showProject"
+      <div v-show="showProject"
            class=" gantt-cell-height">
         <div class="gantt-block-container">
           <div class="gantt-block-blocks">
@@ -41,7 +41,7 @@
           </div>
         </div>
       </div>
-      <div v-if="showActual"
+      <div v-show="showActual"
            class=" gantt-cell-height">
         <div class="gantt-block-container">
           <div class="gantt-block-blocks">
@@ -109,6 +109,7 @@ export default {
     },
     blockClick(item) {
       this.$store.commit("updateMarkLineTime", item.start);
+      this.$store.commit("updateMarkLineTimeEnd", item.end);
     },
     initBind() {
       //可以带一个回调函数参数
@@ -219,7 +220,7 @@ export default {
       let prev; //前一个兄弟节点
       let next; //后一个兄弟节点
       let self; //自身
-      let maxLeftMargin = 0; //-1值代表不限制
+      let maxLeftMargin = 0; //null值代表不限制
       let minLeftMargin = 0;
       jquery(".gantt-block-blocks>div").draggable({
         axis: "x",

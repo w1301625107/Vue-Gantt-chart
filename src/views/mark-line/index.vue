@@ -1,7 +1,10 @@
 <template>
   <div v-show="visible"
        class="gantt-markline"
-       :style="{'background-color':color,'margin-left':getBlockMargin()+'px'}"></div>
+       :style="{'background-color':color,'left':getBlockMargin()+'px'}">
+    <div class="gantt-markline-content"
+         :style="{'background-color':color}">{{markLineTime.format("HH:mm:ss")}}</div>
+  </div>
 </template>
 
 <script>
@@ -10,6 +13,9 @@ import { calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "MarkLine",
   props: {
+    markLineTime: {
+      type: Object
+    },
     baseMargin: {
       type: Number,
       default: 200
@@ -25,7 +31,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["cellWidth", "scale", "markLineTime"]),
+    ...mapState(["cellWidth", "scale"]),
     ...mapGetters(["startBlockTime"])
   },
   methods: {

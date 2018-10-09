@@ -131,10 +131,17 @@ $font-gray:#777;
   }
 
   &-markline {
-    width: 1px;
+    width: 2px;
     height: 100%;
     position: absolute;
-    top: 0;
+    top: 40px;
+
+    &-content {
+      padding: 3px;
+      float: left;
+      color: #fff;
+      font-size: 0.7rem;
+    }
   }
 
   &-table {

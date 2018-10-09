@@ -15,6 +15,9 @@ export default new Vuex.Store({
     markLineTime: moment()
       .add(6, "h")
       .add(5, "s"),
+    markLineTimeEnd: moment()
+      .add(7, "h")
+      .add(5, "s"),
     start: moment(),
     end: moment()
       .add(2, "d")
@@ -146,6 +149,9 @@ export default new Vuex.Store({
     },
     updateMarkLineTime(state, value) {
       state.markLineTime = value;
+    },
+    updateMarkLineTimeEnd(state, value) {
+      state.markLineTimeEnd = value;
     },
   }
 })

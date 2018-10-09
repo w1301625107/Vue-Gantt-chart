@@ -9,7 +9,10 @@
            class="gantt-body"
            :style="{width:totalWidth+'px','padding-top':descHeight+'px'}">
         <gt-table :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></gt-table>
-        <mark-line color="red"></mark-line>
+        <mark-line :markLineTime="markLineTime"
+                   color="rgba(255,0,0,.4)"></mark-line>
+        <mark-line :markLineTime="markLineTimeEnd"
+                   color="#0ca30a"></mark-line>
       </div>
 
     </div>
@@ -42,7 +45,9 @@ export default {
       "cellWidth",
       "scale",
       "cellHeight",
-      "showTimeBlock"
+      "showTimeBlock",
+      "markLineTime",
+      "markLineTimeEnd"
     ]),
     ...mapGetters(["startBlockTime", "totalBlocks", "totalWidth"])
   },
