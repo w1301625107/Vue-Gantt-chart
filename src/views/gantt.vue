@@ -41,7 +41,8 @@ export default {
       "descHeight",
       "cellWidth",
       "scale",
-      "cellHeight"
+      "cellHeight",
+      "showTimeBlock"
     ]),
     ...mapGetters(["startBlockTime", "totalBlocks", "totalWidth"])
   },
@@ -53,6 +54,9 @@ export default {
       this.resetCss();
     },
     cellHeight() {
+      this.resetCss();
+    },
+    showTimeBlock() {
       this.resetCss();
     }
   },
@@ -85,20 +89,22 @@ export default {
     //修改gantt-cell-height和gantt-cell-height样式数值
     resetCss() {
       let style = document.getElementById("gantt-cell-style");
-      let { cellWidth, cellHeight } = this;
+      let { cellWidth, cellHeight, showTimeBlock } = this;
+      let innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}.gantt-table{background-size: ${cellWidth}px ${cellHeight}px}`;
+      console.log(showTimeBlock);
+      if (!showTimeBlock) {
+        innerText += ".gantt-table{background-image: none !important}";
+      }
       if (null == style) {
         let style = document.createElement("style");
         style.setAttribute("id", "gantt-cell-style");
         style.setAttribute("type", "text/css");
-        style.innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}.gantt-table{    background-size: ${cellWidth}px ${cellHeight}px;`;
+        style.innerText = innerText;
         document.head.appendChild(style);
       } else {
-        style.innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}.gantt-table{    background-size: ${cellWidth}px ${cellHeight}px;`;
+        style.innerText = innerText;
       }
     }
   }
 };
 </script>
-
-<style>
-</style>

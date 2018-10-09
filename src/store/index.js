@@ -8,7 +8,7 @@ Vue.use(Vuex)
 Vue.config.devtools = true;
 export default new Vuex.Store({
   state: {
-    showTimeBlock: false,
+    showTimeBlock: true,
     showProject: true,
     showPlan: true,
     showActual: true,
@@ -46,7 +46,7 @@ export default new Vuex.Store({
     scaleList: [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120, 180, 240,
       360, 720, 1440
     ],
-    datas: mockDatas(200)
+    datas: mockDatas(20)
   },
   getters: {
     //计算表格总宽度
