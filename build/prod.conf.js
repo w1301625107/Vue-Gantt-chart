@@ -103,6 +103,9 @@ module.exports = {
   },
 
   plugins: [
+    new webpack.DefinePlugin({
+      __DEV__: true
+    }),
     new HtmlWebpackPlugin({
       template: resolve('index.html'),
       filename: assetsPath('index.html'),

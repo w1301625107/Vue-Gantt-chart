@@ -5,9 +5,12 @@ import store from './store/index.js'
 import '../scss/index.scss'
 
 
+if (!process.env.__DEV__) {
+  Vue.config.debug = false;
+  Vue.config.devtools = false;
+  Vue.config.productionTip = false;
+}
 
-Vue.config.devtools = true;
-//Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({

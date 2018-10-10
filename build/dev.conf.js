@@ -82,15 +82,6 @@ module.exports = {
           loader: "sass-loader" // compiles Sass to CSS
         }]
       },
-      //开发环境不用MiniCssExtractPlugin
-      // {
-      //   test: /\.(scss|css)$/,
-      //   use: [
-      //     MiniCssExtractPlugin.loader,
-      //     'css-loader',
-      //     'sass-loader',
-      //   ],
-      // },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
@@ -118,7 +109,6 @@ module.exports = {
     ]
   },
 
-
   resolve: {
     extensions: ['.wasm', '.mjs', '.js', '.json', '.vue'], //自动解析确定的扩展
     alias: {
@@ -129,6 +119,9 @@ module.exports = {
   },
 
   plugins: [
+    new webpack.DefinePlugin({
+      __DEV__: true
+    }),
     new HtmlWebpackPlugin({
       template: resolve('index.html'),
       filename: assetsPath('index.html'),
