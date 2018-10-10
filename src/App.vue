@@ -19,10 +19,10 @@
              type="checkbox">
       <label for="cellWidth">cellWidth</label>
       <input id="cellWidth"
-             v-model.number="cellWidth">
+             v-model.number.lazy="cellWidth">
       <label for="cellHeight">cellHeight</label>
       <input id="cellHeight"
-             v-model.number="cellHeight">
+             v-model.number.lazy="cellHeight">
       <label for="scale">scale</label>
       <select id="scale"
               v-model.number="scale">
@@ -38,6 +38,15 @@
 
 <script>
 import Gantt from "@views/gantt.vue";
+import {
+  updateShowTimeBlock,
+  updateShowProject,
+  updateShowPlan,
+  updateShowActual,
+  updateCellWidth,
+  updateCellHeight,
+  updateScale
+} from "@src/store/mutation-type.js";
 export default {
   name: "App",
   components: { Gantt },
@@ -50,7 +59,7 @@ export default {
         return this.$store.state.showTimeBlock;
       },
       set(value) {
-        this.$store.commit("updateShowTimeBlock", value);
+        this.$store.commit(updateShowTimeBlock, value);
       }
     },
     showProject: {
@@ -58,7 +67,7 @@ export default {
         return this.$store.state.showProject;
       },
       set(value) {
-        this.$store.commit("updateShowProject", value);
+        this.$store.commit(updateShowProject, value);
       }
     },
     showPlan: {
@@ -66,7 +75,7 @@ export default {
         return this.$store.state.showPlan;
       },
       set(value) {
-        this.$store.commit("updateShowPlan", value);
+        this.$store.commit(updateShowPlan, value);
       }
     },
     showActual: {
@@ -74,7 +83,7 @@ export default {
         return this.$store.state.showActual;
       },
       set(value) {
-        this.$store.commit("updateShowActual", value);
+        this.$store.commit(updateShowActual, value);
       }
     },
     cellWidth: {
@@ -82,7 +91,7 @@ export default {
         return this.$store.state.cellWidth;
       },
       set(value) {
-        this.$store.commit("updateCellWidth", value);
+        this.$store.commit(updateCellWidth, value);
       }
     },
     cellHeight: {
@@ -90,7 +99,7 @@ export default {
         return this.$store.state.cellHeight;
       },
       set(value) {
-        this.$store.commit("updateCellHeight", value);
+        this.$store.commit(updateCellHeight, value);
       }
     },
     scale: {
@@ -98,7 +107,7 @@ export default {
         return this.$store.state.scale;
       },
       set(value) {
-        this.$store.commit("updateScale", value);
+        this.$store.commit(updateScale, value);
       }
     }
   }

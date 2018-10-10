@@ -66,6 +66,10 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import {
+  updateMarkLineTime,
+  updateMarkLineTimeEnd
+} from "@src/store/mutation-type.js";
 import jquery from "jquery";
 import "jquery-ui/ui/widgets/draggable";
 import "jquery-ui/ui/widgets/resizable";
@@ -108,8 +112,8 @@ export default {
       return calcBlockMargin(block, options);
     },
     blockClick(item) {
-      this.$store.commit("updateMarkLineTime", item.start);
-      this.$store.commit("updateMarkLineTimeEnd", item.end);
+      this.$store.commit(updateMarkLineTime, item.start);
+      this.$store.commit(updateMarkLineTimeEnd, item.end);
     },
     initBind() {
       //可以带一个回调函数参数

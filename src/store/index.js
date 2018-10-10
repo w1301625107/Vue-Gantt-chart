@@ -4,9 +4,11 @@ import {
   mockDatas
 } from '../mock/index.js'
 import moment from 'moment'
+import * as mutations from './mutation-type.js'
 Vue.use(Vuex)
 Vue.config.devtools = true;
 export default new Vuex.Store({
+  strict: true,
   state: {
     showTimeBlock: true,
     showProject: true,
@@ -113,31 +115,31 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    updateShowTimeBlock(state, value) {
+    [mutations.updateShowTimeBlock](state, value) {
       state.showTimeBlock = value
     },
-    updateShowProject(state, value) {
+    [mutations.updateShowProject](state, value) {
       state.showProject = value
     },
-    updateShowPlan(state, value) {
+    [mutations.updateShowPlan](state, value) {
       state.showPlan = value
     },
-    updateShowActual(state, value) {
+    [mutations.updateShowActual](state, value) {
       state.showActual = value
     },
-    updateCellWidth(state, value) {
+    [mutations.updateCellWidth](state, value) {
       state.cellWidth = value
     },
-    updateCellHeight(state, value) {
+    [mutations.updateCellHeight](state, value) {
       state.cellHeight = value
     },
-    updateDescHeight(state, value) {
+    [mutations.updateDescHeight](state, value) {
       state.descHeight = value
     },
-    updateDescWidth(state, value) {
+    [mutations.updateDescWidth](state, value) {
       state.descWidth = value
     },
-    updateScale(state, value) {
+    [mutations.updateScale](state, value) {
       let {
         scaleList
       } = state
@@ -147,10 +149,10 @@ export default new Vuex.Store({
       }
       state.scale = temp;
     },
-    updateMarkLineTime(state, value) {
+    [mutations.updateMarkLineTime](state, value) {
       state.markLineTime = value;
     },
-    updateMarkLineTimeEnd(state, value) {
+    [mutations.updateMarkLineTimeEnd](state, value) {
       state.markLineTimeEnd = value;
     },
   }
