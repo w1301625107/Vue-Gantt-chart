@@ -90,6 +90,11 @@ export default {
     ]),
     ...mapGetters(["startBlockTime"])
   },
+  watch: {
+    datas() {
+      this.initBind();
+    }
+  },
   mounted() {
     this.initBind();
   },

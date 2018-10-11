@@ -9,10 +9,15 @@
            class="gantt-body"
            :style="{width:totalWidth+'px','padding-top':descHeight+'px'}">
         <gt-table :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></gt-table>
-        <mark-line :markLineTime="markLineTime"
-                   color="rgba(255,0,0,.4)"></mark-line>
-        <mark-line :markLineTime="markLineTimeEnd"
-                   color="#0ca30a"></mark-line>
+        <div class="gantt-mark-area">
+          <mark-line :markLineTime="markLineTime"
+                     color="rgba(255,0,0,.4)"></mark-line>
+          <mark-line :markLineTime="markLineTimeEnd"
+                     color="#0ca30a"></mark-line>
+        </div>
+        <div class="gantt-scroll-y">
+          <div></div>
+        </div>
       </div>
 
     </div>
@@ -96,7 +101,6 @@ export default {
       let style = document.getElementById("gantt-cell-style");
       let { cellWidth, cellHeight, showTimeBlock } = this;
       let innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}.gantt-table{background-size: ${cellWidth}px ${cellHeight}px}`;
-      console.log(showTimeBlock);
       if (!showTimeBlock) {
         innerText += ".gantt-table{background-image: none !important}";
       }

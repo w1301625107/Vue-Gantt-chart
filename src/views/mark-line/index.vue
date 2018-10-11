@@ -16,10 +16,6 @@ export default {
     markLineTime: {
       type: Object
     },
-    baseMargin: {
-      type: Number,
-      default: 200
-    },
     color: {
       type: String,
       default: "green"
@@ -31,7 +27,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["cellWidth", "scale"]),
+    ...mapState(["cellWidth", "scale", "descWidth"]),
     ...mapGetters(["startBlockTime"])
   },
   methods: {
@@ -49,7 +45,7 @@ export default {
         let block = {
           start: this.markLineTime
         };
-        return this.baseMargin + calcBlockMargin(block, options);
+        return this.descWidth + calcBlockMargin(block, options);
       }
     }
   }

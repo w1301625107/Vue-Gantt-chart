@@ -194,6 +194,20 @@ $font-gray:#777;
     }
 
   }
+
+  &-scroll-y {
+    position: absolute;
+    top: 40px;
+    height: 100%;
+    width: 17px;
+    right: 0;
+    background-color: red;
+    overflow-y: scroll;
+
+    &>div {
+      height: 1200px;
+    }
+  }
 }
 
 .project {

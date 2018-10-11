@@ -10,6 +10,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 //const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+let BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 function assetsPath(_path) {
   return path.join(__dirname, '../dist/', _path)
@@ -141,6 +142,7 @@ module.exports = {
       /moment[\\\/]locale$/,
       /^\.\/(zh-cn)$/
     ),
+    //new BundleAnalyzerPlugin()
 
   ],
   performance: {

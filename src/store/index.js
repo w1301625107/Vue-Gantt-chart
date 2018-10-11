@@ -8,7 +8,7 @@ import * as mutations from './mutation-type.js'
 Vue.use(Vuex)
 Vue.config.devtools = true;
 export default new Vuex.Store({
-  strict: true,
+  strict: process.env.__DEV__,
   state: {
     showTimeBlock: true,
     showProject: true,
