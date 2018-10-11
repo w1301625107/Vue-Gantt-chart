@@ -1,32 +1,39 @@
 <template>
-  <div class="gantt">
+  <div class="gantt"
+       @wheel="wheelHandle">
     <div class="gantt-chart">
-      <div class="gantt-header"
-           :style="{width:totalWidth+'px'}">
-        <timeline :style="{'margin-left':descWidth+'px'}"></timeline>
+      <div class="gantt-header">
+        <timeline :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></timeline>
       </div>
-      <div @scroll="syncScroll"
-           class="gantt-body"
-           :style="{width:totalWidth+'px','padding-top':descHeight+'px'}">
-        <gt-table :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></gt-table>
-        <div class="gantt-mark-area">
-          <mark-line :markLineTime="markLineTime"
-                     color="rgba(255,0,0,.4)"></mark-line>
-          <mark-line :markLineTime="markLineTimeEnd"
-                     color="#0ca30a"></mark-line>
+      <div class="gantt-body"
+           :style="{height:'calc(100% - '+descHeight+'px'+')'}">
+        <div class="gantt-table">
+          <blocks :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></blocks>
+          <div class="gantt-mark-area">
+            <mark-line :markLineTime="markLineTime"
+                       color="rgba(255,0,0,.4)"></mark-line>
+            <mark-line :markLineTime="markLineTimeEnd"
+                       color="#0ca30a"></mark-line>
+          </div>
         </div>
-        <div class="gantt-scroll-y">
-          <div></div>
+        <div class="gantt-scroll-y"
+             :style="{height:'calc(100% - 17px - '+descHeight+'px'+')'}"
+             @scroll="syncScrollY">
+          <div :style="{height:totalHeight+'px'}"></div>
+        </div>
+        <div class="gantt-scroll-x"
+             @scroll="syncScrollX">
+          <!-- 这里减去边框的17px -->
+          <div :style="{width:totalWidth-17+'px'}"></div>
         </div>
       </div>
-
     </div>
     <div class="gantt-fixleft"
-         :style="{width:descWidth+'px'}">
+         :style="{width:descWidth+'px',height:'calc(100% - 17px)'}">
       <div class="gantt-lefthearder"
            :style="{'line-height':descHeight+'px',height:descHeight+'px'}">
         Hello GanttChart</div>
-      <LeftBar></LeftBar>
+      <LeftBar :style="{height:'calc(100% - '+descHeight+'px'+')'}"></LeftBar>
     </div>
   </div>
 </template>
@@ -35,13 +42,23 @@
 import { mapState, mapGetters } from "vuex";
 import Timeline from "@views/time-line/index.vue";
 import LeftBar from "@views/left-bar/index.vue";
-import GtTable from "@views/gt-table/index.vue";
+import Blocks from "@views/blocks/index.vue";
 import MarkLine from "@views/mark-line/index.vue";
 export default {
   name: "Gantt",
-  components: { Timeline, LeftBar, GtTable, MarkLine },
+  components: { Timeline, LeftBar, Blocks, MarkLine },
   data() {
-    return {};
+    return {
+      //缓存节点
+      selector: {
+        gantt_leftbar: {},
+        gantt_table: {},
+        gantt_scroll_y: {},
+        gantt_body: {},
+        gantt_header: {},
+        gantt_scroll_x: {}
+      }
+    };
   },
   computed: {
     ...mapState([
@@ -54,12 +71,14 @@ export default {
       "markLineTime",
       "markLineTimeEnd"
     ]),
-    ...mapGetters(["startBlockTime", "totalBlocks", "totalWidth"])
+    ...mapGetters([
+      "startBlockTime",
+      "totalBlocks",
+      "totalWidth",
+      "totalHeight"
+    ])
   },
   watch: {
-    descHeight() {
-      this.resize();
-    },
     cellWidth() {
       this.resetCss();
     },
@@ -72,37 +91,68 @@ export default {
   },
   created() {},
   mounted() {
-    this.resize();
-    window.onresize = () => this.resize();
     this.resetCss();
+    this.getSelector();
+    console.log(this.selector);
+  },
+  updated() {
+    this.getSelector();
   },
   methods: {
-    //同步fixleft和block的滚动
-    syncScroll(event) {
+    //缓存节点
+    getSelector() {
+      this.selector.gantt_leftbar = document.querySelector(".gantt-leftbar");
+      this.selector.gantt_table = document.querySelector(".gantt-table");
+      this.selector.gantt_scroll_y = document.querySelector(".gantt-scroll-y");
+      this.selector.gantt_body = document.querySelector(".gantt-body");
+      this.selector.gantt_header = document.querySelector(".gantt-header");
+      this.selector.gantt_scroll_x = document.querySelector(".gantt-scroll-x");
+    },
+    wheelHandle(event) {
+      let { deltaX, deltaY, deltaZ } = event;
+      let {
+        gantt_leftbar,
+        gantt_table,
+        gantt_scroll_y,
+        gantt_body,
+        gantt_header,
+        gantt_scroll_x
+      } = this.selector;
       this.$nextTick(() => {
-        document.querySelector(".gantt-leftbar").scrollTop =
-          event.target.scrollTop;
+        if (deltaY != 0) {
+          gantt_leftbar.scrollTop += deltaY;
+          gantt_table.scrollTop += deltaY;
+          gantt_scroll_y.scrollTop += deltaY;
+        }
+        if (deltaX != 0) {
+          gantt_body.scrollLeft += deltaX;
+          gantt_header.scrollLeft += deltaX;
+          gantt_scroll_x.scrollLeft += deltaX;
+        }
       });
     },
-    //修正滚动区域的高度
-    resize() {
-      let scrollSize = 16;
-      let bodyHeight = document.querySelector(".gantt").clientHeight;
-      let headerHeight = document.querySelector(".gantt-header").clientHeight;
-      document.querySelector(".gantt-body").style.height =
-        bodyHeight - headerHeight - scrollSize + "px";
-      document.querySelector(".gantt-fixleft").style.height =
-        bodyHeight - scrollSize + "px";
-      document.querySelector(".gantt-leftbar").style.height =
-        bodyHeight - headerHeight - scrollSize + "px";
+    //同步fixleft和block的滚动
+    syncScrollY(event) {
+      let { gantt_leftbar, gantt_table } = this.selector;
+      this.$nextTick(() => {
+        gantt_leftbar.scrollTop = event.target.scrollTop;
+        gantt_table.scrollTop = event.target.scrollTop;
+      });
+    },
+    syncScrollX(event) {
+      let { gantt_table, gantt_header } = this.selector;
+      this.$nextTick(() => {
+        gantt_table.scrollLeft = event.target.scrollLeft;
+        gantt_header.scrollLeft = event.target.scrollLeft;
+      });
     },
     //修改gantt-cell-height和gantt-cell-height样式数值
     resetCss() {
       let style = document.getElementById("gantt-cell-style");
       let { cellWidth, cellHeight, showTimeBlock } = this;
-      let innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}.gantt-table{background-size: ${cellWidth}px ${cellHeight}px}`;
+      let innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}.gantt-block{background-size: ${cellWidth}px ${cellHeight}px}`;
       if (!showTimeBlock) {
-        innerText += ".gantt-table{background-image: none !important}";
+        innerText += ".gantt-block{background-image: none !important}";
       }
       if (null == style) {
         let style = document.createElement("style");

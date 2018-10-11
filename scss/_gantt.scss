@@ -6,12 +6,13 @@ $font-gray:#777;
   width: 100%;
   outline: 1px solid $gray;
   position: relative;
+  overflow: hidden;
 
   &-chart {
     height: 100%;
     width: 100%;
-    overflow-x: scroll;
-    overflow-y: hidden;
+    //overflow-x: scroll;
+    //overflow-y: hidden;
     position: relative;
     z-index: 100;
   }
@@ -19,16 +20,18 @@ $font-gray:#777;
   &-header {
     background-color: #fff;
     outline: 1px solid $gray;
-    position: absolute;
-    z-index: 1000;
-    top: 0;
+    overflow: hidden;
+    //position: absolute;
+    //z-index: 1000;
+    //top: 0;
   }
 
   &-body {
-    overflow-x: hidden;
-    overflow-y: scroll;
-    height: 100%;
-    padding-right: 16px;
+    //overflow: hidden;
+    //overflow-x: hidden;
+    //overflow-y: scroll;
+    //height: 100%;
+    //padding-right: 16px;
   }
 
   &-timeline {
@@ -131,11 +134,17 @@ $font-gray:#777;
     }
   }
 
+  &-mark-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+  }
+
   &-markline {
     width: 2px;
     height: 100%;
     position: absolute;
-    top: 40px;
 
     &-content {
       padding: 3px;
@@ -146,11 +155,19 @@ $font-gray:#777;
   }
 
   &-table {
-    background-image: url('../src/assets/block.png');
-    background-repeat: repeat;
+    width: calc(100% - 17px);
+    height: calc(100% - 17px);
+    overflow: hidden;
+    position: relative;
+  }
+
+  &-blocks {
+    //overflow: hidden;
   }
 
   &-block {
+    background-image: url('../src/assets/block.png');
+    background-repeat: repeat;
 
     &-container {
       position: relative;
@@ -198,14 +215,26 @@ $font-gray:#777;
   &-scroll-y {
     position: absolute;
     top: 40px;
-    height: 100%;
+    height: calc(100% - 40px - 17px);
     width: 17px;
     right: 0;
-    background-color: red;
     overflow-y: scroll;
 
     &>div {
-      height: 1200px;
+      width: 17px;
+    }
+  }
+
+  &-scroll-x {
+    position: absolute;
+    bottom: 0;
+    width: calc(100% - 17px);
+    height: 17px;
+    left: 0;
+    overflow-x: scroll;
+
+    &>div {
+      height: 17px;
     }
   }
 }

@@ -65,6 +65,21 @@ export default new Vuex.Store({
       } = getters;
       return descWidth + cellWidth * totalBlocks;
     },
+    //计算表格总高度
+    totalHeight: state => {
+      let {
+        datas,
+        showActual,
+        showPlan,
+        showProject,
+        cellHeight
+      } = state;
+      let rate = 0;
+      if (showActual) rate += 1;
+      if (showPlan) rate += 1;
+      if (showProject) rate += 1;
+      return datas.length * rate * cellHeight
+    },
     //计算时间块的数量
     totalBlocks: state => {
       let {

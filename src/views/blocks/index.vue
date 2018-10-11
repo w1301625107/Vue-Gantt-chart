@@ -1,5 +1,5 @@
 <template>
-  <div class="gantt-table">
+  <div class="gantt-blocks">
     <div class="gantt-block"
          v-for="(data,index) in datas"
          :key="index">
@@ -77,7 +77,7 @@ import "jquery-ui/themes/base/resizable.css";
 import "jquery-ui/themes/base/draggable.css";
 import { calcBlockwidth, calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
-  name: "GtTable",
+  name: "Blocks",
   computed: {
     ...mapState([
       "datas",
