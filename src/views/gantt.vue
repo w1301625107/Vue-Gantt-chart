@@ -140,6 +140,7 @@ export default {
       this.$nextTick(() => {
         gantt_leftbar.scrollTop = event.target.scrollTop;
         gantt_table.scrollTop = event.target.scrollTop;
+        this.scrollTop = event.target.scrollTop;
       });
     },
     syncScrollX(event) {

@@ -1,7 +1,6 @@
 <template>
   <div class="gantt-blocks"
        :style="{height:totalHeight+'px'}">
-
     <div class="gantt-block"
          v-for="(data,index) in showDatas"
          :key="index"
@@ -82,7 +81,11 @@ import { calcBlockwidth, calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "Blocks",
   props: {
-    scrollTop: Number
+    scrollTop: Number,
+    containerHeight: {
+      type: Number,
+      default: 700
+    }
   },
   data() {
     return {
@@ -114,33 +117,31 @@ export default {
     }
   },
   watch: {
-    datas() {
+    showDatas() {
       this.initBind();
     },
     currentIndex(val) {
       this.spliceData();
     }
   },
+  created() {
+    this.spliceData();
+  },
   mounted() {
     this.initBind();
   },
   methods: {
     spliceData() {
-      console.log("??");
-      let containerHeight = 702;
-      let nums =
-        this.currentIndex + Math.ceil(containerHeight / this.blockHeight) * 2;
-      console.log(
-        this.currentIndex,
-        nums,
-        Math.ceil(containerHeight / this.blockHeight)
-      );
-      this.showDatas = this.datas.slice(this.currentIndex, nums);
+      let { containerHeight, currentIndex, blockHeight } = this;
+      let nums = currentIndex + Math.ceil(containerHeight / blockHeight);
+      let start = currentIndex - 5 >= 0 ? currentIndex - 5 : 0;
+      this.showDatas = this.datas.slice(start, nums + 5);
     },
     //计算top距离
     calcTop(index) {
-      let { blockHeight } = this;
-      return (index + this.currentIndex) * blockHeight;
+      let { currentIndex, blockHeight } = this;
+      let start = currentIndex - 5 >= 0 ? currentIndex - 5 : 0;
+      return (index + start) * blockHeight;
     },
     //计算时间块长度
     getBlockwidth(block) {
