@@ -8,7 +8,8 @@
       <div class="gantt-body"
            :style="{height:'calc(100% - '+descHeight+'px'+')'}">
         <div class="gantt-table">
-          <blocks :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></blocks>
+          <blocks :scrollTop="scrollTop"
+                  :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></blocks>
           <div class="gantt-mark-area">
             <mark-line :markLineTime="markLineTime"
                        color="rgba(255,0,0,.4)"></mark-line>
@@ -57,7 +58,8 @@ export default {
         gantt_body: {},
         gantt_header: {},
         gantt_scroll_x: {}
-      }
+      },
+      scrollTop: 0
     };
   },
   computed: {
@@ -123,6 +125,7 @@ export default {
           gantt_leftbar.scrollTop += deltaY;
           gantt_table.scrollTop += deltaY;
           gantt_scroll_y.scrollTop += deltaY;
+          this.scrollTop = gantt_table.scrollTop;
         }
         if (deltaX != 0) {
           gantt_body.scrollLeft += deltaX;
@@ -149,8 +152,8 @@ export default {
     //修改gantt-cell-height和gantt-cell-height样式数值
     resetCss() {
       let style = document.getElementById("gantt-cell-style");
-      let { cellWidth, cellHeight, showTimeBlock } = this;
-      let innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}.gantt-block{background-size: ${cellWidth}px ${cellHeight}px}`;
+      let { cellWidth, cellHeight, showTimeBlock, totalWidth } = this;
+      let innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}.gantt-block{background-size: ${cellWidth}px ${cellHeight}px;width:${totalWidth}px}`;
       if (!showTimeBlock) {
         innerText += ".gantt-block{background-image: none !important}";
       }

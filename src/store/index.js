@@ -51,7 +51,7 @@ export default new Vuex.Store({
     scaleList: [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120, 180, 240,
       360, 720, 1440
     ],
-    datas: mockDatas(20)
+    datas: mockDatas(2000)
   },
   getters: {
     //计算表格总宽度

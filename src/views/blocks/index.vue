@@ -1,8 +1,11 @@
 <template>
-  <div class="gantt-blocks">
+  <div class="gantt-blocks"
+       :style="{height:totalHeight+'px'}">
+
     <div class="gantt-block"
-         v-for="(data,index) in datas"
-         :key="index">
+         v-for="(data,index) in showDatas"
+         :key="index"
+         :style="{top:calcTop(index)+'px'}">
       <div v-show="showPlan"
            class=" gantt-cell-height">
         <div class="gantt-block-container">
@@ -78,27 +81,67 @@ import "jquery-ui/themes/base/draggable.css";
 import { calcBlockwidth, calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "Blocks",
+  props: {
+    scrollTop: Number
+  },
+  data() {
+    return {
+      showDatas: []
+    };
+  },
   computed: {
     ...mapState([
       "datas",
       "cellWidth",
+      "cellHeight",
       "scale",
       "forbidden",
       "showPlan",
       "showActual",
       "showProject"
     ]),
-    ...mapGetters(["startBlockTime"])
+    ...mapGetters(["startBlockTime", "totalHeight"]),
+    blockHeight() {
+      let { showActual, showPlan, showProject, cellHeight } = this;
+      let rate = 0;
+      if (showActual) rate += 1;
+      if (showPlan) rate += 1;
+      if (showProject) rate += 1;
+      return rate * cellHeight;
+    },
+    currentIndex() {
+      return Math.ceil(this.scrollTop / this.blockHeight);
+    }
   },
   watch: {
     datas() {
       this.initBind();
+    },
+    currentIndex(val) {
+      this.spliceData();
     }
   },
   mounted() {
     this.initBind();
   },
   methods: {
+    spliceData() {
+      console.log("??");
+      let containerHeight = 702;
+      let nums =
+        this.currentIndex + Math.ceil(containerHeight / this.blockHeight) * 2;
+      console.log(
+        this.currentIndex,
+        nums,
+        Math.ceil(containerHeight / this.blockHeight)
+      );
+      this.showDatas = this.datas.slice(this.currentIndex, nums);
+    },
+    //计算top距离
+    calcTop(index) {
+      let { blockHeight } = this;
+      return (index + this.currentIndex) * blockHeight;
+    },
     //计算时间块长度
     getBlockwidth(block) {
       let options = {

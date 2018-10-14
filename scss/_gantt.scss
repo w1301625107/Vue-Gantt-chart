@@ -168,6 +168,7 @@ $font-gray:#777;
   &-block {
     background-image: url('../src/assets/block.png');
     background-repeat: repeat;
+    position: absolute;
 
     &-container {
       position: relative;
