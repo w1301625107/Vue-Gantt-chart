@@ -1,4 +1,4 @@
-export default function debounce(fn, interval, immediate) {
+export default function debounce(fn, interval = 500, immediate = false) {
   //fn为要执行的函数
   //interval为等待的时间
   //immediate判断是否立即执行

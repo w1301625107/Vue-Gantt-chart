@@ -13,6 +13,7 @@
                  :key="index"
                  class="plan"
                  @click="blockClick(item)"
+                 @dblclick="dbBlockClick(item)"
                  :style="{width:getBlockwidth(item)+'px',
                    'left':getBlockMargin(item)+'px'}">{{data.name}}{{item.start.format("HH:mm:ss")}}</div>
           </div>
@@ -68,6 +69,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import debounce from "@src/utils/debounce.js";
 import {
   updateMarkLineTime,
   updateMarkLineTimeEnd
@@ -81,15 +83,19 @@ import { calcBlockwidth, calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "Blocks",
   props: {
-    scrollTop: Number,
-    containerHeight: {
-      type: Number,
-      default: 700
-    }
+    scrollTop: Number
   },
   data() {
     return {
-      showDatas: []
+      showDatas: [],
+      containerHeight: 700,
+      initBind_: "",
+      initHeight_: "",
+      //两者避免过多的调用sliceData，造成过多的dom操作
+      //上一次加载的节点
+      oldCurrentIndex: 0,
+      //预加载的数量
+      preload: 8
     };
   },
   computed: {
@@ -118,29 +124,46 @@ export default {
   },
   watch: {
     showDatas() {
-      this.initBind();
+      this.initBind_();
     },
     currentIndex(val) {
-      this.spliceData();
+      let { oldCurrentIndex, preload } = this;
+      if (val < oldCurrentIndex - preload || val > oldCurrentIndex + preload) {
+        this.oldCurrentIndex = val;
+        this.spliceData();
+      }
     }
   },
   created() {
     this.spliceData();
+    //去抖
+    this.initBind_ = debounce(this.initBind);
+    this.initHeight_ = debounce(this.getContainerHeight);
   },
   mounted() {
-    this.initBind();
+    this.initBind_();
+    window.onresize = () => {
+      this.initHeight_();
+    };
   },
   methods: {
+    //获取父级容器的高度
+    getContainerHeight() {
+      this.containerHeight = document.querySelector(
+        ".gantt-table"
+      ).parentNode.clientHeight;
+    },
     spliceData() {
-      let { containerHeight, currentIndex, blockHeight } = this;
+      let { containerHeight, currentIndex, blockHeight, preload } = this;
       let nums = currentIndex + Math.ceil(containerHeight / blockHeight);
-      let start = currentIndex - 5 >= 0 ? currentIndex - 5 : 0;
-      this.showDatas = this.datas.slice(start, nums + 5);
+      let start = currentIndex - preload >= 0 ? currentIndex - preload : 0;
+      this.showDatas = this.datas.slice(start, nums + preload);
     },
     //计算top距离
     calcTop(index) {
-      let { currentIndex, blockHeight } = this;
-      let start = currentIndex - 5 >= 0 ? currentIndex - 5 : 0;
+      let { oldCurrentIndex, blockHeight, preload } = this;
+      let start =
+        oldCurrentIndex - preload >= 0 ? oldCurrentIndex - preload : 0;
       return (index + start) * blockHeight;
     },
     //计算时间块长度
@@ -163,6 +186,9 @@ export default {
     blockClick(item) {
       this.$store.commit(updateMarkLineTime, item.start);
       this.$store.commit(updateMarkLineTimeEnd, item.end);
+    },
+    dbBlockClick(item) {
+      alert(item);
     },
     initBind() {
       //可以带一个回调函数参数
