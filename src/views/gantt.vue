@@ -95,7 +95,6 @@ export default {
   mounted() {
     this.resetCss();
     this.getSelector();
-    console.log(this.selector);
   },
   updated() {
     this.getSelector();

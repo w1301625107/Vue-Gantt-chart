@@ -1,10 +1,12 @@
 <template>
   <div class="gantt-blocks"
        :style="{height:totalHeight+'px'}">
+    <div class="gantt-block gantt-block-top-space"
+         :style="{height:calTopSpace()+'px'}">
+    </div>
     <div class="gantt-block"
          v-for="(data,index) in showDatas"
-         :key="index"
-         :style="{top:calcTop(index)+'px'}">
+         :key="index">
       <div v-show="showPlan"
            class=" gantt-cell-height">
         <div class="gantt-block-container">
@@ -89,6 +91,7 @@ export default {
     return {
       showDatas: [],
       containerHeight: 700,
+      //去抖
       initBind_: "",
       initHeight_: "",
       //两者避免过多的调用sliceData，造成过多的dom操作
@@ -153,18 +156,19 @@ export default {
         ".gantt-table"
       ).parentNode.clientHeight;
     },
+    //分割出dom中显示的数据
     spliceData() {
       let { containerHeight, currentIndex, blockHeight, preload } = this;
       let nums = currentIndex + Math.ceil(containerHeight / blockHeight);
       let start = currentIndex - preload >= 0 ? currentIndex - preload : 0;
       this.showDatas = this.datas.slice(start, nums + preload);
     },
-    //计算top距离
-    calcTop(index) {
+    //第一个撑开前置高度的容器块高度
+    calTopSpace() {
       let { oldCurrentIndex, blockHeight, preload } = this;
       let start =
         oldCurrentIndex - preload >= 0 ? oldCurrentIndex - preload : 0;
-      return (index + start) * blockHeight;
+      return start * blockHeight;
     },
     //计算时间块长度
     getBlockwidth(block) {
