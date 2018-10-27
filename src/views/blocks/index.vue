@@ -97,7 +97,7 @@ export default {
       //两者避免过多的调用sliceData，造成过多的dom操作
       //上一次加载的节点
       oldCurrentIndex: 0,
-      //预加载的数量
+      //预加载的数量,是前后都为8个
       preload: 8
     };
   },

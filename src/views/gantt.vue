@@ -7,15 +7,16 @@
       </div>
       <div class="gantt-body"
            :style="{height:'calc(100% - '+descHeight+'px'+')'}">
-        <div class="gantt-table">
-          <blocks :scrollTop="scrollTop"
-                  :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></blocks>
-          <div class="gantt-mark-area">
+        <div class="gantt-mark-area">
             <mark-line :markLineTime="markLineTime"
                        color="rgba(255,0,0,.4)"></mark-line>
             <mark-line :markLineTime="markLineTimeEnd"
                        color="#0ca30a"></mark-line>
-          </div>
+        </div>
+        <div class="gantt-table">
+          <blocks :scrollTop="scrollTop"
+                  :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></blocks>
+          
         </div>
         <div class="gantt-scroll-y"
              :style="{height:'calc(100% - 17px - '+descHeight+'px'+')'}"
@@ -57,7 +58,8 @@ export default {
         gantt_scroll_y: {},
         gantt_body: {},
         gantt_header: {},
-        gantt_scroll_x: {}
+        gantt_scroll_x: {},
+        gantt_markArea:{},
       },
       scrollTop: 0
     };
@@ -108,6 +110,7 @@ export default {
       this.selector.gantt_body = document.querySelector(".gantt-body");
       this.selector.gantt_header = document.querySelector(".gantt-header");
       this.selector.gantt_scroll_x = document.querySelector(".gantt-scroll-x");
+      this.selector.gantt_markArea= document.querySelector(".gantt-mark-area");
     },
     wheelHandle(event) {
       let { deltaX, deltaY, deltaZ } = event;
@@ -117,7 +120,8 @@ export default {
         gantt_scroll_y,
         gantt_body,
         gantt_header,
-        gantt_scroll_x
+        gantt_scroll_x,
+        gantt_markArea
       } = this.selector;
       this.$nextTick(() => {
         if (deltaY != 0) {
@@ -130,6 +134,7 @@ export default {
           gantt_body.scrollLeft += deltaX;
           gantt_header.scrollLeft += deltaX;
           gantt_scroll_x.scrollLeft += deltaX;
+          gantt_markArea.style.left= gantt_markArea.style.left+ deltaX;
         }
       });
     },
@@ -143,10 +148,11 @@ export default {
       });
     },
     syncScrollX(event) {
-      let { gantt_table, gantt_header } = this.selector;
+      let { gantt_table, gantt_header ,gantt_markArea} = this.selector;
       this.$nextTick(() => {
         gantt_table.scrollLeft = event.target.scrollLeft;
         gantt_header.scrollLeft = event.target.scrollLeft;
+        gantt_markArea.style.left= '-'+ event.target.scrollLeft+'px';
       });
     },
     //修改gantt-cell-height和gantt-cell-height样式数值

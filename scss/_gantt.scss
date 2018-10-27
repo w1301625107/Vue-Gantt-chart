@@ -1,4 +1,5 @@
 $gray: #f0f0f0;
+
 $font-gray:#777;
 
 .gantt {
@@ -27,6 +28,7 @@ $font-gray:#777;
   }
 
   &-body {
+    position: relative;
     //overflow: hidden;
     //overflow-x: hidden;
     //overflow-y: scroll;
@@ -142,9 +144,10 @@ $font-gray:#777;
   }
 
   &-markline {
-    width: 2px;
-    height: 100%;
     position: absolute;
+    z-index: 100;
+    width: 2px;
+    height: 100vh;
 
     &-content {
       padding: 3px;
@@ -213,12 +216,13 @@ $font-gray:#777;
   }
 
   &-scroll-y {
+    overflow-y: scroll;
     position: absolute;
+    z-index: 1000;
     top: 40px;
+    right: 0;
     height: calc(100% - 40px - 17px);
     width: 17px;
-    right: 0;
-    overflow-y: scroll;
 
     &>div {
       width: 17px;
@@ -226,12 +230,13 @@ $font-gray:#777;
   }
 
   &-scroll-x {
+    overflow-x: scroll;
     position: absolute;
+    z-index: 1000;
+    left: 0;
     bottom: 0;
     width: calc(100% - 17px);
     height: 17px;
-    left: 0;
-    overflow-x: scroll;
 
     &>div {
       height: 17px;
