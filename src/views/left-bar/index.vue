@@ -19,7 +19,7 @@ import { mapState } from "vuex";
 export default {
   name: "LeftBar",
   computed: {
-    ...mapState(["datas", "descWidth", "showPlan", "showActual", "showProject"])
+    ...mapState(["datas", "descWidth", ])
   }
 };
 </script>

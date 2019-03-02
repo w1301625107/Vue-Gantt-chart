@@ -16,7 +16,6 @@
         <div class="gantt-table">
           <blocks :scrollTop="scrollTop"
                   :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></blocks>
-          
         </div>
         <div class="gantt-scroll-y"
              :style="{height:'calc(100% - 17px - '+descHeight+'px'+')'}"
@@ -160,9 +159,6 @@ export default {
       let style = document.getElementById("gantt-cell-style");
       let { cellWidth, cellHeight, showTimeBlock, totalWidth } = this;
       let innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}.gantt-block{background-size: ${cellWidth}px ${cellHeight}px;width:${totalWidth}px}`;
-      if (!showTimeBlock) {
-        innerText += ".gantt-block{background-image: none !important}";
-      }
       if (null == style) {
         let style = document.createElement("style");
         style.setAttribute("id", "gantt-cell-style");
