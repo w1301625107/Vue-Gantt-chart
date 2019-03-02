@@ -30,23 +30,7 @@ export default new Vuex.Store({
     descHeight: 40,
     descWidth: 200,
     scale: 60,
-    forbidden: [{
-        start: moment()
-          .add(5, "h")
-          .add(10, "m"),
-        end: moment()
-          .add(9, "h")
-          .add(29, "m")
-      },
-      {
-        start: moment()
-          .add(11, "h")
-          .add(10, "m"),
-        end: moment()
-          .add(16, "h")
-          .add(29, "m")
-      }
-    ],
+    
     //可用缩放尺度
     scaleList: [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120, 180, 240,
       360, 720, 1440

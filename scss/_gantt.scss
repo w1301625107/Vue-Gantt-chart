@@ -75,16 +75,7 @@ $font-gray:#777;
     }
 
 
-    &-forbiddens {
-      position: absolute;
-      z-index: -1;
-
-      &>div {
-        height: 100%;
-        background-color: #dde2ea;
-        position: absolute;
-      }
-    }
+   
 
   }
 
@@ -195,18 +186,7 @@ $font-gray:#777;
       }
     }
 
-    &-forbiddens {
-      height: 100%;
-      position: absolute;
-      top: 0;
-      z-index: -2;
-
-      &>div {
-        height: 100%;
-        background-color: #dde2ea;
-        position: absolute;
-      }
-    }
+    
 
     &-name {
       width: 100px;

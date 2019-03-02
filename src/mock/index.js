@@ -20,35 +20,7 @@ var template = {
     }
     return temp;
   },
-  'Projected': () => {
-    let temp = [];
-    let i = 0;
-    let j = Mock.Random.natural(1, 1);
-
-    while (i < j) {
-      temp.push({
-        'id': Mock.Random.natural(1000, 9999),
-        'name': Mock.Random.word(2, 3),
-        'start': moment().add(Mock.Random.natural(1, 7), 'h'),
-        'end': moment().add(Mock.Random.natural(8, 15), 'h')
-      })
-      i++;
-    }
-    return temp;
-  },
-
-  'Actual': () => {
-    let temp = [];
-    if (Mock.Random.boolean()) {
-      temp.push({
-        'id': Mock.Random.natural(1000, 9999),
-        'name': Mock.Random.word(2, 3),
-        'start': moment().add(Mock.Random.natural(1, 7), 'h'),
-        'end': moment().add(Mock.Random.natural(8, 15), 'h')
-      });
-    }
-    return temp;
-  }
+  
 }
 // let datas = [];
 // for (let i = 0,

@@ -19,50 +19,6 @@
                  :style="{width:getBlockwidth(item)+'px',
                    'left':getBlockMargin(item)+'px'}">{{data.name}}{{item.start.format("HH:mm:ss")}}</div>
           </div>
-          <div class="gantt-block-forbiddens">
-            <div v-for="(item,index) in forbidden"
-                 :key="index"
-                 :style="{width:getBlockwidth(item)+'px',
-                   'left':getBlockMargin(item)+'px'}"></div>
-          </div>
-        </div>
-      </div>
-      <div v-show="showProject"
-           class=" gantt-cell-height">
-        <div class="gantt-block-container">
-          <div class="gantt-block-blocks">
-            <div v-for="(item,index) in data.Projected"
-                 :key="index"
-                 class="project"
-                 @click="blockClick(item)"
-                 :style="{width:getBlockwidth(item)+'px',
-                   'left':getBlockMargin(item)+'px'}"></div>
-          </div>
-          <div class="gantt-block-forbiddens">
-            <div v-for="(item,index) in forbidden"
-                 :key="index"
-                 :style="{width:getBlockwidth(item)+'px',
-                   'left':getBlockMargin(item)+'px'}"></div>
-          </div>
-        </div>
-      </div>
-      <div v-show="showActual"
-           class=" gantt-cell-height">
-        <div class="gantt-block-container">
-          <div class="gantt-block-blocks">
-            <div v-for="(item,index) in data.Actual"
-                 :key="index"
-                 class="actual"
-                 @click="blockClick(item)"
-                 :style="{width:getBlockwidth(item)+'px',
-                   'left':getBlockMargin(item)+'px'}"></div>
-          </div>
-          <div class="gantt-block-forbiddens">
-            <div v-for="(item,index) in forbidden"
-                 :key="index"
-                 :style="{width:getBlockwidth(item)+'px',
-                   'left':getBlockMargin(item)+'px'}"></div>
-          </div>
         </div>
       </div>
     </div>
@@ -107,7 +63,6 @@ export default {
       "cellWidth",
       "cellHeight",
       "scale",
-      "forbidden",
       "showPlan",
       "showActual",
       "showProject"
