@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import App from './App'
-import store from './store/index.js'
 import '../scss/index.scss'
 
 Vue.config.debug = __DEV__;
@@ -14,6 +13,5 @@ new Vue({
   components: {
     App
   },
-  store,
   template: '<App/>'
 })

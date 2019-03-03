@@ -1,42 +1,55 @@
 <template>
   <div class="gantt-blocks"
-       :style="{height:totalHeight+'px'}">
+       :style="{height:blockHeight+'px'}">
     <div class="gantt-block gantt-block-top-space"
          :style="{height:calTopSpace()+'px'}">
     </div>
-    <div class="gantt-block"
+    <div class="gantt-block gantt-cell-height"
          v-for="(data,index) in showDatas"
          :key="index">
-      <div v-show="showPlan"
-           class=" gantt-cell-height">
-        <div class="gantt-block-container">
-          <div class="gantt-block-blocks">
-            <div v-for="(item,index) in data.Planned"
-                 :key="index"
-                 class="plan"
-                 @click="blockClick(item)"
-                 @dblclick="dbBlockClick(item)"
-                 :style="{width:getBlockwidth(item)+'px',
-                   'left':getBlockMargin(item)+'px'}">{{data.name}}{{item.start.format("HH:mm:ss")}}</div>
-          </div>
-        </div>
+      <div class="gantt-block-item"
+           v-for="(item,index) in data.Planned"
+           :key="index"
+           :style="{width:getBlockwidth(item)+'px',
+                   'left':getBlockMargin(item)+'px'}">
+        <div class="plan"
+             @click="blockClick(item)">{{data.name}}{{item.start.format("HH:mm:ss")}}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
 import debounce from "@src/utils/debounce.js";
 import {
-  updateMarkLineTime,
-  updateMarkLineTimeEnd
-} from "@src/store/mutation-type.js";
+  getStartBlocksTime,
+  countTimeBlockWithScale
+} from "@src/utils/timeblock.js";
 import { calcBlockwidth, calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "Blocks",
   props: {
-    scrollTop: Number
+    scrollTop: Number,
+    start: {
+      type: Object,
+      required: true
+    },
+    cellWidth: {
+      type: Number,
+      default: 50
+    },
+    cellHeight: {
+      type: Number,
+      default: 20
+    },
+    scale: {
+      type: Number,
+      default: 60
+    },
+    datas: {
+      type: Array,
+      required: true
+    }
   },
   data() {
     return {
@@ -48,30 +61,22 @@ export default {
       //上一次加载的节点
       oldCurrentIndex: 0,
       //预加载的数量,是前后都为8个
-      preload: 8
+      preload: 4
     };
   },
   computed: {
-    ...mapState([
-      "datas",
-      "cellWidth",
-      "cellHeight",
-      "scale",
-      "showPlan",
-      "showActual",
-      "showProject"
-    ]),
-    ...mapGetters(["startBlockTime", "totalHeight"]),
+    startBlockTime() {
+      let value = getStartBlocksTime(this.start);
+
+      return value;
+    },
+    // ...mapGetters(["startBlockTime", ]),
     blockHeight() {
-      let { showActual, showPlan, showProject, cellHeight } = this;
-      let rate = 0;
-      if (showActual) rate += 1;
-      if (showPlan) rate += 1;
-      if (showProject) rate += 1;
-      return rate * cellHeight;
+      let { datas, cellHeight } = this;
+      return datas.length * cellHeight;
     },
     currentIndex() {
-      return Math.ceil(this.scrollTop / this.blockHeight);
+      return Math.ceil(this.scrollTop / this.cellHeight);
     }
   },
   watch: {
@@ -89,6 +94,7 @@ export default {
     this.initHeight_ = debounce(this.getContainerHeight);
   },
   mounted() {
+    this.initHeight_();
     window.onresize = () => {
       this.initHeight_();
     };
@@ -102,17 +108,17 @@ export default {
     },
     //分割出dom中显示的数据
     spliceData() {
-      let { containerHeight, currentIndex, blockHeight, preload } = this;
-      let nums = currentIndex + Math.ceil(containerHeight / blockHeight);
+      let { containerHeight, currentIndex, cellHeight, preload } = this;
+      let nums = currentIndex + Math.ceil(containerHeight / cellHeight);
       let start = currentIndex - preload >= 0 ? currentIndex - preload : 0;
       this.showDatas = this.datas.slice(start, nums + preload);
     },
     //第一个撑开前置高度的容器块高度
     calTopSpace() {
-      let { oldCurrentIndex, blockHeight, preload } = this;
+      let { oldCurrentIndex, cellHeight, preload } = this;
       let start =
         oldCurrentIndex - preload >= 0 ? oldCurrentIndex - preload : 0;
-      return start * blockHeight;
+      return start * cellHeight;
     },
     //计算时间块长度
     getBlockwidth(block) {
@@ -132,12 +138,9 @@ export default {
       return calcBlockMargin(block, options);
     },
     blockClick(item) {
-      this.$store.commit(updateMarkLineTime, item.start);
-      this.$store.commit(updateMarkLineTimeEnd, item.end);
-    },
-    dbBlockClick(item) {
-    },
-   
+      // this.$store.commit(updateMarkLineTime, item.start);
+      // this.$store.commit(updateMarkLineTimeEnd, item.end);
+    }
   }
 };
 </script>

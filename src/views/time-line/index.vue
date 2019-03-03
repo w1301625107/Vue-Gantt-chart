@@ -1,20 +1,18 @@
 <template>
   <div class="gantt-timeline">
-    <div class="gantt-timeline-blocks">
-      <div class="gantt-timeline-block"
-           v-for="(day,index) in dateDiff"
-           :key="index"
-           :style="{width:getDayWith(day)+'px'}">
-        <div class="gantt-timeline-day "
-             :style="{height:descHeight/2+'px','line-height':descHeight/2+'px'}">{{day.format("MM/DD")}}</div>
-        <div class="gantt-timeline-hours "
-             :style="{height:descHeight/2+'px',
+    <div class="gantt-timeline-block"
+         v-for="(day,index) in getDays"
+         :key="index"
+         :style="{width:getDayWith(day)+'px'}">
+      <div class="gantt-timeline-day "
+           :style="{height:descHeight/2+'px','line-height':descHeight/2+'px'}">{{day.format("MM/DD")}}</div>
+      <div class="gantt-timeline-hours "
+           :style="{height:descHeight/2+'px',
            'line-height':descHeight/2+'px'}">
-          <div class="gantt-cell-width"
-               v-for="(hour,index) in getHourList(day)"
-               :key="index">
-            <span>{{hour}}</span>
-          </div>
+        <div class="gantt-cell-width"
+             v-for="(hour,index) in getHourList(day)"
+             :key="index">
+          {{hour}}
         </div>
       </div>
     </div>
@@ -22,7 +20,6 @@
 </template>
 
 <script>
-import { mapState  } from "vuex";
 import {
   getStartBlocksTime,
   countTimeBlockWithScale
@@ -37,10 +34,31 @@ function isSameDay(one, two) {
 
 export default {
   name: "Timeline",
+  props: {
+    start: {
+      type: Object,
+      required: true
+    },
+    end: {
+      type: Object,
+      required: true
+    },
+    cellWidth: {
+      type: Number,
+      default: 50
+    },
+    descHeight: {
+      type: Number,
+      default: 40
+    },
+    scale: {
+      type: Number,
+      default: 60
+    }
+  },
   computed: {
-    ...mapState(["descHeight", "cellWidth", "start", "end", "scale"]),
     //天列表
-    dateDiff() {
+    getDays() {
       let temp = [];
       let start = this.start.clone();
       let end = this.end;
