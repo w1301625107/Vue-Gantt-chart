@@ -1,24 +1,27 @@
-# vue-gantt-chart
+# vue-gantt-chart(重构中ing)
 
-基于 Vue+Vuex 实现的 gantt 图表
-引入 jqeryui 来实现容器块拉伸，移动
+
+基于 Vue ~~+Vuex~~ 实现的 gantt 图表
+
+~~引入 jqeryui 来实现容器块拉伸，移动~~
 
 # 特性
 
 - 可变时间轴,1 天内可被整除的时间可变。1 分钟，2 分钟，3 分钟，4 分钟~~~到一天
 - 可变时间轴宽高
-- 可选显示计划
-- 标记线(目前有点问题)
+- ~~可选显示计划~~
+- 标记线(修改中，目前不可用)
 - 还有一些不算特性的特性？
 
-# 下一步计划
+# 可能下一步计划
 
 - 通用计划条
 - 高亮？整块，还是线提示？
 - 背景表格线定制？更多的状态？
 - 将项目变成一个组件，像表格组件那样
 
-# 截图
+# 截图(现在分支取消了部分东西)
+## 原版位置 https://github.com/w1301625107/Vue-Gantt-chart/commit/09995a8e1ab13badcae6d8a9d21171cade8d89a1
 
 ![](https://raw.githubusercontent.com/w1301625107/vue-gantt-chart/master/screenshot/page1.png)
 
