@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "vue-app",
   "scripts": {
-    "dev": "webpack-dev-server --progress --color --inline --config build/dev.conf.js -w -d",
-    "pack": "webpack --progress --color  --config build/prod.conf.js -p",
-    "start": "npm run dev"
+    "dev": "webpack-dev-server --progress --color --inline --config build/dev.conf.js -w -p -d",
+    "pack": "webpack --progress --inline --config build/prod.conf.js  -p -d",
+    "analyzer": "webpack --progress --inline --config build/prod.conf.js  -p -d --env.analyzer=true",
+    "start": "npm run dev",
+    "test": "mocha --require babel-register"
   },
   "repository": {
     "type": "git",
@@ -20,13 +22,9 @@
   "dependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
-    "es6-promise": "^4.2.5",
-    "jquery": "^3.3.1",
-    "jquery-ui": "^1.12.1",
     "mockjs": "^1.0.1-beta3",
     "moment": "^2.22.2",
     "vue": "^2.5.17",
-    "vuex": "^3.0.1",
     "webpack-cli": "^3.1.0"
   },
   "devDependencies": {
@@ -39,7 +37,9 @@
     "babel-plugin-transform-vue-jsx": "^3.7.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
+    "chai": "^4.2.0",
     "clean-webpack-plugin": "^0.1.19",
+    "compression-webpack-plugin": "^2.0.0",
     "copy-webpack-plugin": "^4.5.2",
     "css-loader": "^1.0.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
@@ -47,6 +47,7 @@
     "friendly-errors-webpack-plugin": "^1.7.0",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.4.1",
+    "mocha": "^6.0.2",
     "node-sass": "^4.9.3",
     "postcss-loader": "^3.0.0",
     "sass-loader": "^7.1.0",
@@ -58,7 +59,7 @@
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.16.5",
     "webpack-bundle-analyzer": "^2.13.1",
-    "webpack-dev-server": "^3.1.5",
+    "webpack-dev-server": ">=3.1.11",
     "webpack-merge": "^4.1.4"
   }
 }

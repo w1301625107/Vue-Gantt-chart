@@ -3,20 +3,29 @@
        @wheel="wheelHandle">
     <div class="gantt-chart">
       <div class="gantt-header">
-        <timeline :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></timeline>
+        <timeline :start="start"
+                  :end="end"
+                  :cellWidth="cellWidth"
+                  :descHeight="descHeight"
+                  :scale="scale"
+                  :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></timeline>
       </div>
       <div class="gantt-body"
            :style="{height:'calc(100% - '+descHeight+'px'+')'}">
         <div class="gantt-mark-area">
-            <mark-line :markLineTime="markLineTime"
-                       color="rgba(255,0,0,.4)"></mark-line>
-            <mark-line :markLineTime="markLineTimeEnd"
-                       color="#0ca30a"></mark-line>
+          <!-- <mark-line :markLineTime="markLineTime"
+                     color="rgba(255,0,0,.4)"></mark-line>
+          <mark-line :markLineTime="markLineTimeEnd"
+                     color="#0ca30a"></mark-line> -->
         </div>
         <div class="gantt-table">
           <blocks :scrollTop="scrollTop"
+                  :datas="datas"
+                  :start="start"
+                  :cellWidth="cellWidth"
+                  :cellHeight="cellHeight"
+                  :scale="scale"
                   :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></blocks>
-          
         </div>
         <div class="gantt-scroll-y"
              :style="{height:'calc(100% - 17px - '+descHeight+'px'+')'}"
@@ -35,20 +44,59 @@
       <div class="gantt-lefthearder"
            :style="{'line-height':descHeight+'px',height:descHeight+'px'}">
         Hello GanttChart</div>
-      <LeftBar :style="{height:'calc(100% - '+descHeight+'px'+')'}"></LeftBar>
+      <LeftBar :datas="datas"
+               :descWidth="descWidth"
+               :style="{height:'calc(100% - '+descHeight+'px'+')'}"></LeftBar>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
 import Timeline from "@views/time-line/index.vue";
 import LeftBar from "@views/left-bar/index.vue";
 import Blocks from "@views/blocks/index.vue";
+import {
+  getStartBlocksTime,
+  countTimeBlockWithScale
+} from "@src/utils/timeblock.js";
 import MarkLine from "@views/mark-line/index.vue";
 export default {
   name: "Gantt",
   components: { Timeline, LeftBar, Blocks, MarkLine },
+  props: {
+    start: {
+      type: Object,
+      required: true
+    },
+    end: {
+      type: Object,
+      required: true
+    },
+    cellWidth: {
+      type: Number,
+      default: 50
+    },
+    cellHeight: {
+      type: Number,
+      default: 20
+    },
+    descHeight: {
+      type: Number,
+      default: 40
+    },
+    descWidth: {
+      type: Number,
+      default: 200
+    },
+    scale: {
+      type: Number,
+      default: 60
+    },
+    datas: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {
       //缓存节点
@@ -59,37 +107,32 @@ export default {
         gantt_body: {},
         gantt_header: {},
         gantt_scroll_x: {},
-        gantt_markArea:{},
+        gantt_markArea: {}
       },
       scrollTop: 0
     };
   },
   computed: {
-    ...mapState([
-      "descWidth",
-      "descHeight",
-      "cellWidth",
-      "scale",
-      "cellHeight",
-      "showTimeBlock",
-      "markLineTime",
-      "markLineTimeEnd"
-    ]),
-    ...mapGetters([
-      "startBlockTime",
-      "totalBlocks",
-      "totalWidth",
-      "totalHeight"
-    ])
+    totalWidth() {
+      let { descWidth, cellWidth } = this;
+      let { totalBlocks } = this;
+      return descWidth + cellWidth * totalBlocks;
+    },
+    //计算时间块的数量
+    totalBlocks() {
+      let { start, end, scale } = this;
+      return countTimeBlockWithScale(start, end, scale);
+    },
+    totalHeight() {
+      let { datas, cellHeight } = this;
+      return datas.length * cellHeight;
+    }
   },
   watch: {
     cellWidth() {
       this.resetCss();
     },
     cellHeight() {
-      this.resetCss();
-    },
-    showTimeBlock() {
       this.resetCss();
     }
   },
@@ -110,7 +153,7 @@ export default {
       this.selector.gantt_body = document.querySelector(".gantt-body");
       this.selector.gantt_header = document.querySelector(".gantt-header");
       this.selector.gantt_scroll_x = document.querySelector(".gantt-scroll-x");
-      this.selector.gantt_markArea= document.querySelector(".gantt-mark-area");
+      this.selector.gantt_markArea = document.querySelector(".gantt-mark-area");
     },
     wheelHandle(event) {
       let { deltaX, deltaY, deltaZ } = event;
@@ -134,7 +177,7 @@ export default {
           gantt_body.scrollLeft += deltaX;
           gantt_header.scrollLeft += deltaX;
           gantt_scroll_x.scrollLeft += deltaX;
-          gantt_markArea.style.left= gantt_markArea.style.left+ deltaX;
+          gantt_markArea.style.left = gantt_markArea.style.left + deltaX;
         }
       });
     },
@@ -148,11 +191,11 @@ export default {
       });
     },
     syncScrollX(event) {
-      let { gantt_table, gantt_header ,gantt_markArea} = this.selector;
+      let { gantt_table, gantt_header, gantt_markArea } = this.selector;
       this.$nextTick(() => {
         gantt_table.scrollLeft = event.target.scrollLeft;
         gantt_header.scrollLeft = event.target.scrollLeft;
-        gantt_markArea.style.left= '-'+ event.target.scrollLeft+'px';
+        gantt_markArea.style.left = "-" + event.target.scrollLeft + "px";
       });
     },
     //修改gantt-cell-height和gantt-cell-height样式数值
@@ -160,9 +203,6 @@ export default {
       let style = document.getElementById("gantt-cell-style");
       let { cellWidth, cellHeight, showTimeBlock, totalWidth } = this;
       let innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}.gantt-block{background-size: ${cellWidth}px ${cellHeight}px;width:${totalWidth}px}`;
-      if (!showTimeBlock) {
-        innerText += ".gantt-block{background-image: none !important}";
-      }
       if (null == style) {
         let style = document.createElement("style");
         style.setAttribute("id", "gantt-cell-style");

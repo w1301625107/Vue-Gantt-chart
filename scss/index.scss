@@ -1,7 +1,7 @@
 @import "./normalize.css";
+@import "./gantt.scss";
 $W-desc: 200px;
 $W-header: 30px;
-@import "./gantt.scss";
 
 body {
   font: 12px;
@@ -19,8 +19,6 @@ body {
 .top-bar {
   height: $W-header;
 }
-
-
 
 .main-footer {
   height: $W-header;
