@@ -68,11 +68,11 @@ export default {
   components: { Timeline, LeftBar, Blocks, MarkLine },
   props: {
     start: {
-      type: Object,
+      type: moment,
       required: true
     },
     end: {
-      type: Object,
+      type: moment,
       required: true
     },
     cellWidth: {

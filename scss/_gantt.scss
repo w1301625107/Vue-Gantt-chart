@@ -164,16 +164,7 @@ $font-gray:#777;
       position: absolute;
       height: 100%;
 
-      &>div {
-        height: 100%;
-        box-sizing: border-box;
-        border: 1px solid $gray;
-        border-radius: 5px;
-        color: #fff;
-        padding-left: 5px;
-        font-size: 0.8rem;
-        opacity: .8;
-      }
+
     }
 
 
@@ -220,6 +211,14 @@ $font-gray:#777;
 
 .plan {
   background-color: #37a2da;
+  height: 100%;
+  box-sizing: border-box;
+  border: 1px solid $gray;
+  border-radius: 5px;
+  color: #fff;
+  padding-left: 5px;
+  font-size: 0.8rem;
+  opacity: .8;
 }
 
 .actual {

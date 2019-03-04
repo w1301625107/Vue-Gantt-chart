@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import moment from "moment";
 import debounce from "@src/utils/debounce.js";
 import { countTimeBlockWithScale } from "@src/utils/timeblock.js";
 import { calcBlockwidth, calcBlockMargin } from "@src/utils/calc-margin.js";
@@ -28,7 +29,7 @@ export default {
   props: {
     scrollTop: Number,
     startBlockTime: {
-      type: Object,
+      type: moment,
       required: true
     },
     cellWidth: {

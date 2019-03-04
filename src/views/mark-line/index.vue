@@ -8,11 +8,12 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   name: "MarkLine",
   props: {
     markLineTime: {
-      type: Object
+      type: moment
     },
     color: {
       type: String,
