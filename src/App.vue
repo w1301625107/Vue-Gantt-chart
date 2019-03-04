@@ -1,5 +1,20 @@
 <template>
   <div id="app">
+    <header class="top-bar">Vue-Gantt-Chart
+      <label for="cellWidth">cellWidth</label>
+      <input id="cellWidth"
+             v-model.number.lazy="cellWidth">
+      <label for="cellHeight">cellHeight</label>
+      <input id="cellHeight"
+             v-model.number.lazy="cellHeight">
+      <label for="scale">scale</label>
+      <select id="scale"
+              v-model.number="scale">
+        <option v-for="i in scaleList"
+                :key="i">{{i}}</option>
+      </select>
+      <span>minute</span>
+    </header>
     <gantt :start="start"
            :end="end"
            :cellWidth="cellWidth"
@@ -14,7 +29,10 @@
 
 <script>
 import { mockDatas } from "@src/mock/index.js";
-import moment from 'moment'
+import {
+  scaleList
+} from "@src/utils/timeblock.js";
+import moment from "moment";
 import Gantt from "@views/gantt.vue";
 export default {
   name: "App",
@@ -22,7 +40,7 @@ export default {
   data() {
     return {
       markLineTime: moment(),
-      markLineTimeEnd: moment(),
+      markLineTimeList: [moment()],
       start: moment(),
       end: moment()
         .add(1, "d")
@@ -33,9 +51,20 @@ export default {
       descHeight: 40,
       descWidth: 200,
       scale: 60,
-      datas: mockDatas(100)
+      datas: mockDatas(100),
+      scaleList:scaleList
     };
   }
 };
 </script>
 
+<style scoped>
+label {
+  margin-left: 10px;
+}
+input {
+  width: 40px;
+  height: 20px;
+  vertical-align: bottom;
+}
+</style>

@@ -8,8 +8,6 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
-import { calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "MarkLine",
   props: {
@@ -19,16 +17,17 @@ export default {
     color: {
       type: String,
       default: "green"
-    }
+    },
+    getTimeLineMargin:{
+      type:Function,
+      required:true
+    },
+    
   },
   data() {
     return {
       visible: false
     };
-  },
-  computed: {
-    ...mapState(["cellWidth", "scale", "descWidth"]),
-    ...mapGetters(["startBlockTime"])
   },
   methods: {
     getBlockMargin() {
@@ -37,15 +36,7 @@ export default {
         return;
       } else {
         this.visible = true;
-        let options = {
-          cellWidth: this.cellWidth,
-          scale: this.scale,
-          startBlockTime: this.startBlockTime
-        };
-        let block = {
-          start: this.markLineTime
-        };
-        return this.descWidth + calcBlockMargin(block, options);
+        return this.getTimeLineMargin(this.markLineTime);
       }
     }
   }

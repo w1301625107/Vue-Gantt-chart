@@ -1,11 +1,11 @@
 {
   "name": "vue-gantt-chart",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "vue-app",
   "scripts": {
-    "dev": "webpack-dev-server --progress --color --inline --config build/dev.conf.js -w -p -d",
-    "pack": "webpack --progress --inline --config build/prod.conf.js  -p -d",
-    "analyzer": "webpack --progress --inline --config build/prod.conf.js  -p -d --env.analyzer=true",
+    "dev": "webpack-dev-server --progress --color --inline --config build/dev.conf.js -w -d",
+    "pack": "webpack --progress  --config build/prod.conf.js  -p ",
+    "analyzer": "webpack --progress  --config build/prod.conf.js  -p --env.analyzer=true",
     "start": "npm run dev",
     "test": "mocha --require babel-register"
   },

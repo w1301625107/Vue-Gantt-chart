@@ -13,18 +13,19 @@
       <div class="gantt-body"
            :style="{height:'calc(100% - '+descHeight+'px'+')'}">
         <div class="gantt-mark-area">
-          <!-- <mark-line :markLineTime="markLineTime"
+          <mark-line :markLineTime="currentTime"
+                     :getTimeLineMargin="getTimeLineMargin"
                      color="rgba(255,0,0,.4)"></mark-line>
-          <mark-line :markLineTime="markLineTimeEnd"
+          <!--<mark-line :markLineTime="markLineTimeEnd"
                      color="#0ca30a"></mark-line> -->
         </div>
         <div class="gantt-table">
           <blocks :scrollTop="scrollTop"
                   :datas="datas"
-                  :start="start"
                   :cellWidth="cellWidth"
                   :cellHeight="cellHeight"
                   :scale="scale"
+                  :startBlockTime="startBlockTime"
                   :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></blocks>
         </div>
         <div class="gantt-scroll-y"
@@ -52,13 +53,15 @@
 </template>
 
 <script>
-import Timeline from "@views/time-line/index.vue";
-import LeftBar from "@views/left-bar/index.vue";
-import Blocks from "@views/blocks/index.vue";
+import moment from "moment";
 import {
   getStartBlocksTime,
   countTimeBlockWithScale
 } from "@src/utils/timeblock.js";
+import { calcBlockMargin } from "@src/utils/calc-margin.js";
+import Timeline from "@views/time-line/index.vue";
+import LeftBar from "@views/left-bar/index.vue";
+import Blocks from "@views/blocks/index.vue";
 import MarkLine from "@views/mark-line/index.vue";
 export default {
   name: "Gantt",
@@ -109,13 +112,13 @@ export default {
         gantt_scroll_x: {},
         gantt_markArea: {}
       },
-      scrollTop: 0
+      scrollTop: 0,
+      currentTime: moment()
     };
   },
   computed: {
     totalWidth() {
-      let { descWidth, cellWidth } = this;
-      let { totalBlocks } = this;
+      let { descWidth, cellWidth, totalBlocks } = this;
       return descWidth + cellWidth * totalBlocks;
     },
     //计算时间块的数量
@@ -126,6 +129,10 @@ export default {
     totalHeight() {
       let { datas, cellHeight } = this;
       return datas.length * cellHeight;
+    },
+    startBlockTime() {
+      let value = getStartBlocksTime(this.start);
+      return value;
     }
   },
   watch: {
@@ -140,11 +147,27 @@ export default {
   mounted() {
     this.resetCss();
     this.getSelector();
+    const timeNow = setInterval(() => {
+      this.currentTime = moment();
+    }, 1000);
+    this.$once("hook:beforeDestroy", timeNow => {
+      clearInterval(timeNow);
+    });
   },
   updated() {
     this.getSelector();
   },
   methods: {
+    getTimeLineMargin(date) {
+      let { cellWidth, scale, startBlockTime, descWidth } = this;
+      let options = {
+        cellWidth,
+        scale,
+        startBlockTime
+      };
+
+      return descWidth + calcBlockMargin(date, options);
+    },
     //缓存节点
     getSelector() {
       this.selector.gantt_leftbar = document.querySelector(".gantt-leftbar");
@@ -202,7 +225,9 @@ export default {
     resetCss() {
       let style = document.getElementById("gantt-cell-style");
       let { cellWidth, cellHeight, showTimeBlock, totalWidth } = this;
-      let innerText = `.gantt-cell-width{width:${cellWidth}px;}.gantt-cell-height{height:${cellHeight}px;}.gantt-block{background-size: ${cellWidth}px ${cellHeight}px;width:${totalWidth}px}`;
+      let innerText = `.gantt-cell-width{width:${cellWidth}px;}
+        .gantt-cell-height{height:${cellHeight}px;}
+        .gantt-block{background-size: ${cellWidth}px ${cellHeight}px;width:${totalWidth}px}`;
       if (null == style) {
         let style = document.createElement("style");
         style.setAttribute("id", "gantt-cell-style");

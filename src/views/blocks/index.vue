@@ -21,30 +21,27 @@
 
 <script>
 import debounce from "@src/utils/debounce.js";
-import {
-  getStartBlocksTime,
-  countTimeBlockWithScale
-} from "@src/utils/timeblock.js";
+import { countTimeBlockWithScale } from "@src/utils/timeblock.js";
 import { calcBlockwidth, calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "Blocks",
   props: {
     scrollTop: Number,
-    start: {
+    startBlockTime: {
       type: Object,
       required: true
     },
     cellWidth: {
       type: Number,
-      default: 50
+      required: true
     },
     cellHeight: {
       type: Number,
-      default: 20
+      required: true
     },
     scale: {
       type: Number,
-      default: 60
+      required: true
     },
     datas: {
       type: Array,
@@ -65,12 +62,6 @@ export default {
     };
   },
   computed: {
-    startBlockTime() {
-      let value = getStartBlocksTime(this.start);
-
-      return value;
-    },
-    // ...mapGetters(["startBlockTime", ]),
     blockHeight() {
       let { datas, cellHeight } = this;
       return datas.length * cellHeight;
@@ -126,7 +117,7 @@ export default {
         scale: this.scale,
         cellWidth: this.cellWidth
       };
-      return calcBlockwidth(block, options);
+      return calcBlockwidth(block.start, block.end, options);
     },
     //计算时间块偏移
     getBlockMargin(block) {
@@ -135,7 +126,7 @@ export default {
         cellWidth: this.cellWidth,
         startBlockTime: this.startBlockTime
       };
-      return calcBlockMargin(block, options);
+      return calcBlockMargin(block.start, options);
     },
     blockClick(item) {
       // this.$store.commit(updateMarkLineTime, item.start);

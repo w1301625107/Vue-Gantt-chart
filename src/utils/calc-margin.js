@@ -1,9 +1,5 @@
 //计算时间块长度
-export function calcBlockwidth(block, arg) {
-  let {
-    start,
-    end
-  } = block;
+export function calcBlockwidth(start,end, arg) {
   let {
     scale,
     cellWidth
@@ -13,16 +9,13 @@ export function calcBlockwidth(block, arg) {
 }
 
 //计算时间块偏移
-export function calcBlockMargin(block, arg) {
-  let {
-    start
-  } = block;
+export function calcBlockMargin(time, arg) {
   let {
     scale,
     cellWidth,
     startBlockTime
   } = arg;
   let width =
-    start.diff(startBlockTime, "m", true) / scale;
+  time.diff(startBlockTime, "m", true) / scale;
   return width * cellWidth;
 }
