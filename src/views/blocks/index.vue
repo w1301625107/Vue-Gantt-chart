@@ -12,30 +12,25 @@
            :key="index"
            :style="{width:getBlockwidth(item)+'px',
                    'left':getBlockMargin(item)+'px'}">
-        <div class="plan"
-             @click="blockClick(item)">{{data.name}}{{item.start.format("HH:mm:ss")}}</div>
+         <slot :data="data" :item="item"></slot>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import debounce from "@src/utils/debounce.js";
-import { countTimeBlockWithScale } from "@src/utils/timeblock.js";
+import moment from "moment";
+import dr from '../dynamic-render.js'
 import { calcBlockwidth, calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "Blocks",
+  mixins:[dr],
   props: {
-    scrollTop: Number,
     startBlockTime: {
-      type: Object,
+      type: moment,
       required: true
     },
     cellWidth: {
-      type: Number,
-      required: true
-    },
-    cellHeight: {
       type: Number,
       required: true
     },
@@ -43,74 +38,9 @@ export default {
       type: Number,
       required: true
     },
-    datas: {
-      type: Array,
-      required: true
-    }
-  },
-  data() {
-    return {
-      showDatas: [],
-      containerHeight: 700,
-      //去抖
-      initHeight_: "",
-      //两者避免过多的调用sliceData，造成过多的dom操作
-      //上一次加载的节点
-      oldCurrentIndex: 0,
-      //预加载的数量,是前后都为8个
-      preload: 4
-    };
-  },
-  computed: {
-    blockHeight() {
-      let { datas, cellHeight } = this;
-      return datas.length * cellHeight;
-    },
-    currentIndex() {
-      return Math.ceil(this.scrollTop / this.cellHeight);
-    }
-  },
-  watch: {
-    currentIndex(val) {
-      let { oldCurrentIndex, preload } = this;
-      if (val < oldCurrentIndex - preload || val > oldCurrentIndex + preload) {
-        this.oldCurrentIndex = val;
-        this.spliceData();
-      }
-    }
-  },
-  created() {
-    this.spliceData();
-    //去抖
-    this.initHeight_ = debounce(this.getContainerHeight);
-  },
-  mounted() {
-    this.initHeight_();
-    window.onresize = () => {
-      this.initHeight_();
-    };
+   
   },
   methods: {
-    //获取父级容器的高度
-    getContainerHeight() {
-      this.containerHeight = document.querySelector(
-        ".gantt-table"
-      ).parentNode.clientHeight;
-    },
-    //分割出dom中显示的数据
-    spliceData() {
-      let { containerHeight, currentIndex, cellHeight, preload } = this;
-      let nums = currentIndex + Math.ceil(containerHeight / cellHeight);
-      let start = currentIndex - preload >= 0 ? currentIndex - preload : 0;
-      this.showDatas = this.datas.slice(start, nums + preload);
-    },
-    //第一个撑开前置高度的容器块高度
-    calTopSpace() {
-      let { oldCurrentIndex, cellHeight, preload } = this;
-      let start =
-        oldCurrentIndex - preload >= 0 ? oldCurrentIndex - preload : 0;
-      return start * cellHeight;
-    },
     //计算时间块长度
     getBlockwidth(block) {
       let options = {
@@ -128,10 +58,6 @@ export default {
       };
       return calcBlockMargin(block.start, options);
     },
-    blockClick(item) {
-      // this.$store.commit(updateMarkLineTime, item.start);
-      // this.$store.commit(updateMarkLineTimeEnd, item.end);
-    }
   }
 };
 </script>

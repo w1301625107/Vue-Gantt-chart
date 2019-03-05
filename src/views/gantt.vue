@@ -26,10 +26,14 @@
                   :cellHeight="cellHeight"
                   :scale="scale"
                   :startBlockTime="startBlockTime"
-                  :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></blocks>
+                  :style="{width:totalWidth+'px','margin-left':descWidth+'px'}">
+            <template v-slot="{data,item}">
+              <slot name="block" :data="data" :item="item"></slot>
+            </template>
+          </blocks>
         </div>
         <div class="gantt-scroll-y"
-             :style="{height:'calc(100% - 17px - '+descHeight+'px'+')'}"
+             :style="{height:'calc(100% - 17px)'}"
              @scroll="syncScrollY">
           <div :style="{height:totalHeight+'px'}"></div>
         </div>
@@ -46,6 +50,8 @@
            :style="{'line-height':descHeight+'px',height:descHeight+'px'}">
         Hello GanttChart</div>
       <LeftBar :datas="datas"
+                :scrollTop="scrollTop"
+                  :cellHeight="cellHeight"
                :descWidth="descWidth"
                :style="{height:'calc(100% - '+descHeight+'px'+')'}"></LeftBar>
     </div>
@@ -53,6 +59,7 @@
 </template>
 
 <script>
+
 import moment from "moment";
 import {
   getStartBlocksTime,
@@ -68,11 +75,11 @@ export default {
   components: { Timeline, LeftBar, Blocks, MarkLine },
   props: {
     start: {
-      type: Object,
+      type: moment,
       required: true
     },
     end: {
-      type: Object,
+      type: moment,
       required: true
     },
     cellWidth: {

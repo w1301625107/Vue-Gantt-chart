@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import moment from "moment";
 import {
   getStartBlocksTime,
   countTimeBlockWithScale
@@ -36,11 +37,11 @@ export default {
   name: "Timeline",
   props: {
     start: {
-      type: Object,
+      type: moment,
       required: true
     },
     end: {
-      type: Object,
+      type: moment,
       required: true
     },
     cellWidth: {

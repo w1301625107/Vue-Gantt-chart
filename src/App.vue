@@ -22,12 +22,17 @@
            :descHeight="descHeight"
            :scale="scale"
            :descWidth="descWidth"
-           :datas="datas"></gantt>
+           :datas="datas">
+        <template v-slot:block="{data,item}">
+          <Test :data="data" :item="item"></Test>
+        </template>
+     </gantt>
     <footer class="main-footer">wuchouchou</footer>
   </div>
 </template>
 
 <script>
+import Test from "./test.vue";
 import { mockDatas } from "@src/mock/index.js";
 import {
   scaleList
@@ -36,7 +41,7 @@ import moment from "moment";
 import Gantt from "@views/gantt.vue";
 export default {
   name: "App",
-  components: { Gantt },
+  components: { Gantt,Test },
   data() {
     return {
       markLineTime: moment(),
