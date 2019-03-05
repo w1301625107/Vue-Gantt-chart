@@ -19,11 +19,10 @@ export default {
       type: String,
       default: "green"
     },
-    getTimeLineMargin:{
-      type:Function,
-      required:true
-    },
-    
+    getTimeLineMargin: {
+      type: Function,
+      required: true
+    }
   },
   data() {
     return {

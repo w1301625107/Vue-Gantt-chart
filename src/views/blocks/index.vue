@@ -12,7 +12,8 @@
            :key="index"
            :style="{width:getBlockwidth(item)+'px',
                    'left':getBlockMargin(item)+'px'}">
-         <slot :data="data" :item="item"></slot>
+        <slot :data="data"
+              :item="item"></slot>
       </div>
     </div>
   </div>
@@ -20,11 +21,11 @@
 
 <script>
 import moment from "moment";
-import dr from '../dynamic-render.js'
+import dr from "../dynamic-render.js";
 import { calcBlockwidth, calcBlockMargin } from "@src/utils/calc-margin.js";
 export default {
   name: "Blocks",
-  mixins:[dr],
+  mixins: [dr],
   props: {
     startBlockTime: {
       type: moment,
@@ -37,8 +38,13 @@ export default {
     scale: {
       type: Number,
       required: true
-    },
-   
+    }
+  },
+  created() {},
+  computed: {
+    startBlockTimeFormat() {
+      return this.startBlockTime.format("YYYY-MM-DD HH:mm:ss");
+    }
   },
   methods: {
     //计算时间块长度
@@ -54,10 +60,11 @@ export default {
       let options = {
         scale: this.scale,
         cellWidth: this.cellWidth,
-        startBlockTime: this.startBlockTime
+        startBlockTime: this.startBlockTimeFormat
       };
+
       return calcBlockMargin(block.start, options);
-    },
+    }
   }
 };
 </script>

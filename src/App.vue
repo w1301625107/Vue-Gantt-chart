@@ -18,8 +18,8 @@
       </select>
       <span>minute</span>
     </header>
-    <gantt :start="start"
-           :end="end"
+    <gantt :startTime="startTime"
+           :endTime="endTime"
            :cellWidth="cellWidth"
            :cellHeight="cellHeight"
            :descHeight="descHeight"
@@ -55,11 +55,11 @@ export default {
     return {
       markLineTime: moment(),
       markLineTimeList: [moment()],
-      start: moment(),
-      end: moment()
+      startTime: moment().toString(),
+      endTime: moment()
         .add(1, "d")
         .add(2, "h")
-        .add(5, "s"),
+        .add(5, "s").toString(),
       cellWidth: 50,
       cellHeight: 20,
       descHeight: 40,

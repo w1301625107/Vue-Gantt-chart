@@ -7,15 +7,20 @@ var template = {
   'Planned': () => {
     let temp = [];
     let i = 0;
-    let j = Mock.Random.natural(1, 2);
+    let j = Mock.Random.natural(9, 9);
+    let tempStart = moment();
+    let tempEnd = moment();
 
     while (i < j) {
+      tempStart = tempEnd.clone().add(Mock.Random.natural(1, 5), 'h');
+      tempEnd =  tempStart.clone().add(Mock.Random.natural(1, 5), 'h');
       temp.push({
         'id': Mock.Random.natural(1000, 9999),
         'name': Mock.Random.word(2, 3),
-        'start': moment().add(Mock.Random.natural(1, 9), 'h'),
-        'end': moment().add(Mock.Random.natural(10, 15), 'h')
+        'start':tempStart.format('YYYY-MM-DD HH:mm:ss'),
+        'end': tempEnd.format('YYYY-MM-DD HH:mm:ss')
       })
+      
       i++;
     }
     return temp;

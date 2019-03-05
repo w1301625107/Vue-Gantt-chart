@@ -13,9 +13,7 @@
       <div class="gantt-body"
            :style="{height:'calc(100% - '+descHeight+'px'+')'}">
         <div class="gantt-mark-area">
-          <mark-line :markLineTime="currentTime"
-                     :getTimeLineMargin="getTimeLineMargin"
-                     color="rgba(255,0,0,.4)"></mark-line>
+          <CurrentTime :getTimeLineMargin="getTimeLineMargin" />
           <!--<mark-line :markLineTime="markLineTimeEnd"
                      color="#0ca30a"></mark-line> -->
         </div>
@@ -50,7 +48,8 @@
          :style="{width:descWidth+'px',height:'calc(100% - 17px)'}">
       <div class="gantt-lefthearder"
            :style="{'line-height':descHeight+'px',height:descHeight+'px'}">
-        <slot name="title"></slot></div>
+        <slot name="title"></slot>
+      </div>
       <LeftBar :datas="datas"
                :scrollTop="scrollTop"
                :cellHeight="cellHeight"
@@ -71,19 +70,20 @@ import {
 } from "@src/utils/timeblock.js";
 import { calcBlockMargin } from "@src/utils/calc-margin.js";
 import Timeline from "@views/time-line/index.vue";
+import CurrentTime from "@views/mark-line/current-time.vue";
 import LeftBar from "@views/left-bar/index.vue";
 import Blocks from "@views/blocks/index.vue";
 import MarkLine from "@views/mark-line/index.vue";
 export default {
   name: "Gantt",
-  components: { Timeline, LeftBar, Blocks, MarkLine },
+  components: { Timeline, LeftBar, Blocks, MarkLine, CurrentTime },
   props: {
-    start: {
-      type: moment,
+    startTime: {
+      // type: moment,
       required: true
     },
-    end: {
-      type: moment,
+    endTime: {
+      // type: moment,
       required: true
     },
     cellWidth: {
@@ -123,11 +123,16 @@ export default {
         gantt_scroll_x: {},
         gantt_markArea: {}
       },
-      scrollTop: 0,
-      currentTime: moment()
+      scrollTop: 0
     };
   },
   computed: {
+    start() {
+      return moment(this.startTime);
+    },
+    end() {
+      return moment(this.endTime);
+    },
     totalWidth() {
       let { descWidth, cellWidth, totalBlocks } = this;
       return descWidth + cellWidth * totalBlocks;
@@ -158,12 +163,6 @@ export default {
   mounted() {
     this.resetCss();
     this.getSelector();
-    const timeNow = setInterval(() => {
-      this.currentTime = moment();
-    }, 1000);
-    this.$once("hook:beforeDestroy", timeNow => {
-      clearInterval(timeNow);
-    });
   },
   updated() {
     this.getSelector();
@@ -174,7 +173,7 @@ export default {
       let options = {
         cellWidth,
         scale,
-        startBlockTime
+        startBlockTime: startBlockTime.format("YYYY-MM-DD HH:mm:ss")
       };
 
       return descWidth + calcBlockMargin(date, options);
