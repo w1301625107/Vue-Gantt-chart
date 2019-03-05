@@ -1,6 +1,6 @@
 import debounce from "@src/utils/debounce.js";
-let dr = {
-  
+
+let dynamicRender = {
   props: {
     scrollTop: Number,
     cellHeight: {
@@ -21,7 +21,7 @@ let dr = {
       //两者避免过多的调用sliceData，造成过多的dom操作
       //上一次加载的节点
       oldCurrentIndex: 0,
-      //预加载的数量,是前后都为8个
+      //预加载的数量,是前后都为2个
       preload: 2
     };
   },
@@ -30,6 +30,7 @@ let dr = {
       let { datas, cellHeight } = this;
       return datas.length * cellHeight;
     },
+    //计算当前第一个数据的index
     currentIndex() {
       return Math.ceil(this.scrollTop / this.cellHeight);
     }
@@ -58,7 +59,7 @@ let dr = {
     //获取父级容器的高度
     getContainerHeight() {
       this.containerHeight = document.querySelector(
-        ".gantt"
+        ".gantt-body"
       ).parentNode.clientHeight;
     },
     //分割出dom中显示的数据
@@ -78,4 +79,4 @@ let dr = {
   }
 };
 
-export default dr;
+export default dynamicRender;

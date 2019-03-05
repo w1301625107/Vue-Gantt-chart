@@ -1,10 +1,11 @@
+ 
 <template>
-  <div class="plan">{{data.name}}{{item.start.format("HH:mm:ss")}}</div>
+  <div class="name ">{{item.id}}.{{item.name}}</div>
 </template>
 
 <script>
 export default {
-  name: "Test",
+  name: "TestLeft",
   props: {
     data:Object,
     item:Object

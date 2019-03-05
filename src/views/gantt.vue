@@ -28,7 +28,9 @@
                   :startBlockTime="startBlockTime"
                   :style="{width:totalWidth+'px','margin-left':descWidth+'px'}">
             <template v-slot="{data,item}">
-              <slot name="block" :data="data" :item="item"></slot>
+              <slot name="block"
+                    :data="data"
+                    :item="item"></slot>
             </template>
           </blocks>
         </div>
@@ -48,18 +50,20 @@
          :style="{width:descWidth+'px',height:'calc(100% - 17px)'}">
       <div class="gantt-lefthearder"
            :style="{'line-height':descHeight+'px',height:descHeight+'px'}">
-        Hello GanttChart</div>
+        <slot name="title"></slot></div>
       <LeftBar :datas="datas"
-                :scrollTop="scrollTop"
-                  :cellHeight="cellHeight"
-               :descWidth="descWidth"
-               :style="{height:'calc(100% - '+descHeight+'px'+')'}"></LeftBar>
+               :scrollTop="scrollTop"
+               :cellHeight="cellHeight"
+               :style="{height:'calc(100% - '+descHeight+'px'+')'}">
+        <template v-slot="{item}">
+          <slot name="left"
+                :item="item"></slot>
+        </template></LeftBar>
     </div>
   </div>
 </template>
 
 <script>
-
 import moment from "moment";
 import {
   getStartBlocksTime,

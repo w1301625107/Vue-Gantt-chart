@@ -7,7 +7,6 @@ Vue.config.devtools = __DEV__;
 Vue.config.productionTip = __DEV__;
 
 
-/* eslint-disable no-new */
 new Vue({
   el: '#app',
   components: {
