@@ -5,6 +5,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const WebpackBar = require('webpackbar');
 
 function assetsPath(_path) {
   return path.join(__dirname, '../dist/', _path)
@@ -102,6 +103,7 @@ module.exports = {
   },
 
   plugins: [
+    new WebpackBar(),
     new HtmlWebpackPlugin({
       template: rootDir('index.html'),
       filename: assetsPath('index.html'),
