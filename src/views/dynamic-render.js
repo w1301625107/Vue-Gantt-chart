@@ -15,9 +15,10 @@ let dynamicRender = {
   data() {
     return {
       showDatas: [],
-      containerHeight: 700,
+      containerHeight: 960,
+      containerWidth: 1920,
       //去抖
-      initHeight_: "",
+      initSize_: "",
       //两者避免过多的调用sliceData，造成过多的dom操作
       //上一次加载的节点
       oldCurrentIndex: 0,
@@ -47,20 +48,23 @@ let dynamicRender = {
   created() {
     this.spliceData();
     //去抖
-    this.initHeight_ = debounce(this.getContainerHeight);
+    this.initSize_ = debounce(this.getContainerSize);
   },
   mounted() {
-    this.initHeight_();
-    window.onresize = () => {
-      this.initHeight_();
-    };
+    this.initSize_();
+    window.addEventListener('resize',this.initSize_)
+    this.$once("hook:beforeDestroy", () => {
+      window.removeEventListener('resize',this.initSize_)
+    });
   },
   methods: {
     //获取父级容器的高度
-    getContainerHeight() {
-      this.containerHeight = document.querySelector(
-        ".gantt-body"
-      ).parentNode.clientHeight;
+    getContainerSize() {
+      let dom = document.querySelector(
+        ".gantt-blocks-wrapper"
+      )
+      this.containerHeight = dom.clientHeight;
+      this.containerWidth = dom.clientWidth;
     },
     //分割出dom中显示的数据
     spliceData() {

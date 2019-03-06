@@ -6,10 +6,11 @@
     </div>
     <div class="gantt-block gantt-cell-height"
          v-for="(data,index) in showDatas"
-         :key="index">
+         :key="data.id">
       <div class="gantt-block-item"
            v-for="(item,index) in data.Planned"
-           :key="index"
+           v-if="isInRange(item)"
+           :key="item.id"
            :style="{width:getBlockwidth(item)+'px',
                    'left':getBlockMargin(item)+'px'}">
         <slot :data="data"
@@ -27,6 +28,7 @@ export default {
   name: "Blocks",
   mixins: [dr],
   props: {
+    scrollLeft: Number,
     startBlockTime: {
       type: moment,
       required: true
@@ -40,13 +42,58 @@ export default {
       required: true
     }
   },
-  created() {},
+  data() {
+    return {
+      startTime: null,
+      endTime: null
+    };
+  },
+  created() {
+    this.getXAxisRange();
+  },
+  mounted() {},
   computed: {
     startBlockTimeFormat() {
       return this.startBlockTime.format("YYYY-MM-DD HH:mm:ss");
     }
   },
+  watch: {
+    scrollLeft() {
+      this.getXAxisRange();
+    }
+  },
   methods: {
+    getXAxisRange() {
+      let {
+        startBlockTime,
+        scrollLeft,
+        cellWidth,
+        scale,
+        containerWidth
+      } = this;
+      this.startTime = startBlockTime
+        .clone()
+        .add((scrollLeft / cellWidth) * scale, "m")
+        .toDate()
+        .getTime();
+      this.endTime = startBlockTime
+        .clone()
+        .add(((scrollLeft + containerWidth) / cellWidth) * scale, "m")
+        .toDate()
+        .getTime();
+    },
+    isInRange(item) {
+      let { startTime, endTime } = this;
+      let startToMs = new Date(item.start).getTime();
+      let endToMs = new Date(item.end).getTime();
+      if (
+        (startTime <= startToMs && startToMs <= endTime) ||
+        (startTime <= endToMs && endToMs <= endTime)
+      ) {
+        return true;
+      }
+      return false;
+    },
     //计算时间块长度
     getBlockwidth(block) {
       let options = {
@@ -59,7 +106,7 @@ export default {
     getBlockMargin(block) {
       let options = {
         scale: this.scale,
-        cellWidth: this.cellWidth,
+        cellWidth: this.cellWidth
       };
 
       return calcBlockMargin(block.start, this.startBlockTimeFormat, options);

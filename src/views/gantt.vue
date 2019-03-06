@@ -38,6 +38,7 @@
         </div>
         <div class="gantt-blocks-wrapper">
           <blocks :scrollTop="scrollTop"
+                  :scrollLeft="scrollLeft"
                   :datas="datas"
                   :cellWidth="cellWidth"
                   :cellHeight="cellHeight"
@@ -134,7 +135,8 @@ export default {
         gantt_scroll_x: {},
         gantt_markArea: {}
       },
-      scrollTop: 0
+      scrollTop: 0,
+      scrollLeft:0,
     };
   },
   computed: {
@@ -232,6 +234,9 @@ export default {
           gantt_timeline.scrollLeft += deltaX;
           gantt_scroll_x.scrollLeft += deltaX;
           gantt_markArea.style.left = gantt_markArea.style.left + deltaX;
+          if(this.scrollLeft + deltaX < 0){
+            this.scrollLeft = 0
+          }
         }
       });
     },
@@ -239,17 +244,20 @@ export default {
     syncScrollY(event) {
       let { gantt_leftbar, gantt_table } = this.selector;
       this.$nextTick(() => {
-        gantt_leftbar.scrollTop = event.target.scrollTop;
-        gantt_table.scrollTop = event.target.scrollTop;
-        this.scrollTop = event.target.scrollTop;
+        let topValue = event.target.scrollTop;
+        gantt_leftbar.scrollTop = topValue;
+        gantt_table.scrollTop = topValue;
+        this.scrollTop = topValue;
       });
     },
     syncScrollX(event) {
       let { gantt_table, gantt_timeline, gantt_markArea } = this.selector;
       this.$nextTick(() => {
-        gantt_table.scrollLeft = event.target.scrollLeft;
-        gantt_timeline.scrollLeft = event.target.scrollLeft;
-        gantt_markArea.style.left = "-" + event.target.scrollLeft + "px";
+        let leftValue =  event.target.scrollLeft
+        gantt_table.scrollLeft = leftValue;
+        gantt_timeline.scrollLeft = leftValue;
+        gantt_markArea.style.left = "-" + leftValue + "px";
+        this.scrollLeft =  leftValue
       });
     },
     //修改gantt-cell-height和gantt-cell-height样式数值
