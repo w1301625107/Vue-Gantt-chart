@@ -60,10 +60,9 @@ export default {
       let options = {
         scale: this.scale,
         cellWidth: this.cellWidth,
-        startBlockTime: this.startBlockTimeFormat
       };
 
-      return calcBlockMargin(block.start, options);
+      return calcBlockMargin(block.start, this.startBlockTimeFormat, options);
     }
   }
 };

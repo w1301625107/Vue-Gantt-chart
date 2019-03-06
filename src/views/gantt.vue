@@ -173,10 +173,9 @@ export default {
       let options = {
         cellWidth,
         scale,
-        startBlockTime: startBlockTime.format("YYYY-MM-DD HH:mm:ss")
       };
 
-      return descWidth + calcBlockMargin(date, options);
+      return descWidth + calcBlockMargin(date,startBlockTime.format("YYYY-MM-DD HH:mm:ss"), options);
     },
     //缓存节点
     getSelector() {

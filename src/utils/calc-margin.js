@@ -4,67 +4,76 @@
 // import moment from 'moment' //替换moment 兼容性会好一点，但是速度就很慢了，之前测了一下，大概快30倍？有点忘记了
 
 //缓存 解析值，加速一点点吧
-let startBlockTimeCache = null;
-let startBlockTimeStringCache = null;
-let timeCache = null;
-let timeString = null
-//计算时间块长度
+const cacheParseTime = function() {
+  let cacheString = {}
+  let cacheValue = {}
+  return function(timeName, timeString) {
+
+    if (cacheString[timeName] !== timeString) {
+      cacheString[timeName] = timeString;
+      cacheValue[timeName] = parseTime(timeString)
+    }
+
+    return cacheValue[timeName]
+  }
+}()
+
+// pStart 关于缓存这个值是因为calcBlockwidth和calcBlockMargin通常是前后连续调用，start 值会再两个函数中分别用到一次
+
+/**
+ * 根据配置项计算两个时间的在gantt 图中的长度
+ *
+ * @export
+ * @param {*} start
+ * @param {*} end
+ * @param {*} arg
+ * @returns
+ */
 export function calcBlockwidth(start, end, arg) {
   let {
     scale,
     cellWidth
   } = arg;
-  // let pStart = transferTime(start);
-  let pStart;
-  if (start != timeString) {
-    timeCache = transferTime(start)
-    timeString = start
-  }
-  pStart = timeCache
-  let pEnd = transferTime(end)
-  let width = diffTime(pStart, pEnd) / scale;
-  return width * cellWidth;
+  let pStart = cacheParseTime('pStart', start);
+  let pEnd = parseTime(end)
+  return diffTimeByMinutes(pStart, pEnd) / scale * cellWidth;
 }
 
-//计算时间块偏移
-export function calcBlockMargin(time, arg) {
+/**
+ * 根据配置项计算 相对于 时间轴起始时间的距离 是 calcBlockwidth 的特化
+ *
+ * @export
+ * @param {*} time
+ * @param {*} startBlockTime
+ * @param {*} arg
+ * @returns
+ */
+export function calcBlockMargin(time, startBlockTime, arg) {
   // console.log('?')
   let {
     scale,
     cellWidth,
-    startBlockTime
   } = arg;
-  // let pTime = transferTime(time)
-  let pTime;
-  if (time != timeString) {
-    timeCache = transferTime(time)
-    timeString = time
-  }
-  pTime = timeCache
-  let pStartBlockTime;
-  //缓存pStartBlockTime，调用很多次
-  if (startBlockTimeStringCache !== startBlockTime) {
-    startBlockTimeStringCache = startBlockTime;
-    startBlockTimeCache = transferTime(startBlockTime)
-  }
-  pStartBlockTime = startBlockTimeCache;
-  let width = diffTime(pStartBlockTime, pTime) / scale;
-  return width * cellWidth;
+  let pTime = cacheParseTime('pStart', time);
+  let pStartBlockTime = cacheParseTime('pStartBlockTime', startBlockTime);
+  return diffTimeByMinutes(pStartBlockTime, pTime) / scale * cellWidth;
 }
 
-function transferTime(time) {
+function parseTime(time) {
   return new Date(time)
 }
 
-function diffTime(start, end) {
+function diffTimeByMinutes(start, end) {
   let diff = end.getTime() - start.getTime()
   return (diff / 1000 / 60).toFixed(4)
 }
 
-// function transferTime(time){
+
+
+// function parseTime(time){
 //   return moment(time)
 // }
 
-// function diffTime(start,end){
+// function diffTimeByMinutes(start,end){
 //   return end.diff(start, "m", true)
 // }
