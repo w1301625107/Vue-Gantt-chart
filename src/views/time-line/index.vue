@@ -1,9 +1,9 @@
 <template>
-  <div class="gantt-timeline">
+  <div class="gantt-timeline"
+       :style="{'margin-left':-cellWidth/2+'px'}">
     <div class="gantt-timeline-block"
          v-for="(day,index) in getDays"
-         :key="index"
-         :style="{width:getDayWith(day)+'px'}">
+         :key="index">
       <div class="gantt-timeline-day "
            :style="{height:descHeight/2+'px','line-height':descHeight/2+'px'}">{{day.format("MM/DD")}}</div>
       <div class="gantt-timeline-hours "
@@ -18,7 +18,7 @@
     </div>
   </div>
 </template>
-
+//  :style="{width:getDayWith(day)+'px'}" 
 <script>
 import moment from "moment";
 import {
@@ -73,27 +73,27 @@ export default {
     }
   },
   methods: {
-    //计算每天的MM/DD的block长度
-    getDayWith(date) {
-      let blocks;
-      let { start, end, scale, cellWidth } = this;
-      if (isSameDay(date, start)) {
-        blocks = countTimeBlockWithScale(
-          start,
-          start.clone().endOf("day"),
-          scale
-        );
-      } else if (isSameDay(date, end)) {
-        blocks = countTimeBlockWithScale(
-          end.clone().startOf("day"),
-          end,
-          scale
-        );
-      } else {
-        blocks = (24 * 60) / scale;
-      }
-      return blocks * cellWidth;
-    },
+    // //计算每天的MM/DD的block长度
+    // getDayWith(date) {
+    //   let blocks;
+    //   let { start, end, scale, cellWidth } = this;
+    //   if (isSameDay(date, start)) {
+    //     blocks = countTimeBlockWithScale(
+    //       start,
+    //       start.clone().endOf("day"),
+    //       scale
+    //     );
+    //   } else if (isSameDay(date, end)) {
+    //     blocks = countTimeBlockWithScale(
+    //       end.clone().startOf("day"),
+    //       end,
+    //       scale
+    //     );
+    //   } else {
+    //     blocks = (24 * 60) / scale;
+    //   }
+    //   return blocks * cellWidth;
+    // },
     //获取时间刻度数组
     getHourList(date) {
       let temp = [];
@@ -115,7 +115,7 @@ export default {
       let a, b;
       switch (type) {
         case START_DAY: //和start同一天
-          a = getStartBlocksTime(start);
+          a = getStartBlocksTime(start, scale);
           //start和end同一天特殊处理
           if (isSameDay(start, end)) {
             b = end;

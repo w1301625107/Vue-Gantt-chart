@@ -3,37 +3,33 @@ $gray: #f0f0f0;
 $font-gray:#777;
 
 .gantt {
-  height: calc(100vh - 30px - 30px);
-  width: 100%;
-  outline: 1px solid $gray;
-  position: relative;
-  overflow: hidden;
-
   &-chart {
+    position: relative;
+    overflow: hidden;
     height: 100%;
     width: 100%;
-    //overflow-x: scroll;
-    //overflow-y: hidden;
-    position: relative;
-    z-index: 100;
+    outline: 1px solid $gray;
   }
 
   &-header {
+    display: flex;
     background-color: #fff;
     outline: 1px solid $gray;
-    overflow: hidden;
-    //position: absolute;
-    //z-index: 1000;
-    //top: 0;
+
+    &-title {
+      width: 100%;
+      background: #747e80;
+      color: #fff;
+      text-align: center;
+    }
+
+    &-timeline {
+      overflow: hidden;
+    }
   }
 
   &-body {
     position: relative;
-    //overflow: hidden;
-    //overflow-x: hidden;
-    //overflow-y: scroll;
-    //height: 100%;
-    //padding-right: 16px;
   }
 
   &-timeline {
@@ -42,15 +38,15 @@ $font-gray:#777;
     display: flex;
 
     &-block:nth-child(odd) {
-      background-color: #d5e4f3;
+      // background-color: #d5e4f3;
     }
 
     &-block:nth-child(even) {
-      background-color: #cadbfc;
+      // background-color: #cadbfc;
     }
 
     &-day {
-      outline: 1px solid $gray;
+      font-weight: bold;
       color: $font-gray;
     }
 
@@ -60,65 +56,47 @@ $font-gray:#777;
       &>div {
         height: 100%;
         font-size: 0.8rem;
-        outline: 1px solid $gray;
+        font-weight: bold;
+
         color: $font-gray;
       }
     }
-
-
-
-
-  }
-
-  &-fixleft {
-    box-sizing: border-box;
-    border-right: 1px solid $gray;
-    height: 100%;
-    position: absolute;
-    z-index: 200;
-    top: 0px;
-    left: 0px;
-    overflow: hidden;
-    background: rgb(255, 255, 255);
-    box-shadow: 0 0 10px rgba(0, 0, 0, .12);
-  }
-
-  &-lefthearder {
-    width: 100%;
-    background: #747e80;
-    color: #fff;
-    text-align: center;
   }
 
   &-leftbar {
     width: 100%;
     height: 100%;
-    overflow: hidden;
     background: rgb(255, 255, 255);
     color: $font-gray;
     font-size: 0.8rem;
 
     &-item {
-      display: flex;
       outline: 1px solid $gray;
-    }
-
-    &-series {
-      display: flex;
-      flex-direction: column;
-
-      &>div {
-        box-sizing: border-box;
-        border-bottom: 1px solid $gray;
-      }
     }
   }
 
-  &-mark-area {
-    position: absolute;
-    top: 0;
-    left: 0;
 
+
+  &-table {
+    display: flex;
+    width: calc(100% - 17px);
+    height: calc(100% - 17px);
+  }
+
+  &-blocks-wrapper {
+    overflow: hidden;
+  }
+
+  &-leftbar-wrapper {
+    position: relative;
+    overflow: hidden;
+    outline: 1px solid $gray;
+    z-index: 100;
+  }
+
+  &-markline-area {
+    position: relative;
+    z-index: 99;
   }
 
   &-markline {
@@ -135,20 +113,9 @@ $font-gray:#777;
     }
   }
 
-  &-table {
-    width: calc(100% - 17px);
-    height: calc(100% - 17px);
-    overflow: hidden;
-    position: relative;
-  }
-
-  &-blocks {
-    //overflow: hidden;
-  }
-
   &-block {
     position: relative;
-    background-image: url('../src/assets/block.png');
+    background-image: url('/src/assets/block.png');
     background-repeat: repeat;
 
     &-container {
@@ -159,17 +126,7 @@ $font-gray:#777;
     &-item {
       position: absolute;
       height: 100%;
-
-
     }
-
-
-
-    &-name {
-      width: 100px;
-      height: 100%;
-    }
-
   }
 
   &-scroll-y {
@@ -178,7 +135,6 @@ $font-gray:#777;
     z-index: 1000;
     top: 0;
     right: 0;
-    height: calc(100% - 40px - 17px);
     width: 17px;
 
     &>div {
@@ -200,4 +156,3 @@ $font-gray:#777;
     }
   }
 }
-

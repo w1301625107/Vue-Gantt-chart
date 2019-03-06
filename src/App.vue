@@ -18,6 +18,7 @@
       </select>
       <span>minute</span>
     </header>
+    <div :style="{height:'calc(100vh - 30px - 30px)'}">
     <gantt :startTime="startTime"
            :endTime="endTime"
            :cellWidth="cellWidth"
@@ -37,6 +38,7 @@
         hola
       </template>
     </gantt>
+    </div>
     <footer class="main-footer">wuchouchou</footer>
   </div>
 </template>
@@ -57,7 +59,7 @@ export default {
       markLineTimeList: [moment()],
       startTime: moment().toString(),
       endTime: moment()
-        .add(1, "d")
+        .add(2, "d")
         .add(2, "h")
         .add(5, "s").toString(),
       cellWidth: 50,

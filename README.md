@@ -16,12 +16,9 @@
 - 横轴根据时间范围动态渲染，加快渲染速度
 - ~~通用计划条~~
 - 自定义标记线 
-- 高亮？整块，还是线提示？
-- 背景表格线定制？
 - 将项目变成一个组件(完成部分，打算上npm?)
 
-# 截图(现在分支取消了部分东西)
-## 原版位置 https://github.com/w1301625107/Vue-Gantt-chart/commit/09995a8e1ab13badcae6d8a9d21171cade8d89a1
+# 截图
 
 ![](https://raw.githubusercontent.com/w1301625107/vue-gantt-chart/master/screenshot/page1.png)
 

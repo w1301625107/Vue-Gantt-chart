@@ -61,7 +61,6 @@ export function countTimeBlockWithScale(timeStart, timeEnd, scale = 60) {
 
   let startBlocksTime = getStartBlocksTime(timeStart, scale);
   let count = 0;
-
   while (!startBlocksTime.isAfter(timeEnd)) {
     count++;
     startBlocksTime.add(scale, "m")

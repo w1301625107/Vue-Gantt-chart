@@ -1,30 +1,49 @@
 <template>
-  <div class="gantt"
+  <div class="gantt-chart"
        @wheel="wheelHandle">
-    <div class="gantt-chart">
-      <div class="gantt-header">
+    <div class="gantt-header">
+      <div class="gantt-header-title"
+           :style="{'line-height':descHeight+'px',height:descHeight+'px','max-width':descWidth+'px','min-width':descWidth+'px'}">
+        <slot name="title"></slot>
+      </div>
+      <div class="gantt-header-timeline">
         <timeline :start="start"
                   :end="end"
                   :cellWidth="cellWidth"
                   :descHeight="descHeight"
                   :scale="scale"
-                  :style="{width:totalWidth+'px','margin-left':descWidth+'px'}"></timeline>
+                  :style="{width:totalWidth+'px'}">
+        </timeline>
       </div>
-      <div class="gantt-body"
-           :style="{height:'calc(100% - '+descHeight+'px'+')'}">
-        <div class="gantt-mark-area">
+    </div>
+    <div class="gantt-body"
+         :style="{height:'calc(100% - '+descHeight+'px'+')'}">
+      <div class="gantt-table">
+        <div class="gantt-markline-area">
           <CurrentTime :getTimeLineMargin="getTimeLineMargin" />
           <!--<mark-line :markLineTime="markLineTimeEnd"
                      color="#0ca30a"></mark-line> -->
         </div>
-        <div class="gantt-table">
+        <div class="gantt-leftbar-wrapper"
+             :style="{'max-width':descWidth+'px','min-width':descWidth+'px'}">
+          <LeftBar :datas="datas"
+                   :scrollTop="scrollTop"
+                   :cellHeight="cellHeight"
+                   :style="{height:totalHeight+'px'}">
+            <template v-slot="{item}">
+              <slot name="left"
+                    :item="item"></slot>
+            </template>
+          </LeftBar>
+        </div>
+        <div class="gantt-blocks-wrapper">
           <blocks :scrollTop="scrollTop"
                   :datas="datas"
                   :cellWidth="cellWidth"
                   :cellHeight="cellHeight"
                   :scale="scale"
                   :startBlockTime="startBlockTime"
-                  :style="{width:totalWidth+'px','margin-left':descWidth+'px'}">
+                  :style="{width:totalWidth+'px'}">
             <template v-slot="{data,item}">
               <slot name="block"
                     :data="data"
@@ -32,32 +51,17 @@
             </template>
           </blocks>
         </div>
-        <div class="gantt-scroll-y"
-             :style="{height:'calc(100% - 17px)'}"
-             @scroll="syncScrollY">
-          <div :style="{height:totalHeight+'px'}"></div>
-        </div>
-        <div class="gantt-scroll-x"
-             @scroll="syncScrollX">
-          <!-- 这里减去边框的17px -->
-          <div :style="{width:totalWidth-17+'px'}"></div>
-        </div>
       </div>
-    </div>
-    <div class="gantt-fixleft"
-         :style="{width:descWidth+'px',height:'calc(100% - 17px)'}">
-      <div class="gantt-lefthearder"
-           :style="{'line-height':descHeight+'px',height:descHeight+'px'}">
-        <slot name="title"></slot>
+      <div class="gantt-scroll-y"
+           :style="{height:'calc(100% - 17px)'}"
+           @scroll="syncScrollY">
+        <div :style="{height:totalHeight+'px'}"></div>
       </div>
-      <LeftBar :datas="datas"
-               :scrollTop="scrollTop"
-               :cellHeight="cellHeight"
-               :style="{height:'calc(100% - '+descHeight+'px'+')'}">
-        <template v-slot="{item}">
-          <slot name="left"
-                :item="item"></slot>
-        </template></LeftBar>
+      <div class="gantt-scroll-x"
+           @scroll="syncScrollX">
+        <!-- 这里减去边框的17px -->
+        <div :style="{width:totalWidth-17+'px'}"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -65,6 +69,7 @@
 <script>
 import moment from "moment";
 import {
+  scaleList,
   getStartBlocksTime,
   countTimeBlockWithScale
 } from "@src/utils/timeblock.js";
@@ -79,12 +84,16 @@ export default {
   components: { Timeline, LeftBar, Blocks, MarkLine, CurrentTime },
   props: {
     startTime: {
-      // type: moment,
-      required: true
+      required: true,
+      validator(date) {
+        return moment(date).isValid();
+      }
     },
     endTime: {
-      // type: moment,
-      required: true
+      required: true,
+      validator(date) {
+        return moment(date).isValid();
+      }
     },
     cellWidth: {
       type: Number,
@@ -104,7 +113,10 @@ export default {
     },
     scale: {
       type: Number,
-      default: 60
+      default: 60,
+      validator(value) {
+        return scaleList.includes(value);
+      }
     },
     datas: {
       type: Array,
@@ -118,8 +130,7 @@ export default {
         gantt_leftbar: {},
         gantt_table: {},
         gantt_scroll_y: {},
-        gantt_body: {},
-        gantt_header: {},
+        gantt_timeline: {},
         gantt_scroll_x: {},
         gantt_markArea: {}
       },
@@ -147,7 +158,7 @@ export default {
       return datas.length * cellHeight;
     },
     startBlockTime() {
-      let value = getStartBlocksTime(this.start);
+      let value = getStartBlocksTime(this.start,this.scale);
       return value;
     }
   },
@@ -165,27 +176,40 @@ export default {
     this.getSelector();
   },
   updated() {
-    this.getSelector();
+    // this.getSelector();
   },
   methods: {
     getTimeLineMargin(date) {
       let { cellWidth, scale, startBlockTime, descWidth } = this;
       let options = {
         cellWidth,
-        scale,
+        scale
       };
 
-      return descWidth + calcBlockMargin(date,startBlockTime.format("YYYY-MM-DD HH:mm:ss"), options);
+      return (
+        calcBlockMargin(
+          date,
+          startBlockTime.format("YYYY-MM-DD HH:mm:ss"),
+          options
+        ) + descWidth
+      );
     },
     //缓存节点
     getSelector() {
-      this.selector.gantt_leftbar = document.querySelector(".gantt-leftbar");
-      this.selector.gantt_table = document.querySelector(".gantt-table");
+      this.selector.gantt_leftbar = document.querySelector(
+        ".gantt-leftbar-wrapper"
+      );
+      this.selector.gantt_table = document.querySelector(
+        ".gantt-blocks-wrapper"
+      );
       this.selector.gantt_scroll_y = document.querySelector(".gantt-scroll-y");
-      this.selector.gantt_body = document.querySelector(".gantt-body");
-      this.selector.gantt_header = document.querySelector(".gantt-header");
+      this.selector.gantt_timeline = document.querySelector(
+        ".gantt-header-timeline"
+      );
       this.selector.gantt_scroll_x = document.querySelector(".gantt-scroll-x");
-      this.selector.gantt_markArea = document.querySelector(".gantt-mark-area");
+      this.selector.gantt_markArea = document.querySelector(
+        ".gantt-markline-area"
+      );
     },
     wheelHandle(event) {
       let { deltaX, deltaY, deltaZ } = event;
@@ -193,8 +217,7 @@ export default {
         gantt_leftbar,
         gantt_table,
         gantt_scroll_y,
-        gantt_body,
-        gantt_header,
+        gantt_timeline,
         gantt_scroll_x,
         gantt_markArea
       } = this.selector;
@@ -206,8 +229,7 @@ export default {
           this.scrollTop = gantt_table.scrollTop;
         }
         if (deltaX != 0) {
-          gantt_body.scrollLeft += deltaX;
-          gantt_header.scrollLeft += deltaX;
+          gantt_timeline.scrollLeft += deltaX;
           gantt_scroll_x.scrollLeft += deltaX;
           gantt_markArea.style.left = gantt_markArea.style.left + deltaX;
         }
@@ -223,20 +245,20 @@ export default {
       });
     },
     syncScrollX(event) {
-      let { gantt_table, gantt_header, gantt_markArea } = this.selector;
+      let { gantt_table, gantt_timeline, gantt_markArea } = this.selector;
       this.$nextTick(() => {
         gantt_table.scrollLeft = event.target.scrollLeft;
-        gantt_header.scrollLeft = event.target.scrollLeft;
+        gantt_timeline.scrollLeft = event.target.scrollLeft;
         gantt_markArea.style.left = "-" + event.target.scrollLeft + "px";
       });
     },
     //修改gantt-cell-height和gantt-cell-height样式数值
     resetCss() {
       let style = document.getElementById("gantt-cell-style");
-      let { cellWidth, cellHeight, showTimeBlock, totalWidth } = this;
+      let { cellWidth, cellHeight, totalWidth } = this;
       let innerText = `.gantt-cell-width{width:${cellWidth}px;}
         .gantt-cell-height{height:${cellHeight}px;}
-        .gantt-block{background-size: ${cellWidth}px ${cellHeight}px;width:${totalWidth}px}`;
+        .gantt-block{background-size: ${cellWidth}px ${cellHeight}px;`;
       if (null == style) {
         let style = document.createElement("style");
         style.setAttribute("id", "gantt-cell-style");
@@ -250,3 +272,7 @@ export default {
   }
 };
 </script>
+
+<style>
+@import "scss/gantt.scss";
+</style>
