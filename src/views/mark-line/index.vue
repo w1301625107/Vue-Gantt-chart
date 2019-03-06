@@ -1,8 +1,8 @@
 <template>
   <div v-show="visible"
        class="gantt-markline"
-       :style="{'background-color':color,'left':getBlockMargin()+'px'}">
-    <div class="gantt-markline-content"
+       :style="{'background-color':color,'left':getPosition()+'px'}">
+    <div class="gantt-markline-label"
          :style="{'background-color':color}">{{markLineTime.format("HH:mm:ss")}}</div>
   </div>
 </template>
@@ -19,7 +19,7 @@ export default {
       type: String,
       default: "green"
     },
-    getTimeLineMargin: {
+    getTimeLinePosition: {
       type: Function,
       required: true
     }
@@ -30,13 +30,13 @@ export default {
     };
   },
   methods: {
-    getBlockMargin() {
+    getPosition() {
       if (this.markLineTime == null) {
         this.visible = false;
-        return;
+        return 0;
       } else {
         this.visible = true;
-        return this.getTimeLineMargin(this.markLineTime);
+        return this.getTimeLinePosition(this.markLineTime);
       }
     }
   }

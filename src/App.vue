@@ -23,9 +23,9 @@
            :endTime="endTime"
            :cellWidth="cellWidth"
            :cellHeight="cellHeight"
-           :descHeight="descHeight"
+           :titleHeight="titleHeight"
            :scale="scale"
-           :descWidth="descWidth"
+           :titleWidth="titleWidth"
            :datas="datas">
       <template v-slot:block="{data,item}">
         <Test :data="data"
@@ -47,7 +47,7 @@
 import Test from "./test.vue";
 import TestLeft from "./test-left.vue";
 import { mockDatas } from "@src/mock/index.js";
-import { scaleList } from "@src/utils/timeblock.js";
+import { scaleList } from "@src/utils/timeLineUtils.js";
 import moment from "moment";
 import Gantt from "@views/gantt.vue";
 export default {
@@ -64,8 +64,8 @@ export default {
         .add(5, "s").toString(),
       cellWidth: 50,
       cellHeight: 20,
-      descHeight: 40,
-      descWidth: 200,
+      titleHeight: 40,
+      titleWidth: 200,
       scale: 60,
       datasNum: 100,
       datas: mockDatas(100),

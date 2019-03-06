@@ -5,12 +5,12 @@
          v-for="(day,index) in getDays"
          :key="index">
       <div class="gantt-timeline-day "
-           :style="{height:descHeight/2+'px','line-height':descHeight/2+'px'}">{{day.format("MM/DD")}}</div>
-      <div class="gantt-timeline-hours "
-           :style="{height:descHeight/2+'px',
-           'line-height':descHeight/2+'px'}">
+           :style="{height:titleHeight/2+'px','line-height':titleHeight/2+'px'}">{{day.format("MM/DD")}}</div>
+      <div class="gantt-timeline-scale "
+           :style="{height:titleHeight/2+'px',
+           'line-height':titleHeight/2+'px'}">
         <div class="gantt-cell-width"
-             v-for="(hour,index) in getHourList(day)"
+             v-for="(hour,index) in getTimeScales(day)"
              :key="index">
           {{hour}}
         </div>
@@ -18,13 +18,14 @@
     </div>
   </div>
 </template>
-//  :style="{width:getDayWith(day)+'px'}" 
+
 <script>
 import moment from "moment";
 import {
-  getStartBlocksTime,
-  countTimeBlockWithScale
-} from "@src/utils/timeblock.js";
+  getBeginTimeOfTimeLine,
+  calcScalesAbout2Times
+} from "@src/utils/timeLineUtils.js";
+
 const START_DAY = 0;
 const MIDDLE_DAY = 1;
 const END_DAY = 2;
@@ -48,7 +49,7 @@ export default {
       type: Number,
       default: 50
     },
-    descHeight: {
+    titleHeight: {
       type: Number,
       default: 40
     },
@@ -73,49 +74,28 @@ export default {
     }
   },
   methods: {
-    // //计算每天的MM/DD的block长度
-    // getDayWith(date) {
-    //   let blocks;
-    //   let { start, end, scale, cellWidth } = this;
-    //   if (isSameDay(date, start)) {
-    //     blocks = countTimeBlockWithScale(
-    //       start,
-    //       start.clone().endOf("day"),
-    //       scale
-    //     );
-    //   } else if (isSameDay(date, end)) {
-    //     blocks = countTimeBlockWithScale(
-    //       end.clone().startOf("day"),
-    //       end,
-    //       scale
-    //     );
-    //   } else {
-    //     blocks = (24 * 60) / scale;
-    //   }
-    //   return blocks * cellWidth;
-    // },
     //获取时间刻度数组
-    getHourList(date) {
+    getTimeScales(date) {
       let temp = [];
       let { start, end } = this;
 
       if (isSameDay(date, start)) {
-        temp = this.generateHourList(START_DAY);
+        temp = this.generateTimeScale(START_DAY);
       } else if (isSameDay(date, end)) {
-        temp = this.generateHourList(END_DAY);
+        temp = this.generateTimeScale(END_DAY);
       } else {
-        temp = this.generateHourList(MIDDLE_DAY);
+        temp = this.generateTimeScale(MIDDLE_DAY);
       }
       return temp;
     },
     //根据类型生成时间刻度数组
-    generateHourList(type) {
+    generateTimeScale(type) {
       let totalblock = [];
       let { start, end, scale } = this;
       let a, b;
       switch (type) {
         case START_DAY: //和start同一天
-          a = getStartBlocksTime(start, scale);
+          a = getBeginTimeOfTimeLine(start, scale);
           //start和end同一天特殊处理
           if (isSameDay(start, end)) {
             b = end;

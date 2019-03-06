@@ -50,7 +50,7 @@ $font-gray:#777;
       color: $font-gray;
     }
 
-    &-hours {
+    &-scale{
       display: flex;
 
       &>div {
@@ -105,7 +105,7 @@ $font-gray:#777;
     width: 2px;
     height: 100vh;
 
-    &-content {
+    &-label {
       padding: 3px;
       float: left;
       color: #fff;

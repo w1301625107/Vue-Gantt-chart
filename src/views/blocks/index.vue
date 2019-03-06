@@ -9,10 +9,10 @@
          :key="data.id">
       <div class="gantt-block-item"
            v-for="(item,index) in data.Planned"
-           v-if="isInRange(item)"
+           v-if="isInTimeRange(item)"
            :key="item.id"
-           :style="{width:getBlockwidth(item)+'px',
-                   'left':getBlockMargin(item)+'px'}">
+           :style="{width:getWidth(item)+'px',
+                   'left':getPosition(item)+'px'}">
         <slot :data="data"
               :item="item"></slot>
       </div>
@@ -23,13 +23,13 @@
 <script>
 import moment from "moment";
 import dr from "../dynamic-render.js";
-import { calcBlockwidth, calcBlockMargin } from "@src/utils/calc-margin.js";
+import { getWidthAbout2Times, getPositonOffset } from "@src/utils/gtUtils.js";
 export default {
   name: "Blocks",
   mixins: [dr],
   props: {
     scrollLeft: Number,
-    startBlockTime: {
+    beginTimeOfTimeLine: {
       type: moment,
       required: true
     },
@@ -49,40 +49,40 @@ export default {
     };
   },
   created() {
-    this.getXAxisRange();
+    this.getTimeRange();
   },
   mounted() {},
   computed: {
-    startBlockTimeFormat() {
-      return this.startBlockTime.format("YYYY-MM-DD HH:mm:ss");
+    beginTimeOfTimeLineFormat() {
+      return this.beginTimeOfTimeLine.format("YYYY-MM-DD HH:mm:ss");
     }
   },
   watch: {
     scrollLeft() {
-      this.getXAxisRange();
+      this.getTimeRange();
     }
   },
   methods: {
-    getXAxisRange() {
+    getTimeRange() {
       let {
-        startBlockTime,
+        beginTimeOfTimeLine,
         scrollLeft,
         cellWidth,
         scale,
         containerWidth
       } = this;
-      this.startTime = startBlockTime
+      this.startTime = beginTimeOfTimeLine
         .clone()
         .add((scrollLeft / cellWidth) * scale, "m")
         .toDate()
         .getTime();
-      this.endTime = startBlockTime
+      this.endTime = beginTimeOfTimeLine
         .clone()
         .add(((scrollLeft + containerWidth) / cellWidth) * scale, "m")
         .toDate()
         .getTime();
     },
-    isInRange(item) {
+    isInTimeRange(item) {
       let { startTime, endTime } = this;
       let startToMs = new Date(item.start).getTime();
       let endToMs = new Date(item.end).getTime();
@@ -95,21 +95,21 @@ export default {
       return false;
     },
     //计算时间块长度
-    getBlockwidth(block) {
+    getWidth(block) {
       let options = {
         scale: this.scale,
         cellWidth: this.cellWidth
       };
-      return calcBlockwidth(block.start, block.end, options);
+      return getWidthAbout2Times(block.start, block.end, options);
     },
     //计算时间块偏移
-    getBlockMargin(block) {
+    getPosition(block) {
       let options = {
         scale: this.scale,
         cellWidth: this.cellWidth
       };
 
-      return calcBlockMargin(block.start, this.startBlockTimeFormat, options);
+      return getPositonOffset(block.start, this.beginTimeOfTimeLineFormat, options);
     }
   }
 };

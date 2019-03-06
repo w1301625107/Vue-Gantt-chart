@@ -15,16 +15,16 @@ export function validateScale(scale) {
 
 /**
  * 根据给出的scale 和 start 时间 计算出用于计算的启始时间
- * eg：Start 为10:10分 刻度为60，getStartBlocksTime函数给出的时间 为 10:00分
- *                    刻度为5，getStartBlocksTime函数给出的时间 为 10:10分
- *                    刻度为3，getStartBlocksTime函数给出的时间 为 10:09分
+ * eg：Start 为10:10分 刻度为60，getBeginTimeOfTimeLine函数给出的时间 为 10:00分
+ *                    刻度为5，getBeginTimeOfTimeLine函数给出的时间 为 10:10分
+ *                    刻度为3，getBeginTimeOfTimeLine函数给出的时间 为 10:09分
  *
  * @export
  * @param {*} start 
  * @param {number} [scale=60]
  * @returns 计算的启始时间
  */
-export function getStartBlocksTime(start, scale = 60) {
+export function getBeginTimeOfTimeLine(start, scale = 60) {
   validateScale(scale)
   let timeBlocks;
   let startClone = start.clone();
@@ -41,7 +41,7 @@ export function getStartBlocksTime(start, scale = 60) {
 }
 /**
  * 根据所给 scale计算 两个时间差一共可以分成多少块
- * 注意： timdStart 并不是实在开始计算的时间，会通过getStartBlocksTime 函数计算出分割开始时间
+ * 注意： timdStart 并不是实在开始计算的时间，会通过getBeginTimeOfTimeLine 函数计算出分割开始时间
  *
  * @export
  * @param {*} timeStart 开始时间
@@ -49,17 +49,17 @@ export function getStartBlocksTime(start, scale = 60) {
  * @param {number} [scale=60] 分割的刻度
  * @returns 时间块数量
  */
-export function countTimeBlockWithScale(timeStart, timeEnd, scale = 60) {
+export function calcScalesAbout2Times(timeStart, timeEnd, scale = 60) {
   if (!moment.isMoment(timeStart) || !moment.isMoment(timeEnd)) {
     throw new TypeError('参数必须为moment 对象')
   }
   if (timeStart.isAfter(timeEnd)) {
-    throw new TypeError('错误的参数顺序，函数countTimeBlockWithScale的第一个时间参数必须大于第二个时间参数')
+    throw new TypeError('错误的参数顺序，函数calcScalesAbout2Times的第一个时间参数必须大于第二个时间参数')
   }
 
   validateScale(scale);
 
-  let startBlocksTime = getStartBlocksTime(timeStart, scale);
+  let startBlocksTime = getBeginTimeOfTimeLine(timeStart, scale);
   let count = 0;
   while (!startBlocksTime.isAfter(timeEnd)) {
     count++;

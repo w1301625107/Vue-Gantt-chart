@@ -1,6 +1,6 @@
 <template>
   <mark-line :markLineTime="currentTime"
-             :getTimeLineMargin="getTimeLineMargin"
+             :getTimeLinePosition="getTimeLinePosition"
              color="rgba(255,0,0,.4)"></mark-line>
 </template>
 
@@ -11,7 +11,7 @@ export default {
   name: "CurrentTime",
   components: { MarkLine },
   props: {
-    getTimeLineMargin: {
+    getTimeLinePosition: {
       type: Function,
       required: true
     }

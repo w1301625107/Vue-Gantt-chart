@@ -3,29 +3,29 @@
        @wheel="wheelHandle">
     <div class="gantt-header">
       <div class="gantt-header-title"
-           :style="{'line-height':descHeight+'px',height:descHeight+'px','max-width':descWidth+'px','min-width':descWidth+'px'}">
+           :style="{'line-height':titleHeight+'px',height:titleHeight+'px','max-width':titleWidth+'px','min-width':titleWidth+'px'}">
         <slot name="title"></slot>
       </div>
       <div class="gantt-header-timeline">
         <timeline :start="start"
                   :end="end"
                   :cellWidth="cellWidth"
-                  :descHeight="descHeight"
+                  :titleHeight="titleHeight"
                   :scale="scale"
                   :style="{width:totalWidth+'px'}">
         </timeline>
       </div>
     </div>
     <div class="gantt-body"
-         :style="{height:'calc(100% - '+descHeight+'px'+')'}">
+         :style="{height:'calc(100% - '+titleHeight+'px'+')'}">
       <div class="gantt-table">
         <div class="gantt-markline-area">
-          <CurrentTime :getTimeLineMargin="getTimeLineMargin" />
+          <CurrentTime :getTimeLinePosition="getTimeLinePosition" />
           <!--<mark-line :markLineTime="markLineTimeEnd"
                      color="#0ca30a"></mark-line> -->
         </div>
         <div class="gantt-leftbar-wrapper"
-             :style="{'max-width':descWidth+'px','min-width':descWidth+'px'}">
+             :style="{'max-width':titleWidth+'px','min-width':titleWidth+'px'}">
           <LeftBar :datas="datas"
                    :scrollTop="scrollTop"
                    :cellHeight="cellHeight"
@@ -43,7 +43,7 @@
                   :cellWidth="cellWidth"
                   :cellHeight="cellHeight"
                   :scale="scale"
-                  :startBlockTime="startBlockTime"
+                  :beginTimeOfTimeLine="beginTimeOfTimeLine"
                   :style="{width:totalWidth+'px'}">
             <template v-slot="{data,item}">
               <slot name="block"
@@ -53,6 +53,7 @@
           </blocks>
         </div>
       </div>
+      <!-- 这里减去滚动条的17px -->
       <div class="gantt-scroll-y"
            :style="{height:'calc(100% - 17px)'}"
            @scroll="syncScrollY">
@@ -60,7 +61,6 @@
       </div>
       <div class="gantt-scroll-x"
            @scroll="syncScrollX">
-        <!-- 这里减去边框的17px -->
         <div :style="{width:totalWidth-17+'px'}"></div>
       </div>
     </div>
@@ -71,10 +71,10 @@
 import moment from "moment";
 import {
   scaleList,
-  getStartBlocksTime,
-  countTimeBlockWithScale
-} from "@src/utils/timeblock.js";
-import { calcBlockMargin } from "@src/utils/calc-margin.js";
+  getBeginTimeOfTimeLine,
+  calcScalesAbout2Times
+} from "@src/utils/timeLineUtils.js";
+import { getPositonOffset } from "@src/utils/gtUtils.js";
 import Timeline from "@views/time-line/index.vue";
 import CurrentTime from "@views/mark-line/current-time.vue";
 import LeftBar from "@views/left-bar/index.vue";
@@ -104,11 +104,11 @@ export default {
       type: Number,
       default: 20
     },
-    descHeight: {
+    titleHeight: {
       type: Number,
       default: 40
     },
-    descWidth: {
+    titleWidth: {
       type: Number,
       default: 200
     },
@@ -147,20 +147,20 @@ export default {
       return moment(this.endTime);
     },
     totalWidth() {
-      let { descWidth, cellWidth, totalBlocks } = this;
-      return descWidth + cellWidth * totalBlocks;
+      let { titleWidth, cellWidth, totalScales } = this;
+      return titleWidth + cellWidth * totalScales;
     },
     //计算时间块的数量
-    totalBlocks() {
+    totalScales() {
       let { start, end, scale } = this;
-      return countTimeBlockWithScale(start, end, scale);
+      return calcScalesAbout2Times(start, end, scale);
     },
     totalHeight() {
       let { datas, cellHeight } = this;
       return datas.length * cellHeight;
     },
-    startBlockTime() {
-      let value = getStartBlocksTime(this.start,this.scale);
+    beginTimeOfTimeLine() {
+      let value = getBeginTimeOfTimeLine(this.start,this.scale);
       return value;
     }
   },
@@ -181,19 +181,19 @@ export default {
     // this.getSelector();
   },
   methods: {
-    getTimeLineMargin(date) {
-      let { cellWidth, scale, startBlockTime, descWidth } = this;
+    getTimeLinePosition(date) {
+      let { cellWidth, scale, beginTimeOfTimeLine, titleWidth } = this;
       let options = {
         cellWidth,
         scale
       };
 
       return (
-        calcBlockMargin(
+        getPositonOffset(
           date,
-          startBlockTime.format("YYYY-MM-DD HH:mm:ss"),
+          beginTimeOfTimeLine.format("YYYY-MM-DD HH:mm:ss"),
           options
-        ) + descWidth
+        ) + titleWidth
       );
     },
     //缓存节点
