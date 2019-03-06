@@ -23,7 +23,7 @@
 <script>
 import moment from "moment";
 import dr from "../dynamic-render.js";
-import { getWidthAbout2Times, getPositonOffset } from "@src/utils/gtUtils.js";
+import { getWidthAbout2Times, getPositonOffset } from "../../utils/gtUtils.js";
 export default {
   name: "Blocks",
   mixins: [dr],

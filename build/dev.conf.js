@@ -103,6 +103,7 @@ module.exports = {
   },
 
   plugins: [
+    new VueLoaderPlugin(''),
     new WebpackBar(),
     new HtmlWebpackPlugin({
       template: rootDir('index.html'),
@@ -112,7 +113,10 @@ module.exports = {
       __DEV__: true
     }),
     new webpack.HotModuleReplacementPlugin(), //热加载插件
-    new VueLoaderPlugin(''),
+    new webpack.ContextReplacementPlugin(
+      /moment[\\\/]locale$/,
+      /^\.\/(zh-cn)$/
+    ),
   ],
   performance: {
     hints: 'warning'

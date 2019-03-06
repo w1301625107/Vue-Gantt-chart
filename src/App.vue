@@ -19,7 +19,7 @@
       <span>minute</span>
     </header>
     <div :style="{height:'calc(100vh - 30px - 30px)'}">
-    <gantt :startTime="startTime"
+    <v-gantt-chart :startTime="startTime"
            :endTime="endTime"
            :cellWidth="cellWidth"
            :cellHeight="cellHeight"
@@ -37,7 +37,7 @@
       <template v-slot:title>
         hola
       </template>
-    </gantt>
+    </v-gantt-chart>
     </div>
     <footer class="main-footer">wuchouchou</footer>
   </div>
@@ -47,12 +47,11 @@
 import Test from "./test.vue";
 import TestLeft from "./test-left.vue";
 import { mockDatas } from "@src/mock/index.js";
-import { scaleList } from "@src/utils/timeLineUtils.js";
+import { scaleList } from "@src/lib/utils/timeLineUtils.js";
 import moment from "moment";
-import Gantt from "@views/gantt.vue";
 export default {
   name: "App",
-  components: { Gantt, Test, TestLeft },
+  components: { Test, TestLeft },
   data() {
     return {
       markLineTime: moment(),

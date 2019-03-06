@@ -1,0 +1,118 @@
+.gantt-chart {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  outline: 1px solid #f0f0f0;
+}
+.gantt-header {
+  display: flex;
+  background-color: #fff;
+  outline: 1px solid #f0f0f0;
+}
+.gantt-header-title {
+  width: 100%;
+  background: #747e80;
+  color: #fff;
+  text-align: center;
+}
+.gantt-header-timeline {
+  overflow: hidden;
+}
+.gantt-body {
+  position: relative;
+}
+.gantt-timeline {
+  position: relative;
+  text-align: center;
+  display: flex;
+}
+.gantt-timeline-day {
+  font-weight: bold;
+  color: #777;
+}
+.gantt-timeline-scale {
+  display: flex;
+}
+.gantt-timeline-scale > div {
+  height: 100%;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #777;
+}
+.gantt-leftbar {
+  width: 100%;
+  height: 100%;
+  background: white;
+  color: #777;
+  font-size: 0.8rem;
+}
+.gantt-leftbar-item {
+  outline: 1px solid #f0f0f0;
+}
+.gantt-table {
+  display: flex;
+  width: calc(100% - 17px);
+  height: calc(100% - 17px);
+}
+.gantt-blocks-wrapper {
+  overflow: hidden;
+}
+.gantt-leftbar-wrapper {
+  position: relative;
+  overflow: hidden;
+  outline: 1px solid #f0f0f0;
+  z-index: 100;
+}
+.gantt-markline-area {
+  position: relative;
+  z-index: 99;
+}
+.gantt-markline {
+  position: absolute;
+  z-index: 100;
+  width: 2px;
+  height: 100vh;
+}
+.gantt-markline-label {
+  padding: 3px;
+  float: left;
+  color: #fff;
+  font-size: 0.7rem;
+}
+.gantt-block {
+  position: relative;
+  background-image: url("./assets/block.png");
+  background-repeat: repeat;
+}
+.gantt-block-container {
+  position: relative;
+  height: 100%;
+}
+.gantt-block-item {
+  position: absolute;
+  height: 100%;
+}
+.gantt-scroll-y {
+  overflow-y: scroll;
+  position: absolute;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  width: 17px;
+}
+.gantt-scroll-y > div {
+  width: 17px;
+}
+.gantt-scroll-x {
+  overflow-x: scroll;
+  position: absolute;
+  z-index: 1000;
+  left: 0;
+  bottom: 0;
+  width: calc(100% - 17px);
+  height: 17px;
+}
+.gantt-scroll-x > div {
+  height: 17px;
+}

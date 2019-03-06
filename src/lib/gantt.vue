@@ -73,13 +73,13 @@ import {
   scaleList,
   getBeginTimeOfTimeLine,
   calcScalesAbout2Times
-} from "@src/utils/timeLineUtils.js";
-import { getPositonOffset } from "@src/utils/gtUtils.js";
-import Timeline from "@views/time-line/index.vue";
-import CurrentTime from "@views/mark-line/current-time.vue";
-import LeftBar from "@views/left-bar/index.vue";
-import Blocks from "@views/blocks/index.vue";
-import MarkLine from "@views/mark-line/index.vue";
+} from "./utils/timeLineUtils.js";
+import { getPositonOffset } from "./utils/gtUtils.js";
+import Timeline from "./components/time-line/index.vue";
+import CurrentTime from "./components/mark-line/current-time.vue";
+import LeftBar from "./components/left-bar/index.vue";
+import Blocks from "./components/blocks/index.vue";
+import MarkLine from "./components/mark-line/index.vue";
 export default {
   name: "Gantt",
   components: { Timeline, LeftBar, Blocks, MarkLine, CurrentTime },
@@ -282,5 +282,5 @@ export default {
 </script>
 
 <style>
-@import "scss/gantt.scss";
+@import "./index.css";
 </style>

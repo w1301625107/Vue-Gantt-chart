@@ -1,4 +1,4 @@
-import debounce from "@src/utils/debounce.js";
+import debounce from "../utils/debounce.js";
 
 let dynamicRender = {
   props: {

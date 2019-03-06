@@ -24,7 +24,7 @@ import moment from "moment";
 import {
   getBeginTimeOfTimeLine,
   calcScalesAbout2Times
-} from "@src/utils/timeLineUtils.js";
+} from "../../utils/timeLineUtils.js";
 
 const START_DAY = 0;
 const MIDDLE_DAY = 1;

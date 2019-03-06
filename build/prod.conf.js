@@ -12,6 +12,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const copyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const WebpackBar = require('webpackbar');
 
 
 function assetsPath(_path) {
@@ -22,14 +23,14 @@ function rootDir(dir) {
   return path.join(__dirname, '..', dir)
 }
 
-module.exports = env => {
+module.exports = (env={}) => {
   let config = {
 
     mode: 'production',
-  
+
     entry: rootDir('src/main.js'),
     //entry: ['./src/app.js', './src/main.scss'],
-  
+
     output: {
       path: rootDir('dist'),
       // filename: "bundle.js",
@@ -39,7 +40,7 @@ module.exports = env => {
       //publicPath: website.publicPath
       //chunkFilename:'[name].chunk.js',
     },
-  
+
     // 加载器
     module: {
       rules: [{
@@ -99,17 +100,20 @@ module.exports = env => {
         }
       ]
     },
-  
-  
+
+
     resolve: {
-      extensions: [ '.mjs', '.js', '.json', '.vue'], //自动解析确定的扩展
+      extensions: ['.mjs', '.js', '.json', '.vue'], //自动解析确定的扩展
       alias: {
         'vue$': 'vue/dist/vue.esm.js',
         '@views': rootDir('src/views'),
+        '@src': rootDir('src')
       },
     },
-  
+
     plugins: [
+      new VueLoaderPlugin(''),
+      new WebpackBar(),
       new HtmlWebpackPlugin({
         template: rootDir('index.html'),
         filename: assetsPath('index.html'),
@@ -118,14 +122,13 @@ module.exports = env => {
         'ENVIRONMENT': '"PROD"'
       }),
       // new webpack.HotModuleReplacementPlugin(), //热加载插件
-      new VueLoaderPlugin(''),
       //new ExtractTextPlugin("css/index.css"),
       new MiniCssExtractPlugin({
         filename: 'css/index.css',
       }),
       new copyWebpackPlugin([{
         from: rootDir('static'),
-        to:rootDir('dist/static')
+        to: rootDir('dist/static')
       }]),
       new CleanWebpackPlugin(['dist'], {
         root: rootDir(''),
@@ -136,11 +139,15 @@ module.exports = env => {
         filename: '[path].gz[query]',
         algorithm: 'gzip',
         test: new RegExp(
-            '\\.(js|css)$'    //压缩 js 与 css
+          '\\.(js|css)$' //压缩 js 与 css
         ),
         threshold: 10240,
         minRatio: 0.8
-    })
+      }),
+      new webpack.ContextReplacementPlugin(
+        /moment[\\\/]locale$/,
+        /^\.\/(zh-cn)$/
+      ),
     ],
     performance: {
       hints: 'warning'
@@ -153,10 +160,10 @@ module.exports = env => {
     }
   }
 
-  if(env.analyzer){
+  if (env.analyzer) {
     const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
     config.plugins.push(new BundleAnalyzerPlugin())
   }
 
   return config
-} 
+}

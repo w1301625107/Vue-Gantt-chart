@@ -6,7 +6,7 @@
 
 <script>
 import moment from "moment";
-import MarkLine from "@views/mark-line/index.vue";
+import MarkLine from "./index.vue";
 export default {
   name: "CurrentTime",
   components: { MarkLine },
