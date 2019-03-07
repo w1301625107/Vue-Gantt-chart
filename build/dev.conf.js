@@ -110,7 +110,7 @@ module.exports = {
       filename: assetsPath('index.html'),
     }),
     new webpack.DefinePlugin({
-      __DEV__: true
+      'ENVIRONMENT': '"DEV"'
     }),
     new webpack.HotModuleReplacementPlugin(), //热加载插件
     new webpack.ContextReplacementPlugin(
