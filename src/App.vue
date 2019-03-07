@@ -30,14 +30,14 @@
                      showCurrentTime
                      :datas="datas">
         <template v-slot:block="{data,item}">
-          <Test :data="data"
+          <Test :data="data" :currentTime="currentTime"
                 :item="item"></Test>
         </template>
         <template v-slot:left="{data}">
           <TestLeft :data="data"></TestLeft>
         </template>
         <template v-slot:title>
-          hola
+          铁胆火车侠日程表
         </template>
       </v-gantt-chart>
     </div>
@@ -73,19 +73,21 @@ export default {
           color: "#747e80"
         }
       ],
-      startTime: moment().toString(),
+      currentTime:moment(),
+      startTime: moment().subtract(5, "h").toString(),
       endTime: moment()
         .add(2, "d")
         .add(2, "h")
         .add(5, "s")
         .toString(),
       cellWidth: 50,
-      cellHeight: 20,
+      cellHeight: 30,
       titleHeight: 40,
-      titleWidth: 200,
+      titleWidth: 250,
       scale: 60,
       datasNum: 100,
       datas: mockDatas(100),
+      dataKey:'id',
       scaleList: scaleList
     };
   },

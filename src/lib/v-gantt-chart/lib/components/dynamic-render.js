@@ -23,7 +23,7 @@ let dynamicRender = {
       //上一次加载的节点
       oldCurrentIndex: 0,
       //预加载的数量,是前后都为2个
-      preload: 2
+      preload: 1
     };
   },
   computed: {

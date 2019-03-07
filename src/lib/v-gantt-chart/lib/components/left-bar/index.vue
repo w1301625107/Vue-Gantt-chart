@@ -6,7 +6,7 @@
     <div class="gantt-leftbar-item gantt-cell-height"
          v-for="(data,index) in showDatas"
          :key="dataKey?data[dataKey]:index">
-      <slot  :data="data"></slot>
+      <slot :data="data"></slot>
     </div>
   </div>
 </template>
