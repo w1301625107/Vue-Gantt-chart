@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/w1301625107/vue-gantt-chart/master/screenshot/icon.jpg)
+![](https://raw.githubusercontent.com/w1301625107/vue-gantt-chart/master/screenshot/icon.png)
 # vue-gantt-chart
 基于 Vue  实现的 gantt-like 图表 ,用于排班展示
 
