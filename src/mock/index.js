@@ -4,7 +4,7 @@ var template = {
   'id': () => 'Plan ' + Mock.Random.natural(1000, 9999),
 
   'name': () => (Mock.Random.word(4, 5)),
-  'Planned': () => {
+  'gtArray': () => {
     let temp = [];
     let i = 0;
     let j = Mock.Random.natural(9, 9);

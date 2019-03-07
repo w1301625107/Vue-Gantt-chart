@@ -4,9 +4,9 @@
          :style="{height:calTopSpace()+'px'}">
     </div>
     <div class="gantt-leftbar-item gantt-cell-height"
-         v-for="(item,index) in showDatas"
-         :key="index">
-      <slot  :item="item"></slot>
+         v-for="(data,index) in showDatas"
+         :key="dataKey?data[dataKey]:index">
+      <slot  :data="data"></slot>
     </div>
   </div>
 </template>
@@ -17,6 +17,7 @@ export default {
   name: "LeftBar",
   mixins:[dr],
   props:{
+    dataKey:String,
     datas: {
       type: Array,
       required: true

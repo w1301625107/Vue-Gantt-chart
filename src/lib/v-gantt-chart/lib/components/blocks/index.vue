@@ -6,11 +6,11 @@
     </div>
     <div class="gantt-block gantt-cell-height"
          v-for="(data,index) in showDatas"
-         :key="data.id">
+         :key="dataKey?data[dataKey]:index">
       <div class="gantt-block-item"
-           v-for="(item,index) in data.Planned"
+           v-for="(item,index) in data.gtArray"
            v-if="isInTimeRange(item)"
-           :key="item.id"
+           :key="itemKey?item[itemKey]:index"
            :style="{width:getWidth(item)+'px',
                    'left':getPosition(item)+'px'}">
         <slot :data="data"
@@ -28,6 +28,8 @@ export default {
   name: "Blocks",
   mixins: [dr],
   props: {
+    dataKey:String,
+    itemKey:String,
     scrollLeft: Number,
     beginTimeOfTimeLine: {
       type: moment,

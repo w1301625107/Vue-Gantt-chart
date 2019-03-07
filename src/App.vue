@@ -19,25 +19,27 @@
       <span>minute</span>
     </header>
     <div :style="{height:'calc(100vh - 30px - 30px)'}">
-    <v-gantt-chart :startTime="startTime"
-           :endTime="endTime"
-           :cellWidth="cellWidth"
-           :cellHeight="cellHeight"
-           :titleHeight="titleHeight"
-           :scale="scale"
-           :titleWidth="titleWidth"
-           :datas="datas">
-      <template v-slot:block="{data,item}">
-        <Test :data="data"
-              :item="item"></Test>
-      </template>
-      <template v-slot:left="{data,item}">
-        <TestLeft :item="item"></TestLeft>
-      </template>
-      <template v-slot:title>
-        hola
-      </template>
-    </v-gantt-chart>
+      <v-gantt-chart :startTime="startTime"
+                     :endTime="endTime"
+                     :cellWidth="cellWidth"
+                     :cellHeight="cellHeight"
+                     :timeLines="timeLines"
+                     :titleHeight="titleHeight"
+                     :scale="scale"
+                     :titleWidth="titleWidth"
+                     showCurrentTime
+                     :datas="datas">
+        <template v-slot:block="{data,item}">
+          <Test :data="data"
+                :item="item"></Test>
+        </template>
+        <template v-slot:left="{data}">
+          <TestLeft :data="data"></TestLeft>
+        </template>
+        <template v-slot:title>
+          hola
+        </template>
+      </v-gantt-chart>
     </div>
     <footer class="main-footer">wuchouchou</footer>
   </div>
@@ -47,20 +49,36 @@
 import Test from "./test.vue";
 import TestLeft from "./test-left.vue";
 import { mockDatas } from "@src/mock/index.js";
-import { scaleList } from "@src/lib/utils/timeLineUtils.js";
 import moment from "moment";
+
+const scaleList =[1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120, 180,
+  240,
+  360, 720, 1440
+]
 export default {
   name: "App",
   components: { Test, TestLeft },
   data() {
     return {
-      markLineTime: moment(),
-      markLineTimeList: [moment()],
+      timeLines: [
+        {
+          time: moment()
+            .add(2, "h")
+            .format("YYYY-MM-DD HH:mm:ss")
+        },
+        {
+          time: moment()
+            .add(5, "h")
+            .format("YYYY-MM-DD HH:mm:ss"),
+          color: "#747e80"
+        }
+      ],
       startTime: moment().toString(),
       endTime: moment()
         .add(2, "d")
         .add(2, "h")
-        .add(5, "s").toString(),
+        .add(5, "s")
+        .toString(),
       cellWidth: 50,
       cellHeight: 20,
       titleHeight: 40,

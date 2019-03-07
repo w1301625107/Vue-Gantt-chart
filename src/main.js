@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App'
 import '../scss/index.scss'
-import vGanttChart from "@src/lib/index.js";
+import vGanttChart from "@src/lib/v-gantt-chart/index.js";
 // import gantt from 'v-gantt-chart'
 
 const __DEV__= ENVIRONMENT === 'DEV' ? true :false;

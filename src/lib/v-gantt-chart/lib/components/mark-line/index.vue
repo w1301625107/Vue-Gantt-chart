@@ -3,7 +3,7 @@
        class="gantt-markline"
        :style="{'background-color':color,'left':getPosition()+'px'}">
     <div class="gantt-markline-label"
-         :style="{'background-color':color}">{{markLineTime.format("HH:mm:ss")}}</div>
+         :style="{'background-color':color}">{{moment(markLineTime).format("HH:mm:ss")}}</div>
   </div>
 </template>
 
@@ -13,11 +13,13 @@ export default {
   name: "MarkLine",
   props: {
     markLineTime: {
-      type: moment
+      validator(date) {
+        return moment(date).isValid();
+      }
     },
     color: {
       type: String,
-      default: "green"
+      default: "#0ca30a"
     },
     getTimeLinePosition: {
       type: Function,
@@ -26,7 +28,8 @@ export default {
   },
   data() {
     return {
-      visible: false
+      visible: false,
+      moment:moment
     };
   },
   methods: {

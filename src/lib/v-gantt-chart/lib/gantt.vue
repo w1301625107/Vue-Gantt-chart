@@ -20,25 +20,31 @@
          :style="{height:'calc(100% - '+titleHeight+'px'+')'}">
       <div class="gantt-table">
         <div class="gantt-markline-area">
-          <CurrentTime :getTimeLinePosition="getTimeLinePosition" />
-          <!--<mark-line :markLineTime="markLineTimeEnd"
-                     color="#0ca30a"></mark-line> -->
+          <CurrentTime v-if="showCurrentTime"
+                       :getTimeLinePosition="getTimeLinePosition" />
+          <mark-line v-for="(times,index) in timeLines"
+                     :key="index"
+                     :markLineTime="times.time"
+                     :getTimeLinePosition="getTimeLinePosition"
+                     :color="times.color"></mark-line>
         </div>
         <div class="gantt-leftbar-wrapper"
              :style="{'max-width':titleWidth+'px','min-width':titleWidth+'px'}">
           <LeftBar :datas="datas"
+                   :dataKey="dataKey"
                    :scrollTop="scrollTop"
                    :cellHeight="cellHeight"
                    :style="{height:totalHeight+'px'}">
-            <template v-slot="{item}">
+            <template v-slot="{data}">
               <slot name="left"
-                    :item="item"></slot>
+                    :data="data"></slot>
             </template>
           </LeftBar>
         </div>
         <div class="gantt-blocks-wrapper">
           <blocks :scrollTop="scrollTop"
                   :scrollLeft="scrollLeft"
+                  :dataKey="dataKey"
                   :datas="datas"
                   :cellWidth="cellWidth"
                   :cellHeight="cellHeight"
@@ -122,6 +128,21 @@ export default {
     datas: {
       type: Array,
       required: true
+    },
+    dataKey: {
+      type: String,
+      default: undefined
+    },
+    itemKey: {
+      type: String,
+      default: undefined
+    },
+    showCurrentTime: {
+      type: Boolean,
+      default: false
+    },
+    timeLines: {
+      type: Array
     }
   },
   data() {
@@ -136,7 +157,7 @@ export default {
         gantt_markArea: {}
       },
       scrollTop: 0,
-      scrollLeft:0,
+      scrollLeft: 0
     };
   },
   computed: {
@@ -160,7 +181,7 @@ export default {
       return datas.length * cellHeight;
     },
     beginTimeOfTimeLine() {
-      let value = getBeginTimeOfTimeLine(this.start,this.scale);
+      let value = getBeginTimeOfTimeLine(this.start, this.scale);
       return value;
     }
   },
@@ -234,8 +255,8 @@ export default {
           gantt_timeline.scrollLeft += deltaX;
           gantt_scroll_x.scrollLeft += deltaX;
           gantt_markArea.style.left = gantt_markArea.style.left + deltaX;
-          if(this.scrollLeft + deltaX < 0){
-            this.scrollLeft = 0
+          if (this.scrollLeft + deltaX < 0) {
+            this.scrollLeft = 0;
           }
         }
       });
@@ -253,11 +274,11 @@ export default {
     syncScrollX(event) {
       let { gantt_table, gantt_timeline, gantt_markArea } = this.selector;
       this.$nextTick(() => {
-        let leftValue =  event.target.scrollLeft
+        let leftValue = event.target.scrollLeft;
         gantt_table.scrollLeft = leftValue;
         gantt_timeline.scrollLeft = leftValue;
         gantt_markArea.style.left = "-" + leftValue + "px";
-        this.scrollLeft =  leftValue
+        this.scrollLeft = leftValue;
       });
     },
     //修改gantt-cell-height和gantt-cell-height样式数值
@@ -282,5 +303,5 @@ export default {
 </script>
 
 <style>
- @import "./index.css";
+@import "./index.css";
 </style>
