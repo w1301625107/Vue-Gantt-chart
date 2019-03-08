@@ -4,7 +4,8 @@
   "description": "display gantt-like vaule,like use this to order bus schedule.",
   "main": "index.js",
   "scripts": {
-    "pack": "webpack --progress -p "
+    "pack": "webpack --progress -p ",
+    "analyzer": "webpack --progress -p --env.analyzer=true"
   },
   "repository": {
     "type": "git",

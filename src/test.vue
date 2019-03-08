@@ -1,6 +1,6 @@
 <template>
   <div class="plan"
-       :style="{'background-color':statusColor}">
+       :style="{'background-color':statusColor}" @click="onClick">
     <div class="runTime">
       <span>起{{moment(item.start).format("HH:mm:ss")}}</span>
       <span>至{{moment(item.end).format("HH:mm:ss")}}</span>
@@ -18,7 +18,8 @@ export default {
   props: {
     data: Object,
     item: Object,
-    currentTime: moment
+    currentTime: moment,
+    updateTimeLines:Function
   },
   data() {
     return {
@@ -37,6 +38,11 @@ export default {
       } else {
         return "#69b3e1";
       }
+    }
+  },
+  methods: {
+    onClick(){
+      this.updateTimeLines(this.item.start,this.item.end)
     }
   }
 };

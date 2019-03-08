@@ -2,11 +2,20 @@
   <div id="app">
     <header class="top-bar">Vue-Gantt-Chart
       <label for="cellWidth">cellWidth</label>
-      <input id="cellWidth"
-             v-model.number.lazy="cellWidth">
+      <input type="range"
+             min="20"
+             max="100"
+             v-model.number="cellWidth">
       <label for="cellHeight">cellHeight</label>
-      <input id="cellHeight"
-             v-model.number.lazy="cellHeight">
+      <input type="range"
+             min="20"
+             max="100"
+             v-model.number="cellHeight">
+      <label for="titleWith">titleWidth</label>
+      <input type="range"
+             min="0"
+             max="250"
+             v-model.number="titleWidth">
       <label for="datasNum">datasNum</label>
       <input id="datasNum"
              v-model.number.lazy="datasNum">
@@ -31,7 +40,9 @@
                      :dataKey="dataKey"
                      :datas="datas">
         <template v-slot:block="{data,item}">
-          <Test :data="data" :currentTime="currentTime"
+          <Test :data="data"
+                :updateTimeLines="updateTimeLines"
+                :currentTime="currentTime"
                 :item="item"></Test>
         </template>
         <template v-slot:left="{data}">
@@ -52,10 +63,9 @@ import TestLeft from "./test-left.vue";
 import { mockDatas } from "@src/mock/index.js";
 import moment from "moment";
 
-const scaleList =[1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120, 180,
-  240,
-  360, 720, 1440
-]
+const scaleList = `1,2,3,4,5,6,10,12,15,20,30,60,120,180,240,360,720,1440`
+  .split(",")
+  .map(n => parseInt(n));
 export default {
   name: "App",
   components: { Test, TestLeft },
@@ -74,8 +84,10 @@ export default {
           color: "#747e80"
         }
       ],
-      currentTime:moment(),
-      startTime: moment().subtract(5, "h").toString(),
+      currentTime: moment(),
+      startTime: moment()
+        .subtract(5, "h")
+        .toString(),
       endTime: moment()
         .add(2, "d")
         .add(2, "h")
@@ -88,15 +100,30 @@ export default {
       scale: 60,
       datasNum: 100,
       datas: mockDatas(100),
-      dataKey:'id',
+      dataKey: "id",
       scaleList: scaleList,
-      scrollToTime:moment().add(1,'d').toString(),
-      scrollToPostion:{x:10000,y:10000}
+      scrollToTime: moment()
+        .add(1, "d")
+        .toString(),
+      scrollToPostion: { x: 10000, y: 10000 }
     };
   },
   watch: {
     datasNum(newV, oldV) {
       this.datas = mockDatas(newV);
+    }
+  },
+  methods: {
+    updateTimeLines(timeA, timeB) {
+      this.timeLines = [
+        {
+          time: timeA
+        },
+        {
+          time: timeB,
+          color: "#747e80"
+        }
+      ];
     }
   }
 };
@@ -109,6 +136,9 @@ label {
 input {
   width: 40px;
   height: 20px;
-  vertical-align: bottom;
+  vertical-align: middle;
+}
+input[type="range"] {
+  width: 100px;
 }
 </style>

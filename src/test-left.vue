@@ -1,6 +1,6 @@
  
 <template>
-  <div class="name" >
+  <div class="name" :style="{background:data.color}" >
     <div class="colorBar"/>
     <div class="type">{{data.type}}</div>
     <div class="carId">{{data.name}}{{data.id}}</div>

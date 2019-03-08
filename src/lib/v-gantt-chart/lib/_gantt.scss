@@ -49,9 +49,12 @@ $font-gray:#777;
         height: 100%;
         font-size: 0.8rem;
         font-weight: bold;
-
         color: $font-gray;
       }
+    }
+
+    .gantt-timeline-block:first-child .gantt-timeline-scale div:first-child{
+      visibility: hidden;
     }
   }
 
