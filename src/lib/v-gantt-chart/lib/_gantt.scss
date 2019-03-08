@@ -106,7 +106,7 @@ $font-gray:#777;
 
   &-block {
     position: relative;
-    background-image: url('/src/assets/block.png');
+    background-image: url('./assets/block.png');
     background-repeat: repeat;
 
     &-container {
@@ -126,6 +126,7 @@ $font-gray:#777;
     z-index: 1000;
     top: 0;
     right: 0;
+    height: 100%;
     width: 17px;
 
     &>div {
@@ -139,7 +140,7 @@ $font-gray:#777;
     z-index: 1000;
     left: 0;
     bottom: 0;
-    width: calc(100% - 17px);
+    width: 100%;
     height: 17px;
 
     &>div {

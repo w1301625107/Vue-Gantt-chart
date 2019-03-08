@@ -59,15 +59,13 @@
           </blocks>
         </div>
       </div>
-      <!-- 这里减去滚动条的17px -->
       <div class="gantt-scroll-y"
-           :style="{height:'calc(100% - 17px)'}"
            @scroll="syncScrollY">
         <div :style="{height:totalHeight+'px'}"></div>
       </div>
       <div class="gantt-scroll-x"
            @scroll="syncScrollX">
-        <div :style="{width:totalWidth-17+'px'}"></div>
+        <div :style="{width:totalWidth+'px'}"></div>
       </div>
     </div>
   </div>
@@ -143,6 +141,22 @@ export default {
     },
     timeLines: {
       type: Array
+    },
+    scrollToTime: {
+      validator(date) {
+        return moment(date).isValid();
+      }
+    },
+    scrollToPostion: {
+      validator(obj) {
+        if (!obj.x && !obj.y) {
+          console.warn("scrollToPostion 最少需要一个x或者y值");
+          return false;
+        }
+        let validX = obj.x ? !Number.isNaN(obj.x) : true;
+        let validY = obj.y ? !Number.isNaN(obj.y) : true;
+        return validX && validY;
+      }
     }
   },
   data() {
@@ -191,6 +205,61 @@ export default {
     },
     cellHeight() {
       this.resetCss();
+    },
+    // TODO: 需优化？ 这样子会调用syncScrollX 2次，第一次是我们伪造的event，第二次是他自己触发的
+    scrollToTime: {
+      handler(newV) {
+        if (!newV) {
+          return;
+        }
+        let { start, end, beginTimeOfTimeLine, scale, cellWidth } = this;
+        let time = moment(newV);
+        if (!(time.isAfter(start) && time.isBefore(end))) {
+          console.warn(`当前滚动至${newV}不在${start}和${end}的范围之内`);
+          return;
+        }
+
+        let options = {
+          cellWidth,
+          scale
+        };
+
+        let offset = getPositonOffset(
+          newV,
+          beginTimeOfTimeLine.toString(),
+          options
+        );
+        // immediate 会造成dom 还没有挂载时就进行操作，故需要延迟执行
+        this.$nextTick(() =>
+          this.syncScrollX(
+            {
+              target: {
+                scrollLeft: offset
+              }
+            },
+            true
+          )
+        );
+      },
+      immediate: true
+    },
+    scrollToPostion: {
+      handler(newV) {
+        if(!newV){
+          return;
+        }
+        let x = Number.isNaN(newV.x) ? undefined : newV.x;
+        let y = Number.isNaN(newV.y) ? undefined : newV.y;
+        this.$nextTick(() => {
+          if (x) {
+            this.syncScrollX({ target: { scrollLeft: x } }, true);
+          }
+          if (y) {
+            this.syncScrollY({ target: { scrollTop: y } }, true);
+          }
+        });
+      },
+      immediate: true
     }
   },
   created() {},
@@ -262,24 +331,33 @@ export default {
       });
     },
     //同步fixleft和block的滚动
-    syncScrollY(event) {
-      let { gantt_leftbar, gantt_table } = this.selector;
-      this.$nextTick(() => {
-        let topValue = event.target.scrollTop;
-        gantt_leftbar.scrollTop = topValue;
-        gantt_table.scrollTop = topValue;
-        this.scrollTop = topValue;
-      });
+    syncScrollY(event, fake = false) {
+      let { gantt_leftbar, gantt_table, gantt_scroll_y } = this.selector;
+      let topValue = event.target.scrollTop;
+      if (fake) {
+        gantt_scroll_y.scrollTop = topValue;
+        return;
+      }
+      gantt_leftbar.scrollTop = topValue;
+      gantt_table.scrollTop = topValue;
+      this.scrollTop = topValue;
     },
-    syncScrollX(event) {
-      let { gantt_table, gantt_timeline, gantt_markArea } = this.selector;
-      this.$nextTick(() => {
-        let leftValue = event.target.scrollLeft;
-        gantt_table.scrollLeft = leftValue;
-        gantt_timeline.scrollLeft = leftValue;
-        gantt_markArea.style.left = "-" + leftValue + "px";
-        this.scrollLeft = leftValue;
-      });
+    syncScrollX(event, fake = false) {
+      let {
+        gantt_table,
+        gantt_timeline,
+        gantt_markArea,
+        gantt_scroll_x
+      } = this.selector;
+      let leftValue = event.target.scrollLeft;
+      if (fake) {
+        gantt_scroll_x.scrollLeft = leftValue;
+        return;
+      }
+      gantt_table.scrollLeft = leftValue;
+      gantt_timeline.scrollLeft = leftValue;
+      gantt_markArea.style.left = "-" + leftValue + "px";
+      this.scrollLeft = leftValue;
     },
     //修改gantt-cell-height和gantt-cell-height样式数值
     resetCss() {
@@ -303,5 +381,5 @@ export default {
 </script>
 
 <style>
-@import "./index.css";
+@import "./_gantt.scss";
 </style>

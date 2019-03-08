@@ -28,6 +28,7 @@
                      :scale="scale"
                      :titleWidth="titleWidth"
                      showCurrentTime
+                     :dataKey="dataKey"
                      :datas="datas">
         <template v-slot:block="{data,item}">
           <Test :data="data" :currentTime="currentTime"
@@ -88,7 +89,9 @@ export default {
       datasNum: 100,
       datas: mockDatas(100),
       dataKey:'id',
-      scaleList: scaleList
+      scaleList: scaleList,
+      scrollToTime:moment().add(1,'d').toString(),
+      scrollToPostion:{x:10000,y:10000}
     };
   },
   watch: {

@@ -21,6 +21,7 @@ const cacheParseTime = function() {
 // pStart 关于缓存这个值是因为getWidthAbout2Times和getPositonOffset通常是前后连续调用，start 值会再两个函数中分别用到一次
 
 /**
+ * 时间上start 早， end 晚
  * 根据配置项计算两个时间的在gantt 图中的长度
  *
  * @export
@@ -40,6 +41,7 @@ export function getWidthAbout2Times(start, end, arg) {
 }
 
 /**
+ * 时间上，time 晚  beginTimeOfTimeLine 早
  * 根据配置项计算 相对于 时间轴起始时间的距离 是 getWidthAbout2Times 的特化
  *
  * @export

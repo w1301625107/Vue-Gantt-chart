@@ -22,7 +22,7 @@ export function validateScale(scale) {
  * @export
  * @param {*} start 
  * @param {number} [scale=60]
- * @returns 计算的启始时间
+ * @returns {moment}计算的启始时间
  */
 export function getBeginTimeOfTimeLine(start, scale = 60) {
   validateScale(scale)
