@@ -58,9 +58,9 @@
 </template>
 
 <script>
-import Test from "./test.vue";
-import TestLeft from "./test-left.vue";
-import { mockDatas } from "@src/mock/index.js";
+import Test from "./components/test.vue";
+import TestLeft from "./components/test-left.vue";
+import { mockDatas } from "../mock/index.js";
 import moment from "moment";
 
 const scaleList = `1,2,3,4,5,6,10,12,15,20,30,60,120,180,240,360,720,1440`
@@ -130,6 +130,19 @@ export default {
 </script>
 
 <style scoped>
+body {
+  font: 12px;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #abcdef, #f3f5f7);
+}
+
+#app {
+  padding: 0 10px;
+}
+
 label {
   margin-left: 10px;
 }
@@ -141,4 +154,12 @@ input {
 input[type="range"] {
   width: 100px;
 }
+.top-bar {
+  height: 30px;
+}
+
+.main-footer {
+  height: 30px;
+}
+
 </style>

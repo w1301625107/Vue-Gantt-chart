@@ -206,7 +206,6 @@ export default {
     cellHeight() {
       this.resetCss();
     },
-    // TODO: 需优化？ 这样子会调用syncScrollX 2次，第一次是我们伪造的event，第二次是他自己触发的
     scrollToTime: {
       handler(newV) {
         if (!newV) {
@@ -380,6 +379,6 @@ export default {
 };
 </script>
 
-<style>
-@import "./_gantt.scss";
+<style lang="scss">
+  @import "./gantt.scss";
 </style>

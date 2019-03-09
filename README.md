@@ -23,7 +23,7 @@
 npm i v-gantt-chart --save
 ```
 
-### Include plugin in your `main.js` file.
+Include plugin in your `main.js` file.
 
 ```js
 import Vue from 'vue'
@@ -35,7 +35,7 @@ Vue.use(vGanttChart});
 
 ## Use
 
-#### template code
+### template code
 
 ```html
 <template>
@@ -143,7 +143,9 @@ table th:nth-of-type(4) {
 #安装
 npm i
 # 启动
-npm run dev
+npm run serve
+or
+yarn serve
 #打开浏览器地址栏输入localhost:8080即可
 ```
 
