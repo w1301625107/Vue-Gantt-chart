@@ -18,14 +18,14 @@ export default {
   },
   data() {
     return {
-      currentTime: moment().format("YYYY-MM-DD HH:mm:ss")
+      currentTime: moment().toString()
     };
   },
   created() {
     const timeNow = setInterval(() => {
-      this.currentTime = moment().format("YYYY-MM-DD HH:mm:ss");
+      this.currentTime = moment().toString();
     }, 1000);
-    this.$once("hook:beforeDestroy", timeNow => {
+    this.$once("hook:beforeDestroy", () => {
       clearInterval(timeNow);
     });
   }

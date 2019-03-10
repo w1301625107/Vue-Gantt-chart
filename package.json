@@ -20,7 +20,8 @@
   "dependencies": {
     "mockjs": "^1.0.1-beta3",
     "moment": "^2.24.0",
-    "vue": "^2.6.6"
+    "vue": "^2.6.6",
+    "v-gantt-chart":"^1.1.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",

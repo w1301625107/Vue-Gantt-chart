@@ -1,7 +1,6 @@
 import moment from "moment";
 import Mock from "mockjs";
 const colorList = "#fc6964,#f7a7471,#f3ce4b,#74ca5a1,#46b7f2,#a6a6a8".split(',')
-console.log('TCL: colorList', colorList)
 const nameList = "希望号,飞翼号,光明号,窥探号,力神号,警官号,闪电流星号,博士号,霹雳火神号,狙击手号,希望之光号,南海忍者号,火速E3号,山神号,安全卫士号,铁锤号,寿星号,星星号,罗曼斯卡,欲望号,霹雳雷电号,消防号,欧洲之星号".split(',')
 
 const typeList ='🚅,🚈,🚄'.split(',')
@@ -26,8 +25,8 @@ var template = {
       temp.push({
         'id': 'D'+Random.natural(1000, 9999),
         'passenger':Random.natural(10, 200),
-        'start':tempStart.format('YYYY-MM-DD HH:mm:ss'),
-        'end': tempEnd.format('YYYY-MM-DD HH:mm:ss')
+        'start':tempStart.toString(),
+        'end': tempEnd.toString(),
       })
       
       i++;

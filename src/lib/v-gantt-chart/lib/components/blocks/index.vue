@@ -8,7 +8,7 @@
          v-for="(data,index) in showDatas"
          :key="dataKey?data[dataKey]:index">
       <div class="gantt-block-item"
-           v-for="(item,index) in data.gtArray"
+           v-for="(item,index) in concatArray(data)"
            v-if="isInTimeRange(item)"
            :key="itemKey?item[itemKey]:index"
            :style="{width:getWidth(item)+'px',
@@ -28,8 +28,11 @@ export default {
   name: "Blocks",
   mixins: [dr],
   props: {
-    dataKey:String,
-    itemKey:String,
+    dataKey: String,
+    itemKey: String,
+    arrayKeys: {
+      type: Array
+    },
     scrollLeft: Number,
     beginTimeOfTimeLine: {
       type: moment,
@@ -56,7 +59,14 @@ export default {
   mounted() {},
   computed: {
     beginTimeOfTimeLineFormat() {
-      return this.beginTimeOfTimeLine.format("YYYY-MM-DD HH:mm:ss");
+      return this.beginTimeOfTimeLine.toString();
+    },
+    renderAarrys() {
+      let { arrayKeys } = this;
+      if (arrayKeys.length > 0) {
+        return arrayKeys;
+      }
+      return ["gtArray"];
     }
   },
   watch: {
@@ -65,6 +75,15 @@ export default {
     }
   },
   methods: {
+    concatArray(data) {
+      return this.renderAarrys.reduce((prev, curr) => {
+        if (Array.isArray(data[curr])) {
+          return prev.concat(data[curr]);
+        } else {
+          return prev;
+        }
+      }, []);
+    },
     getTimeRange() {
       let {
         beginTimeOfTimeLine,
@@ -111,7 +130,11 @@ export default {
         cellWidth: this.cellWidth
       };
 
-      return getPositonOffset(block.start, this.beginTimeOfTimeLineFormat, options);
+      return getPositonOffset(
+        block.start,
+        this.beginTimeOfTimeLineFormat,
+        options
+      );
     }
   }
 };

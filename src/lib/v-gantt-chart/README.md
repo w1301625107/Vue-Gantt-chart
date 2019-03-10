@@ -80,13 +80,20 @@ export default {
   },
 };
 
-//渲染的数据，有特殊格式 ，目前要求数组中每一个值均为对象，且有gtAarry对象数组这个属性，gtArray中每一个对象需有两个属性，start和end，需为合法的时间字符串.例如
+//渲染的数据，有特殊格式 ，目前要求数组中每一个值均为对象，且有gtAarry对象数组这个属性(默认取gtArray，也可以自定义多个数组key值)，数组中每一个对象需有两个属性，start和end，需为合法的时间字符串.例如
 [
   {
     id:'test', //非必须
-    gtArray:[
+    gtArray:[ //默认的需要渲染的数组的key
       {
         name:'test', //非必须
+        start:'2019-01-11 18:18:18',
+        end:'2019-01-11 18:18:18'
+      }
+    ]，
+    customKey:[ //自定义的需要渲染的数组的key
+      {
+        id:'test', //非必须
         start:'2019-01-11 18:18:18',
         end:'2019-01-11 18:18:18'
       }
@@ -120,12 +127,14 @@ table th:nth-of-type(4) {
 | titleWidth      |    ❌     | number  |  200   | 表头和行的宽度 |
 | scale           |    ❌     | number  |   60   | 时间轴的刻度值。单位:分钟，允许值[1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120，180,240,360, 720, 1440]                                    |
 | datas           |    ✅     |  array  |   --   | 渲染的数据，有特殊格式 ，目前要求数组中每一个值均为对象，且有gtAarry对象数组这个属性，gtArray中每一个对象需有两个属性，start和end，需为合法的时间字符串.例如```[{id:'test',gtArray:[{start:'2019-01-11 18:18:18',end:'2019-01-11 18:18:18'}]}] ``` 其他不做限制。 |
+| arrayKeys|    ❌     | array  |   ["gtArray"]   | 需要渲染的数组的key  |
 | dataKey         |    ❌     | string  |   --   | 渲染的每一行的key  |
 | itemKey         |    ❌     | string  |   --   | 渲染的每一个gantt容器的key  |
 | showCurrentTime |    ❌     | boolean | false  | 显示当前时间,每秒钟更新  |
 | timelines       |    ❌     |  array  |   --   | 显示标记时间，有特殊格式 ``` [{time:'2019-01-11 18:18:18',color:'#00000'}]```                                                                      |
 | scrollToTime    |    ❌     | string  |   --   | 滚动到指定的时间，需为合法的时间字符串  |
 | scrollToPostion |    ❌     | object  |   --   | 滚动到指定的位置 格式为``` {x:number,y:number}```  |
+| hideHeader |    ❌     | boolean  |   false   | 隐藏时间轴和表头 |
 
 
 

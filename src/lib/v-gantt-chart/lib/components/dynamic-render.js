@@ -1,8 +1,17 @@
-import debounce from "../utils/debounce.js";
-
 let dynamicRender = {
   props: {
-    scrollTop: Number,
+    scrollTop: {
+      type: Number,
+      required: true
+    },
+    containerHeight:{
+      type: Number,
+      required: true
+    },
+    containerWidth:{
+      type: Number,
+      required: true
+    },
     cellHeight: {
       type: Number,
       required: true
@@ -15,10 +24,7 @@ let dynamicRender = {
   data() {
     return {
       showDatas: [],
-      containerHeight: 960,
-      containerWidth: 1920,
-      //去抖
-      initSize_: "",
+      // containerHeight: 960,
       //两者避免过多的调用sliceData，造成过多的dom操作
       //上一次加载的节点
       oldCurrentIndex: 0,
@@ -47,25 +53,8 @@ let dynamicRender = {
   },
   created() {
     this.spliceData();
-    //去抖
-    this.initSize_ = debounce(this.getContainerSize);
-  },
-  mounted() {
-    this.initSize_();
-    window.addEventListener('resize',this.initSize_)
-    this.$once("hook:beforeDestroy", () => {
-      window.removeEventListener('resize',this.initSize_)
-    });
   },
   methods: {
-    //获取父级容器的高度
-    getContainerSize() {
-      let dom = document.querySelector(
-        ".gantt-blocks-wrapper"
-      )
-      this.containerHeight = dom.clientHeight;
-      this.containerWidth = dom.clientWidth;
-    },
     //分割出dom中显示的数据
     spliceData() {
       let { containerHeight, currentIndex, cellHeight, preload } = this;

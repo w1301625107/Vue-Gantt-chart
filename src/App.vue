@@ -16,6 +16,10 @@
              min="0"
              max="250"
              v-model.number="titleWidth">
+      <label for="hideHeader">hideHeader</label>
+      <input id="hideHeader"
+             v-model="hideHeader"
+             type="checkbox">
       <label for="datasNum">datasNum</label>
       <input id="datasNum"
              v-model.number.lazy="datasNum">
@@ -37,7 +41,9 @@
                      :scale="scale"
                      :titleWidth="titleWidth"
                      showCurrentTime
+                     :hideHeader="hideHeader"
                      :dataKey="dataKey"
+                     :arrayKeys="arrayKeys"
                      :datas="datas">
         <template v-slot:block="{data,item}">
           <Test :data="data"
@@ -75,12 +81,12 @@ export default {
         {
           time: moment()
             .add(2, "h")
-            .format("YYYY-MM-DD HH:mm:ss")
+            .toString()
         },
         {
           time: moment()
             .add(5, "h")
-            .format("YYYY-MM-DD HH:mm:ss"),
+            .toString(),
           color: "#747e80"
         }
       ],
@@ -105,7 +111,9 @@ export default {
       scrollToTime: moment()
         .add(1, "d")
         .toString(),
-      scrollToPostion: { x: 10000, y: 10000 }
+      scrollToPostion: { x: 10000, y: 10000 },
+      hideHeader: false,
+      arrayKeys: ["gtArray", "error"]
     };
   },
   watch: {
@@ -161,5 +169,4 @@ input[type="range"] {
 .main-footer {
   height: 30px;
 }
-
 </style>

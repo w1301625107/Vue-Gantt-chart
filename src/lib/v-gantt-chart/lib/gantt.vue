@@ -1,7 +1,8 @@
 <template>
   <div class="gantt-chart"
        @wheel="wheelHandle">
-    <div class="gantt-header">
+    <div v-show="!hideHeader"
+         class="gantt-header">
       <div class="gantt-header-title"
            :style="{'line-height':titleHeight+'px',height:titleHeight+'px','max-width':titleWidth+'px','min-width':titleWidth+'px'}">
         <slot name="title"></slot>
@@ -17,7 +18,7 @@
       </div>
     </div>
     <div class="gantt-body"
-         :style="{height:'calc(100% - '+titleHeight+'px'+')'}">
+         :style="{height:`calc(100% - ${hideHeader ? 0 : titleHeight}px)`}">
       <div class="gantt-table">
         <div class="gantt-markline-area">
           <CurrentTime v-if="showCurrentTime"
@@ -33,6 +34,8 @@
           <LeftBar :datas="datas"
                    :dataKey="dataKey"
                    :scrollTop="scrollTop"
+                   :containerHeight="containerHeight"
+                   :containerWidth="containerWidth"
                    :cellHeight="cellHeight"
                    :style="{height:totalHeight+'px'}">
             <template v-slot="{data}">
@@ -44,6 +47,10 @@
         <div class="gantt-blocks-wrapper">
           <blocks :scrollTop="scrollTop"
                   :scrollLeft="scrollLeft"
+                  :containerHeight="containerHeight"
+                  :containerWidth="containerWidth"
+                  :arrayKeys="arrayKeys"
+                  :itemKey="itemKey"
                   :dataKey="dataKey"
                   :datas="datas"
                   :cellWidth="cellWidth"
@@ -79,6 +86,7 @@ import {
   calcScalesAbout2Times
 } from "./utils/timeLineUtils.js";
 import { getPositonOffset } from "./utils/gtUtils.js";
+import debounce from "./utils/debounce.js";
 import Timeline from "./components/time-line/index.vue";
 import CurrentTime from "./components/mark-line/current-time.vue";
 import LeftBar from "./components/left-bar/index.vue";
@@ -135,6 +143,10 @@ export default {
       type: String,
       default: undefined
     },
+    arrayKeys:{
+      type:Array,
+      default:[]
+    },
     showCurrentTime: {
       type: Boolean,
       default: false
@@ -157,6 +169,10 @@ export default {
         let validY = obj.y ? !Number.isNaN(obj.y) : true;
         return validX && validY;
       }
+    },
+    hideHeader: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -171,7 +187,11 @@ export default {
         gantt_markArea: {}
       },
       scrollTop: 0,
-      scrollLeft: 0
+      scrollLeft: 0,
+      containerHeight: window.screen.availHeight,
+      containerWidth: window.screen.availWidth,
+      //去抖
+      initSize_: ""
     };
   },
   computed: {
@@ -182,8 +202,8 @@ export default {
       return moment(this.endTime);
     },
     totalWidth() {
-      let { titleWidth, cellWidth, totalScales } = this;
-      return titleWidth + cellWidth * totalScales;
+      let { cellWidth, totalScales } = this;
+      return cellWidth * totalScales;
     },
     //计算时间块的数量
     totalScales() {
@@ -197,6 +217,11 @@ export default {
     beginTimeOfTimeLine() {
       let value = getBeginTimeOfTimeLine(this.start, this.scale);
       return value;
+    },
+    avialableScrollLeft() {
+      // 不减这个1，一直往尽头滚会慢慢溢出
+      let { totalWidth, containerWidth, titleWidth } = this;
+      return totalWidth - containerWidth - titleWidth - 1;
     }
   },
   watch: {
@@ -244,7 +269,7 @@ export default {
     },
     scrollToPostion: {
       handler(newV) {
-        if(!newV){
+        if (!newV) {
           return;
         }
         let x = Number.isNaN(newV.x) ? undefined : newV.x;
@@ -261,15 +286,29 @@ export default {
       immediate: true
     }
   },
-  created() {},
+  created() {
+    //去抖
+    this.initSize_ = debounce(this.getContainerSize);
+  },
   mounted() {
     this.resetCss();
     this.getSelector();
+    this.initSize_();
+    window.addEventListener("resize", this.initSize_);
+    this.$once("hook:beforeDestroy", () => {
+      window.removeEventListener("resize", this.initSize_);
+    });
   },
   updated() {
-    // this.getSelector();
+    this.getSelector();
   },
   methods: {
+    //获取父级容器的高度
+    getContainerSize() {
+      let dom = document.querySelector(".gantt-blocks-wrapper");
+      this.containerHeight = dom.clientHeight;
+      this.containerWidth = dom.clientWidth;
+    },
     getTimeLinePosition(date) {
       let { cellWidth, scale, beginTimeOfTimeLine, titleWidth } = this;
       let options = {
@@ -280,7 +319,7 @@ export default {
       return (
         getPositonOffset(
           date,
-          beginTimeOfTimeLine.format("YYYY-MM-DD HH:mm:ss"),
+          beginTimeOfTimeLine.toString(),
           options
         ) + titleWidth
       );
@@ -303,7 +342,7 @@ export default {
       );
     },
     wheelHandle(event) {
-      let { deltaX, deltaY, deltaZ } = event;
+      let { deltaX, deltaY } = event;
       let {
         gantt_leftbar,
         gantt_table,
@@ -320,6 +359,9 @@ export default {
           this.scrollTop = gantt_table.scrollTop;
         }
         if (deltaX != 0) {
+          if (this.scrollLeft + deltaX >= this.avialableScrollLeft) {
+            return;
+          }
           gantt_timeline.scrollLeft += deltaX;
           gantt_scroll_x.scrollLeft += deltaX;
           gantt_markArea.style.left = gantt_markArea.style.left + deltaX;
@@ -361,7 +403,7 @@ export default {
     //修改gantt-cell-height和gantt-cell-height样式数值
     resetCss() {
       let style = document.getElementById("gantt-cell-style");
-      let { cellWidth, cellHeight, totalWidth } = this;
+      let { cellWidth, cellHeight } = this;
       let innerText = `.gantt-cell-width{width:${cellWidth}px;}
         .gantt-cell-height{height:${cellHeight}px;}
         .gantt-block{background-size: ${cellWidth}px ${cellHeight}px;`;
@@ -380,5 +422,5 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "./gantt.scss";
+@import "./gantt.scss";
 </style>

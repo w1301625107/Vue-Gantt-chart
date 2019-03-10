@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import vGanttChart from "./lib/v-gantt-chart"
+// import vGanttChart from "v-gantt-chart"
 
 Vue.config.productionTip = false
 Vue.use(vGanttChart)
