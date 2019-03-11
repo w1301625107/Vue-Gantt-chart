@@ -1,7 +1,7 @@
  
 <template>
-  <div class="name" :style="{background:data.color}" >
-    <div class="colorBar"/>
+  <div class="name" :style="{background:data.colorPair.light}">
+    <div class="colorBar"  :style="{background:data.colorPair.dark}"/>
     <div class="type">{{data.type}}</div>
     <div class="carId">{{data.name}}{{data.id}}</div>
     <div class="speed">{{data.speed}}km/s</div>
@@ -24,13 +24,14 @@ export default {
   overflow: hidden;
   height: 100%;
   width: 100%;
-  padding: 0 5px;
-  border-radius:  2% 0 0 2%;
+  padding: 0 5px 0 0;
+  border-radius: 8px 0 0 8px;
   align-items: center;
 
 }
 .colorBar{
-  width: 5px;
+  width: 10px;
+  height: 100%;
 }
 
 .carId{

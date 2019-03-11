@@ -31,7 +31,7 @@
       </select>
       <span>minute</span>
     </header>
-    <div :style="{height:'calc(100vh - 30px - 30px)'}">
+    <div class="container">
       <v-gantt-chart :startTime="startTime"
                      :endTime="endTime"
                      :cellWidth="cellWidth"
@@ -48,6 +48,7 @@
         <template v-slot:block="{data,item}">
           <Test :data="data"
                 :updateTimeLines="updateTimeLines"
+                :cellHeight="cellHeight"
                 :currentTime="currentTime"
                 :item="item"></Test>
         </template>
@@ -59,7 +60,7 @@
         </template>
       </v-gantt-chart>
     </div>
-    <footer class="main-footer">wuchouchou</footer>
+    <footer class="main-footer">MIT ©wuchouchou</footer>
   </div>
 </template>
 
@@ -117,7 +118,7 @@ export default {
     };
   },
   watch: {
-    datasNum(newV, oldV) {
+    datasNum(newV) {
       this.datas = mockDatas(newV);
     }
   },
@@ -148,7 +149,10 @@ body {
 }
 
 #app {
+  display: flex;
+  flex-direction: column;
   padding: 0 10px;
+  height: calc(100vh - 2px);
 }
 
 label {
@@ -163,10 +167,19 @@ input[type="range"] {
   width: 100px;
 }
 .top-bar {
-  height: 30px;
+  /* height: 30px; */
+}
+
+.container{
+  display: flex;
+  flex :1 ;
 }
 
 .main-footer {
-  height: 30px;
+  /* height: 30px; */
+}
+
+>>>.el-slider{
+  width: 100px;
 }
 </style>

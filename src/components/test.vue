@@ -1,25 +1,53 @@
 <template>
-  <div class="plan"
-       :style="{'background-color':statusColor}" @click="onClick">
-    <div class="runTime">
-      <span>起{{moment(item.start).format("HH:mm:ss")}}</span>
-      <span>至{{moment(item.end).format("HH:mm:ss")}}</span>
-    </div>
-    <div class="middle">编号{{item.id}}</div>
-    <div class="passenger">{{item.passenger}}人</div>
+  <el-popover placement="bottom"
+              trigger="hover">
+    <div slot="reference"
+         class="plan"
+         :style="{'background-color':statusColor,'margin-top':0.1*cellHeight+'px'}"
+         @click="onClick">
+      <div class="runTime">
+        <span>S:{{startToString}}</span>
+        <span>E:{{endToString}}</span>
+      </div>
+      <div class="middle">编号{{item.id}}</div>
+      <!-- <div class="passenger">{{item.passenger}}人</div> -->
 
-  </div>
+    </div>
+
+    <div class="detail">
+      <span class="header">{{data.type}}{{data.name}}{{data.id}}</span>
+      <ul>
+        <li>
+          <span>发车时间：</span><span>{{startToString}}</span>
+        </li>
+        <li>
+          <span>到站时间：</span><span>{{endToString}}</span>
+        </li>
+        <li>
+          <span>载员：</span><span>{{item.passenger}}</span>
+        </li>
+        <li>
+          <span>编号：</span><span>{{item.id}}</span>
+        </li>
+      </ul>
+    </div>
+  </el-popover>
 </template>
 
 <script>
 import moment from "moment";
+
+const NOW_PLAN = '#D5F8EA'
+const FUTHER_PLAN = '#BFF2FE'
+const PAST_PLAN ='#F2F2F2'
 export default {
   name: "Test",
   props: {
     data: Object,
     item: Object,
     currentTime: moment,
-    updateTimeLines:Function
+    updateTimeLines: Function,
+    cellHeight:Number
   },
   data() {
     return {
@@ -32,25 +60,32 @@ export default {
       let start = moment(item.start);
       let end = moment(item.end);
       if (start.isBefore(currentTime) && end.isAfter(currentTime)) {
-        return "#65b2a7";
+        return NOW_PLAN; // NOW
       } else if (end.isBefore(currentTime)) {
-        return "#9e9e9e";
+        return PAST_PLAN; // PAST
       } else {
-        return "#69b3e1";
+        return FUTHER_PLAN; // Future
       }
+    },
+    startToString() {
+      return moment(this.item.start).format("HH:mm");
+    },
+    endToString() {
+      return moment(this.item.end).format("HH:mm");
     }
   },
   methods: {
-    onClick(){
-      this.updateTimeLines(this.item.start,this.item.end)
+    onClick() {
+      this.updateTimeLines(this.item.start, this.item.end);
     }
   }
 };
 </script>
 
-<style scoped>
-.middle{
-  flex:1;
+<style lang="scss" scoped>
+.middle {
+  flex: 1;
+  text-align: center;
   padding-left: 5px;
 }
 .runTime {
@@ -61,12 +96,38 @@ export default {
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  height: 100%;
+  height: 80%;
   border: 1px solid #f0f0f0;
   border-radius: 5px;
-  color: #fff;
+  color: #333333;
   padding-left: 5px;
   font-size: 0.8rem;
-  opacity: .8;
+  // opacity: 0.8;
+}
+
+.detail {
+  .header{
+    text-align: center;
+    font-size: 1rem;
+  }
+}
+
+.detail ul {
+  list-style: none;
+  padding: 0px;
+  li{
+    span{
+      display: inline-block;
+      width: 80px;
+      color: #777;
+      font-size: 0.8rem;
+    }
+    span:first-child{
+      text-align: right;
+    }
+
+    span:last-child{
+    }
+  }
 }
 </style>

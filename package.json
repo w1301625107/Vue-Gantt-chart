@@ -18,10 +18,11 @@
   },
   "homepage": "https://github.com/w1301625107/Vue-Gantt-chart#readme",
   "dependencies": {
+    "element-ui": "^2.6.1",
     "mockjs": "^1.0.1-beta3",
     "moment": "^2.24.0",
-    "vue": "^2.6.6",
-    "v-gantt-chart":"^1.1.1"
+    "v-gantt-chart": "^1.1.1",
+    "vue": "^2.6.6"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",

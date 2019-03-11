@@ -1,16 +1,22 @@
 import moment from "moment";
 import Mock from "mockjs";
-const colorList = "#fc6964,#f7a7471,#f3ce4b,#74ca5a1,#46b7f2,#a6a6a8".split(',')
+const colorList = ["(252, 105, 100)","(247, 167, 71)","(116, 202, 90)","(83, 186, 241)","(208, 142, 2231)"]
 const nameList = "希望号,飞翼号,光明号,窥探号,力神号,警官号,闪电流星号,博士号,霹雳火神号,狙击手号,希望之光号,南海忍者号,火速E3号,山神号,安全卫士号,铁锤号,寿星号,星星号,罗曼斯卡,欲望号,霹雳雷电号,消防号,欧洲之星号".split(',')
 
 const typeList ='🚅,🚈,🚄'.split(',')
 
 const Random = Mock.Random
 var template = {
-  'id': () => 'JHR'+Random.natural(100, 999)+Random.character('upper'),
+  'id': () => 'JHR'+Random.natural(100, 999)+Random.character('upper')+Random.character('upper'),
   'name':()=>Random.pick(nameList),
   'type':()=> Random.pick(typeList),
-  'color':()=>Random.pick(colorList),
+  'colorPair':()=>{
+    let a = 'rgb'+Random.pick(colorList);
+    return{
+      dark:a.replace(')',',0.8)'),
+      light:a.replace(')',',0.1)')
+    }
+},
   'speed': ()=>Random.natural(0, 200),
   'gtArray': () => {
     let temp = [];
