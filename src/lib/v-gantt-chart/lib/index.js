@@ -11,6 +11,11 @@ const myPlugin = {
         Vue.component('v-gantt-chart', gantt)    
     }
 }
+// 新增
+if (typeof window !== 'undefined' && window.Vue) {
+    window.Vue.use(paykeyboard);
+}
+
 
 // 最后将插件导出，并在main.js中通过Vue.use()即可使用插件
 export default myPlugin

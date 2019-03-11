@@ -46,9 +46,9 @@ Vue.use(vGanttChart});
         <!-- 你的容器块组件 -->
         <Test :data="data" :item="item"></Test>
       </template>
-      <template v-slot:left="{data,item}">
+      <template v-slot:left="{data}">
         <!-- 你的行名组件 -->
-        <TestLeft :item="item"></TestLeft>
+        <TestLeft :data="data"></TestLeft>
       </template>
       <template v-slot:title>
         <!-- 你的表头组件 -->
@@ -102,6 +102,67 @@ export default {
 ]
 
 ```
+
+### render slot
+
+```
+// 假设你传入的数据为
+[
+  {
+    id:'test', 
+    name:'sala',
+    gtArray:[ 
+      {
+        name:'test', 
+        start:'2019-01-11 18:18:18',
+        end:'2019-01-11 18:18:18'
+        //...
+      }
+    ]，
+    //...
+  }
+  //...
+]
+```
+
+#### block 容器块slot
+```
+ <template v-slot:block="{data,item}">
+        <!-- 你的容器块组件 -->
+        <Test :data="data" :item="item"></Test>
+ </template>
+ //则data 为
+  {
+    id:'test', 
+    name:'sala',
+    gtArray:[{...}]，
+    //...
+  } 
+
+ //item 为
+  {
+    name:'test', 
+    start:'2019-01-11 18:18:18',
+    end:'2019-01-11 18:18:18'
+    //...
+  }
+```
+
+#### left 行名slot
+```
+  <template v-slot:left="{data}">
+    <!-- 你的行名组件 -->
+    <TestLeft :data="data"></TestLeft>
+  </template>
+  //则data 为
+  {
+    id:'test', 
+    name:'sala',
+    gtArray:[{...}]，
+    //...
+  }
+```
+
 
 ## Doc
 
@@ -161,6 +222,14 @@ yarn serve
 ## Caution
 IE 需要注意一下
 
+## Update 
+1.1.3
+- 添加默认slot
+
+1.1.2
+- 支持隐藏表头和时间轴功能
+- 支持自定义需要渲染的数组key
+- 修复横线滚动越界问题
 #### License
 
 _MIT_ ©wuchouchou

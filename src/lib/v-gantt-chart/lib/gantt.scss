@@ -67,6 +67,12 @@ $font-gray:#777;
 
     &-item {
     }
+
+    &-defalutItem{
+      width: 100%;
+      height: 100%;
+      outline: 1px solid $gray
+    }
   }
 
 
@@ -120,6 +126,13 @@ $font-gray:#777;
     &-item {
       position: absolute;
       height: 100%;
+    }
+
+    &-defaultBlock{
+      width: 100%;
+      height: 100%;
+      outline: 1px solid $gray;
+      background: $gray;
     }
   }
 

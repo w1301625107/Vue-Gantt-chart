@@ -5,7 +5,7 @@
          class="gantt-header">
       <div class="gantt-header-title"
            :style="{'line-height':titleHeight+'px',height:titleHeight+'px','max-width':titleWidth+'px','min-width':titleWidth+'px'}">
-        <slot name="title"></slot>
+        <slot name="title">welcome v-gantt-chart</slot>
       </div>
       <div class="gantt-header-timeline">
         <timeline :start="start"
@@ -40,7 +40,9 @@
                    :style="{height:totalHeight+'px'}">
             <template v-slot="{data}">
               <slot name="left"
-                    :data="data"></slot>
+                    :data="data">
+                <div class="gantt-leftbar-defalutItem"></div>
+              </slot>
             </template>
           </LeftBar>
         </div>
@@ -61,7 +63,9 @@
             <template v-slot="{data,item}">
               <slot name="block"
                     :data="data"
-                    :item="item"></slot>
+                    :item="item">
+                <div class="gantt-block-defaultBlock"></div>
+              </slot>
             </template>
           </blocks>
         </div>
