@@ -196,6 +196,9 @@ table th:nth-of-type(4) {
 | scrollToTime    |    ❌     | string  |   --   | 滚动到指定的时间，需为合法的时间字符串  |
 | scrollToPostion |    ❌     | object  |   --   | 滚动到指定的位置 格式为``` {x:number,y:number}```  |
 | hideHeader |    ❌     | boolean  |   false   | 隐藏时间轴和表头 |
+| hideXS |    ❌     | boolean  |   false   | 隐藏时间轴和表头 |
+| hideXScrollBar |    ❌     | boolean  |   false   | 隐藏横向滚动轴 |
+| hideYScrollBar |    ❌     | boolean  |   false   | 隐藏纵向滚动轴 |
 
 
 
@@ -222,7 +225,12 @@ yarn serve
 ## Caution
 IE 需要注意一下
 
-## Update 
+## Update
+1.2.0
+- 支持隐藏滚动条
+- 修复一次滚动触发2次滚动事件的问题
+- 修复scrollToPosition 无法设置0值是问题
+
 1.1.3
 - 添加默认slot
 
