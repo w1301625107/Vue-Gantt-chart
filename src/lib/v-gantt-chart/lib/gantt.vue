@@ -160,7 +160,7 @@ export default {
     },
     arrayKeys: {
       type: Array,
-      default: []
+      default: () => []
     },
     showCurrentTime: {
       type: Boolean,
