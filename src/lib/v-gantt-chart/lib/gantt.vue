@@ -99,6 +99,14 @@ import CurrentTime from "./components/mark-line/current-time.vue";
 import LeftBar from "./components/left-bar/index.vue";
 import Blocks from "./components/blocks/index.vue";
 import MarkLine from "./components/mark-line/index.vue";
+
+function isUndef(v){
+  return v === undefined
+}
+
+function isDef(v){
+  return v !== undefined
+}
 export default {
   name: "Gantt",
   components: { Timeline, LeftBar, Blocks, MarkLine, CurrentTime },
@@ -168,14 +176,19 @@ export default {
     },
     scrollToPostion: {
       validator(obj) {
-        if (obj.x === undefined && obj.y === undefined) {
+        if (isUndef(obj.x) && isUndef(obj.y)) {
           // eslint-disable-next-line
           console.warn("scrollToPostion 最少需要一个x或者y值");
           return false;
         }
-        let validX = obj.x !== undefined ? !Number.isNaN(obj.x) : true;
-        let validY = obj.y !== undefined ? !Number.isNaN(obj.y) : true;
-        return validX && validY;
+        let validX = isDef(obj.x) ? !Number.isNaN(obj.x) : true;
+        let validY =isDef(obj.y) ? !Number.isNaN(obj.y) : true;
+        if(validX && validY){
+           // eslint-disable-next-line
+          console.warn("scrollToPostion x或y 有值为非Number类型");
+          return false
+        }
+        return true;
       }
     },
     hideHeader: {
@@ -293,10 +306,10 @@ export default {
         let x = Number.isNaN(newV.x) ? undefined : newV.x;
         let y = Number.isNaN(newV.y) ? undefined : newV.y;
         this.$nextTick(() => {
-          if (x !== undefined) {
+          if (isDef(x)) {
             this.syncScrollX({ target: { scrollLeft: x } }, true);
           }
-          if (y !== undefined) {
+          if (isDef(y)) {
             this.syncScrollY({ target: { scrollTop: y } }, true);
           }
         });
