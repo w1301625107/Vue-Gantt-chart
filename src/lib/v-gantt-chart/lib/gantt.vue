@@ -19,7 +19,8 @@
     </div>
     <div class="gantt-body"
          :style="{height:`calc(100% - ${hideHeader ? 0 : titleHeight}px)`}">
-      <div class="gantt-table">
+      <div class="gantt-table"
+           :style="{height:`calc(100% - ${hideXScrollBar ? 0 : scrollBarWitdh}px)`,width:`calc(100% - ${hideYScrollBar ? 0 : scrollBarWitdh}px)`}">
         <div class="gantt-markline-area">
           <CurrentTime v-if="showCurrentTime"
                        :getTimeLinePosition="getTimeLinePosition" />
@@ -71,10 +72,12 @@
         </div>
       </div>
       <div class="gantt-scroll-y"
+           :style="{width:`${hideYScrollBar? 0 : scrollBarWitdh}px`}"
            @scroll="syncScrollY">
         <div :style="{height:totalHeight+'px'}"></div>
       </div>
       <div class="gantt-scroll-x"
+           :style="{height:`${hideXScrollBar? 0 : scrollBarWitdh}px`}"
            @scroll="syncScrollX">
         <div :style="{width:totalWidth+'px'}"></div>
       </div>
@@ -147,9 +150,9 @@ export default {
       type: String,
       default: undefined
     },
-    arrayKeys:{
-      type:Array,
-      default:[]
+    arrayKeys: {
+      type: Array,
+      default: []
     },
     showCurrentTime: {
       type: Boolean,
@@ -165,16 +168,25 @@ export default {
     },
     scrollToPostion: {
       validator(obj) {
-        if (!obj.x && !obj.y) {
+        if (obj.x === undefined && obj.y === undefined) {
+          // eslint-disable-next-line
           console.warn("scrollToPostion 最少需要一个x或者y值");
           return false;
         }
-        let validX = obj.x ? !Number.isNaN(obj.x) : true;
-        let validY = obj.y ? !Number.isNaN(obj.y) : true;
+        let validX = obj.x !== undefined ? !Number.isNaN(obj.x) : true;
+        let validY = obj.y !== undefined ? !Number.isNaN(obj.y) : true;
         return validX && validY;
       }
     },
     hideHeader: {
+      type: Boolean,
+      default: false
+    },
+    hideXScrollBar: {
+      type: Boolean,
+      default: false
+    },
+    hideYScrollBar: {
       type: Boolean,
       default: false
     }
@@ -195,7 +207,8 @@ export default {
       containerHeight: window.screen.availHeight,
       containerWidth: window.screen.availWidth,
       //去抖
-      initSize_: ""
+      initSize_: "",
+      scrollBarWitdh: 17
     };
   },
   computed: {
@@ -243,6 +256,7 @@ export default {
         let { start, end, beginTimeOfTimeLine, scale, cellWidth } = this;
         let time = moment(newV);
         if (!(time.isAfter(start) && time.isBefore(end))) {
+          // eslint-disable-next-line
           console.warn(`当前滚动至${newV}不在${start}和${end}的范围之内`);
           return;
         }
@@ -279,10 +293,10 @@ export default {
         let x = Number.isNaN(newV.x) ? undefined : newV.x;
         let y = Number.isNaN(newV.y) ? undefined : newV.y;
         this.$nextTick(() => {
-          if (x) {
+          if (x !== undefined) {
             this.syncScrollX({ target: { scrollLeft: x } }, true);
           }
-          if (y) {
+          if (y !== undefined) {
             this.syncScrollY({ target: { scrollTop: y } }, true);
           }
         });
@@ -321,11 +335,8 @@ export default {
       };
 
       return (
-        getPositonOffset(
-          date,
-          beginTimeOfTimeLine.toString(),
-          options
-        ) + titleWidth
+        getPositonOffset(date, beginTimeOfTimeLine.toString(), options) +
+        titleWidth
       );
     },
     //缓存节点
@@ -347,30 +358,27 @@ export default {
     },
     wheelHandle(event) {
       let { deltaX, deltaY } = event;
-      let {
-        gantt_leftbar,
-        gantt_table,
-        gantt_scroll_y,
-        gantt_timeline,
-        gantt_scroll_x,
-        gantt_markArea
-      } = this.selector;
       this.$nextTick(() => {
         if (deltaY != 0) {
-          gantt_leftbar.scrollTop += deltaY;
-          gantt_table.scrollTop += deltaY;
-          gantt_scroll_y.scrollTop += deltaY;
-          this.scrollTop = gantt_table.scrollTop;
+          this.syncScrollY(
+            { target: { scrollTop: this.scrollTop + deltaY } },
+            true
+          );
         }
         if (deltaX != 0) {
-          if (this.scrollLeft + deltaX >= this.avialableScrollLeft) {
+          if (
+            this.scrollLeft + deltaX >=
+            this.avialableScrollLeft /*超出滚动限制*/
+          ) {
             return;
           }
-          gantt_timeline.scrollLeft += deltaX;
-          gantt_scroll_x.scrollLeft += deltaX;
-          gantt_markArea.style.left = gantt_markArea.style.left + deltaX;
-          if (this.scrollLeft + deltaX < 0) {
-            this.scrollLeft = 0;
+          if (this.scrollLeft + deltaX < 0 /*滚动为0限制*/) {
+            this.syncScrollX({ target: { scrollLeft: 0 } }, true);
+          } else {
+            this.syncScrollX(
+              { target: { scrollLeft: this.scrollLeft + deltaX } },
+              true
+            );
           }
         }
       });
@@ -380,7 +388,7 @@ export default {
       let { gantt_leftbar, gantt_table, gantt_scroll_y } = this.selector;
       let topValue = event.target.scrollTop;
       if (fake) {
-        gantt_scroll_y.scrollTop = topValue;
+        gantt_scroll_y.scrollTop = topValue; //会触发一次真的滚动事件，避免重复触发
         return;
       }
       gantt_leftbar.scrollTop = topValue;
@@ -396,7 +404,7 @@ export default {
       } = this.selector;
       let leftValue = event.target.scrollLeft;
       if (fake) {
-        gantt_scroll_x.scrollLeft = leftValue;
+        gantt_scroll_x.scrollLeft = leftValue; //会触发一次真的滚动事件，避免重复触发
         return;
       }
       gantt_table.scrollLeft = leftValue;
