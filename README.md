@@ -80,7 +80,8 @@ export default {
   },
 };
 
-//渲染的数据，有特殊格式 ，目前要求数组中每一个值均为对象，且有gtAarry对象数组这个属性(默认取gtArray，也可以自定义多个数组key值)，数组中每一个对象需有两个属性，start和end，需为合法的时间字符串.例如
+//渲染的数据，有特殊格式 ，目前要求数组中每一个值均为对象，且有gtAarry对象数组这个属性(默认取gtArray，也可以自定义多个数组key值)
+//数组中每一个对象需有两个属性，start和end(不提供的情况，偏移与宽度将为0)，需为合法的时间字符串.例如
 [
   {
     id:'test', //非必须
@@ -167,16 +168,19 @@ export default {
 ## Doc
 
 <style>
-table th:first-of-type {
+.param table th:first-of-type {
 	width: 100px;
 }
-table th:nth-of-type(2) {
+.param table th:nth-of-type(2) {
 	width: 100px;
 }
-table th:nth-of-type(4) {
+.param table th:nth-of-type(4) {
 	width: 100px;
 }
 </style>
+<div class="param">
+
+### Param
 
 | param            | required | type  | default | describe                                   |
 | :-------------- | :------: | :-----: | :----: | :---- |
@@ -187,7 +191,7 @@ table th:nth-of-type(4) {
 | titleHeight     |    ❌     | number  |   40   | 表头的高度    |
 | titleWidth      |    ❌     | number  |  200   | 表头和行的宽度 |
 | scale           |    ❌     | number  |   60   | 时间轴的刻度值。单位:分钟，允许值[1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120，180,240,360, 720, 1440]                                    |
-| datas           |    ✅     |  array  |   --   | 渲染的数据，有特殊格式 ，目前要求数组中每一个值均为对象，且有gtAarry对象数组这个属性，gtArray中每一个对象需有两个属性，start和end，需为合法的时间字符串.例如```[{id:'test',gtArray:[{start:'2019-01-11 18:18:18',end:'2019-01-11 18:18:18'}]}] ``` 其他不做限制。 |
+| datas           |    ✅     |  array  |   --   | 渲染的数据，有特殊格式 ，目前要求数组中每一个值均为对象，且有gtAarry对象数组这个属性，gtArray中每一个对象需有两个属性，start和end(不提供的情况，偏移与宽度将为0)，需为合法的时间字符串.例如```[{id:'test',gtArray:[{start:'2019-01-11 18:18:18',end:'2019-01-11 18:18:18'}]}] ``` 其他不做限制。 |
 | arrayKeys|    ❌     | array  |   ["gtArray"]   | 需要渲染的数组的key  |
 | dataKey         |    ❌     | string  |   --   | 渲染的每一行的key  |
 | itemKey         |    ❌     | string  |   --   | 渲染的每一个gantt容器的key  |
@@ -200,7 +204,27 @@ table th:nth-of-type(4) {
 | hideXScrollBar |    ❌     | boolean  |   false   | 隐藏横向滚动轴 |
 | hideYScrollBar |    ❌     | boolean  |   false   | 隐藏纵向滚动轴 |
 
+</div>
+<style>
+.event table th:first-of-type {
+	width: 100px;
+}
+.event table th:nth-of-type(2) {
+	width: 100px;
+}
+.event table th:nth-of-type(3) {
+	width: 300px;
+}
+</style>
+<div class="event">
 
+### Event
+
+| event | type | describle|
+| :---  |:-----:|:---------|
+| scrollLeft| number | X轴的滚动值|
+| scrollTop | number | Y轴的滚动值|
+</div>
 
 ## Next plan
 - 加快渲染速度
@@ -226,6 +250,12 @@ yarn serve
 IE 需要注意一下
 
 ## Update
+
+1.2.1
+- 支持通过监听scrollLeft和scrollTop获取滚动值
+- 修复页面中存在2个甘特图滚动错误的问题
+- 修复没有start，end值可能引起的问题，当不存在start，end时偏移与宽度均为0值
+
 1.2.0
 - 支持隐藏滚动条
 - 修复一次滚动触发2次滚动事件的问题

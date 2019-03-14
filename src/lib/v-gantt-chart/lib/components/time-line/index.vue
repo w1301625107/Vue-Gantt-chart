@@ -23,12 +23,11 @@
 import moment from "moment";
 import {
   getBeginTimeOfTimeLine,
-  calcScalesAbout2Times
 } from "../../utils/timeLineUtils.js";
 
-const START_DAY = 0;
-const MIDDLE_DAY = 1;
-const END_DAY = 2;
+const START_DAY = Symbol();
+const MIDDLE_DAY = Symbol();
+const END_DAY = Symbol();
 
 function isSameDay(one, two) {
   return one.isSame(two, "day");

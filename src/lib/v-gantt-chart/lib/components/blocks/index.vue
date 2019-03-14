@@ -11,8 +11,7 @@
            v-for="(item,index) in concatArray(data)"
            v-if="isInTimeRange(item)"
            :key="itemKey?item[itemKey]:index"
-           :style="{width:getWidth(item)+'px',
-                   'left':getPosition(item)+'px'}">
+           :style="{left:getPosition(item)+'px',width:getWidth(item)+'px'}">
         <slot :data="data"
               :item="item"></slot>
       </div>
@@ -24,6 +23,8 @@
 import moment from "moment";
 import dr from "../dynamic-render.js";
 import { getWidthAbout2Times, getPositonOffset } from "../../utils/gtUtils.js";
+import { isUndef, isDef, warn } from "../../utils/tool.js";
+
 export default {
   name: "Blocks",
   mixins: [dr],
@@ -121,6 +122,11 @@ export default {
         scale: this.scale,
         cellWidth: this.cellWidth
       };
+      if (isUndef(block.start) || isUndef(block.end)) {
+        // warn(`错误，该数据项不含start值 与 end 值 ${JSON.stringify(block)}，无法计算宽度值。`)
+        return 0;
+      }
+
       return getWidthAbout2Times(block.start, block.end, options);
     },
     //计算时间块偏移
@@ -129,6 +135,14 @@ export default {
         scale: this.scale,
         cellWidth: this.cellWidth
       };
+      if (isUndef(block.start)) {
+        warn(
+          `错误，该数据项不含start 值 ${JSON.stringify(
+            block
+          )}，无法计算偏移值。`
+        );
+        return 0;
+      }
 
       return getPositonOffset(
         block.start,

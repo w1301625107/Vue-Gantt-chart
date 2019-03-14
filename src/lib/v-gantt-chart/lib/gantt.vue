@@ -7,7 +7,8 @@
            :style="{'line-height':titleHeight+'px',height:titleHeight+'px','max-width':titleWidth+'px','min-width':titleWidth+'px'}">
         <slot name="title">welcome v-gantt-chart</slot>
       </div>
-      <div class="gantt-header-timeline">
+      <div ref="headerTimeline"
+           class="gantt-header-timeline">
         <timeline :start="start"
                   :end="end"
                   :cellWidth="cellWidth"
@@ -21,7 +22,8 @@
          :style="{height:`calc(100% - ${hideHeader ? 0 : titleHeight}px)`}">
       <div class="gantt-table"
            :style="{height:`calc(100% - ${hideXScrollBar ? 0 : scrollBarWitdh}px)`,width:`calc(100% - ${hideYScrollBar ? 0 : scrollBarWitdh}px)`}">
-        <div class="gantt-markline-area">
+        <div ref="marklineArea"
+             class="gantt-markline-area">
           <CurrentTime v-if="showCurrentTime"
                        :getTimeLinePosition="getTimeLinePosition" />
           <mark-line v-for="(times,index) in timeLines"
@@ -30,7 +32,8 @@
                      :getTimeLinePosition="getTimeLinePosition"
                      :color="times.color"></mark-line>
         </div>
-        <div class="gantt-leftbar-wrapper"
+        <div ref="leftbarWrapper"
+             class="gantt-leftbar-wrapper"
              :style="{'max-width':titleWidth+'px','min-width':titleWidth+'px'}">
           <LeftBar :datas="datas"
                    :dataKey="dataKey"
@@ -47,7 +50,8 @@
             </template>
           </LeftBar>
         </div>
-        <div class="gantt-blocks-wrapper">
+        <div ref="blocksWrapper"
+             class="gantt-blocks-wrapper">
           <blocks :scrollTop="scrollTop"
                   :scrollLeft="scrollLeft"
                   :containerHeight="containerHeight"
@@ -71,12 +75,14 @@
           </blocks>
         </div>
       </div>
-      <div class="gantt-scroll-y"
+      <div ref="scrollXBar"
+           class="gantt-scroll-y"
            :style="{width:`${hideYScrollBar? 0 : scrollBarWitdh}px`}"
            @scroll="syncScrollY">
         <div :style="{height:totalHeight+'px'}"></div>
       </div>
-      <div class="gantt-scroll-x"
+      <div ref="scrollYBar"
+           class="gantt-scroll-x"
            :style="{height:`${hideXScrollBar? 0 : scrollBarWitdh}px`}"
            @scroll="syncScrollX">
         <div :style="{width:totalWidth+'px'}"></div>
@@ -92,6 +98,7 @@ import {
   getBeginTimeOfTimeLine,
   calcScalesAbout2Times
 } from "./utils/timeLineUtils.js";
+import { isUndef, isDef, warn } from "./utils/tool.js";
 import { getPositonOffset } from "./utils/gtUtils.js";
 import debounce from "./utils/debounce.js";
 import Timeline from "./components/time-line/index.vue";
@@ -100,13 +107,6 @@ import LeftBar from "./components/left-bar/index.vue";
 import Blocks from "./components/blocks/index.vue";
 import MarkLine from "./components/mark-line/index.vue";
 
-function isUndef(v){
-  return v === undefined
-}
-
-function isDef(v){
-  return v !== undefined
-}
 export default {
   name: "Gantt",
   components: { Timeline, LeftBar, Blocks, MarkLine, CurrentTime },
@@ -177,16 +177,14 @@ export default {
     scrollToPostion: {
       validator(obj) {
         if (isUndef(obj.x) && isUndef(obj.y)) {
-          // eslint-disable-next-line
-          console.warn("scrollToPostion 最少需要一个x或者y值");
+          warn("scrollToPostion 最少需要一个x或者y值");
           return false;
         }
         let validX = isDef(obj.x) ? !Number.isNaN(obj.x) : true;
-        let validY =isDef(obj.y) ? !Number.isNaN(obj.y) : true;
-        if(validX && validY){
-           // eslint-disable-next-line
-          console.warn("scrollToPostion x或y 有值为非Number类型");
-          return false
+        let validY = isDef(obj.y) ? !Number.isNaN(obj.y) : true;
+        if (!validX && !validY) {
+          warn("scrollToPostion x或y 有值为非Number类型");
+          return false;
         }
         return true;
       }
@@ -269,8 +267,7 @@ export default {
         let { start, end, beginTimeOfTimeLine, scale, cellWidth } = this;
         let time = moment(newV);
         if (!(time.isAfter(start) && time.isBefore(end))) {
-          // eslint-disable-next-line
-          console.warn(`当前滚动至${newV}不在${start}和${end}的范围之内`);
+          warn(`当前滚动至${newV}不在${start}和${end}的范围之内`);
           return;
         }
 
@@ -306,15 +303,21 @@ export default {
         let x = Number.isNaN(newV.x) ? undefined : newV.x;
         let y = Number.isNaN(newV.y) ? undefined : newV.y;
         this.$nextTick(() => {
-          if (isDef(x)) {
+          if (isDef(x) && x !== this.scrollLeft) {
             this.syncScrollX({ target: { scrollLeft: x } }, true);
           }
-          if (isDef(y)) {
+          if (isDef(y) && y !== this.scrollTop) {
             this.syncScrollY({ target: { scrollTop: y } }, true);
           }
         });
       },
       immediate: true
+    },
+    scrollTop(val) {
+      this.$emit("scrollTop", val);
+    },
+    scrollLeft(val) {
+      this.$emit("scrollLeft", val);
     }
   },
   created() {
@@ -330,13 +333,13 @@ export default {
       window.removeEventListener("resize", this.initSize_);
     });
   },
-  updated() {
-    this.getSelector();
-  },
+  // updated() {
+  //   this.getSelector();
+  // },
   methods: {
     //获取父级容器的高度
     getContainerSize() {
-      let dom = document.querySelector(".gantt-blocks-wrapper");
+      let dom = this.$refs.blocksWrapper;
       this.containerHeight = dom.clientHeight;
       this.containerWidth = dom.clientWidth;
     },
@@ -354,20 +357,12 @@ export default {
     },
     //缓存节点
     getSelector() {
-      this.selector.gantt_leftbar = document.querySelector(
-        ".gantt-leftbar-wrapper"
-      );
-      this.selector.gantt_table = document.querySelector(
-        ".gantt-blocks-wrapper"
-      );
-      this.selector.gantt_scroll_y = document.querySelector(".gantt-scroll-y");
-      this.selector.gantt_timeline = document.querySelector(
-        ".gantt-header-timeline"
-      );
-      this.selector.gantt_scroll_x = document.querySelector(".gantt-scroll-x");
-      this.selector.gantt_markArea = document.querySelector(
-        ".gantt-markline-area"
-      );
+      this.selector.gantt_leftbar = this.$refs.leftbarWrapper;
+      this.selector.gantt_table = this.$refs.blocksWrapper;
+      this.selector.gantt_scroll_y = this.$refs.scrollXBar;
+      this.selector.gantt_timeline = this.$refs.headerTimeline;
+      this.selector.gantt_scroll_x = this.$refs.scrollYBar;
+      this.selector.gantt_markArea = this.$refs.marklineArea;
     },
     wheelHandle(event) {
       let { deltaX, deltaY } = event;

@@ -23,6 +23,9 @@
       <label for="datasNum">datasNum</label>
       <input id="datasNum"
              v-model.number.lazy="datasNum">
+      <label for="scrollToY">scrollToY</label>
+      <input id="scrollToY"
+             v-model.number.lazy="scrollToY">
       <label for="scale">scale</label>
       <select id="scale"
               v-model.number="scale">
@@ -44,7 +47,38 @@
                      :hideHeader="hideHeader"
                      :dataKey="dataKey"
                      :arrayKeys="arrayKeys"
-                     :datas="datas">
+                     :scrollToPostion="positionA"
+                     @scrollLeft="scrollLeftA"
+                     :datas="datasA">
+        <template v-slot:block="{data,item}">
+          <Test :data="data"
+                :updateTimeLines="updateTimeLines"
+                :cellHeight="cellHeight"
+                :currentTime="currentTime"
+                :item="item"></Test>
+        </template>
+        <template v-slot:left="{data}">
+          <TestLeft :data="data"></TestLeft>
+        </template>
+        <template v-slot:title>
+          铁胆火车侠日程表
+        </template>
+      </v-gantt-chart>
+      <v-gantt-chart :startTime="startTime"
+                     :endTime="endTime"
+                     :cellWidth="cellWidth"
+                     :cellHeight="cellHeight"
+                     :timeLines="timeLines"
+                     :titleHeight="titleHeight"
+                     :scale="scale"
+                     :titleWidth="titleWidth"
+                     showCurrentTime
+                     hideHeader
+                     :dataKey="dataKey"
+                     :arrayKeys="arrayKeys"
+                     :scrollToPostion="positionB"
+                     @scrollLeft="scrollLeftB"
+                     :datas="datasB">
         <template v-slot:block="{data,item}">
           <Test :data="data"
                 :updateTimeLines="updateTimeLines"
@@ -60,7 +94,7 @@
         </template>
       </v-gantt-chart>
     </div>
-    <footer class="main-footer">MIT ©wuchouchou</footer>
+    <footer class="main-footer">MIT ©wuchouchou<span style="float:right">注:该demo由两个甘特组件组合而成</span></footer>
   </div>
 </template>
 
@@ -106,7 +140,8 @@ export default {
       titleWidth: 250,
       scale: 60,
       datasNum: 100,
-      datas: mockDatas(100),
+      datasA: mockDatas(50),
+      datasB: mockDatas(50),
       dataKey: "id",
       scaleList: scaleList,
       scrollToTime: moment()
@@ -114,12 +149,29 @@ export default {
         .toString(),
       scrollToPostion: { x: 10000, y: 10000 },
       hideHeader: false,
-      arrayKeys: ["gtArray", "error"]
+      arrayKeys: ["gtArray", "error"],
+      scrollToY:0,
+      positionB:{},
+      positionA:{}
     };
   },
   watch: {
     datasNum(newV) {
-      this.datas = mockDatas(newV);
+      this.datasA = mockDatas(newV);
+      this.datasB = mockDatas(newV);
+    }
+  },
+  computed:{
+    // position(){
+    //   let {scrollToY: y} = this
+    //   return {
+    //     y:y
+    //   }
+    // }
+  },
+  watch:{
+    scrollToY(val){
+      this.positionA = {x:val}
     }
   },
   methods: {
@@ -133,6 +185,12 @@ export default {
           color: "#747e80"
         }
       ];
+    },
+    scrollLeftA(val){
+      this.positionB = {x:val}
+    },
+    scrollLeftB(val){
+      this.positionA = {x:val}
     }
   }
 };
@@ -172,6 +230,7 @@ input[type="range"] {
 
 .container{
   display: flex;
+  flex-direction: column;
   flex :1 ;
 }
 

@@ -16,5 +16,5 @@ export default function debounce(fn, interval = 500, immediate = false) {
     clearTimeout(timeout); //不管什么情况，先清除定时器，这是最稳妥的
     timeout = setTimeout(later, interval); //延迟执行
     if (callNow) fn.apply(context, args); //如果是第一次触发，并且immediate为true，则立即执行
-  };
-};
+  }
+}
