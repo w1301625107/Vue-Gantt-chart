@@ -93,6 +93,7 @@
 
 <script>
 import moment from "moment";
+import ResizeObserver from 'resize-observer-polyfill';
 import {
   scaleList,
   getBeginTimeOfTimeLine,
@@ -100,12 +101,13 @@ import {
 } from "./utils/timeLineUtils.js";
 import { isUndef, isDef, warn } from "./utils/tool.js";
 import { getPositonOffset } from "./utils/gtUtils.js";
-import debounce from "./utils/debounce.js";
+import throttle from "./utils/throttle.js";
 import Timeline from "./components/time-line/index.vue";
 import CurrentTime from "./components/mark-line/current-time.vue";
 import LeftBar from "./components/left-bar/index.vue";
 import Blocks from "./components/blocks/index.vue";
 import MarkLine from "./components/mark-line/index.vue";
+
 
 export default {
   name: "Gantt",
@@ -176,10 +178,6 @@ export default {
     },
     scrollToPostion: {
       validator(obj) {
-        if (isUndef(obj.x) && isUndef(obj.y)) {
-          warn("scrollToPostion 最少需要一个x或者y值");
-          return false;
-        }
         let validX = isDef(obj.x) ? !Number.isNaN(obj.x) : true;
         let validY = isDef(obj.y) ? !Number.isNaN(obj.y) : true;
         if (!validX && !validY) {
@@ -217,9 +215,7 @@ export default {
       scrollLeft: 0,
       containerHeight: window.screen.availHeight,
       containerWidth: window.screen.availWidth,
-      //去抖
-      initSize_: "",
-      scrollBarWitdh: 17
+      scrollBarWitdh: 17,
     };
   },
   computed: {
@@ -321,28 +317,22 @@ export default {
     }
   },
   created() {
-    //去抖
-    this.initSize_ = debounce(this.getContainerSize);
   },
   mounted() {
     this.resetCss();
     this.getSelector();
-    this.initSize_();
-    window.addEventListener("resize", this.initSize_);
-    this.$once("hook:beforeDestroy", () => {
-      window.removeEventListener("resize", this.initSize_);
-    });
+    const observeContainer = throttle(entries => {
+      entries.forEach(entry => {
+        const cr = entry.contentRect;
+        this.containerHeight = cr.height;
+        this.containerWidth = cr.width;
+      })
+    })
+    const observer = new ResizeObserver(observeContainer)
+    observer.observe(this.$refs.blocksWrapper)
   },
-  // updated() {
-  //   this.getSelector();
-  // },
   methods: {
-    //获取父级容器的高度
-    getContainerSize() {
-      let dom = this.$refs.blocksWrapper;
-      this.containerHeight = dom.clientHeight;
-      this.containerWidth = dom.clientWidth;
-    },
+    // 为时间线计算偏移
     getTimeLinePosition(date) {
       let { cellWidth, scale, beginTimeOfTimeLine, titleWidth } = this;
       let options = {

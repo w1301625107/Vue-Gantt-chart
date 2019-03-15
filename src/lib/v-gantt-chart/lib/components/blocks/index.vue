@@ -72,6 +72,15 @@ export default {
   },
   watch: {
     scrollLeft() {
+      if(this.containerHeight === 0 ){
+        return;
+      }
+      this.getTimeRange();
+    },
+    containerWidth(){
+      if(this.containerHeight === 0 ){
+        return;
+      }
       this.getTimeRange();
     }
   },

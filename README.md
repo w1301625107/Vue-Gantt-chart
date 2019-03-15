@@ -250,6 +250,11 @@ yarn serve
 IE 需要注意一下
 
 ## Update
+1.2.3
+- 添加Resize Observer api  的polyfill
+
+1.2.2 
+- 通过Resize Observer api来监听div的变化，用以修复感知不到容器大小变化引起的渲染数量不正常的问题
 
 1.2.1
 - 支持通过监听scrollLeft和scrollTop获取滚动值

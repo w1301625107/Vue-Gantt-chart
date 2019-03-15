@@ -49,6 +49,9 @@ let dynamicRender = {
         this.oldCurrentIndex = val;
         this.spliceData();
       }
+    },
+    containerHeight(){
+      this.spliceData()
     }
   },
   created() {
@@ -58,6 +61,9 @@ let dynamicRender = {
     //分割出dom中显示的数据
     spliceData() {
       let { containerHeight, currentIndex, cellHeight, preload } = this;
+      if(containerHeight === 0) {
+        return []
+      }
       let nums = currentIndex + Math.ceil(containerHeight / cellHeight);
       let start = currentIndex - preload >= 0 ? currentIndex - preload : 0;
       this.showDatas = this.datas.slice(start, nums + preload);
