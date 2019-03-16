@@ -140,7 +140,7 @@ export default {
       titleWidth: 250,
       scale: 60,
       datasNum: 100,
-      datasA: mockDatas(50),
+      datasA: mockDatas(5),
       datasB: mockDatas(50),
       dataKey: "id",
       scaleList: scaleList,
@@ -159,17 +159,7 @@ export default {
     datasNum(newV) {
       this.datasA = mockDatas(newV);
       this.datasB = mockDatas(newV);
-    }
-  },
-  computed:{
-    // position(){
-    //   let {scrollToY: y} = this
-    //   return {
-    //     y:y
-    //   }
-    // }
-  },
-  watch:{
+    },
     scrollToY(val){
       this.positionA = {x:val}
     }
@@ -203,7 +193,6 @@ body {
   padding: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, #abcdef, #f3f5f7);
 }
 
 #app {

@@ -38,8 +38,8 @@
           <LeftBar :datas="datas"
                    :dataKey="dataKey"
                    :scrollTop="scrollTop"
-                   :containerHeight="containerHeight"
-                   :containerWidth="containerWidth"
+                   :heightOfRenderAera="heightOfRenderAera"
+                   :widthOfRenderAera="widthOfRenderAera"
                    :cellHeight="cellHeight"
                    :style="{height:totalHeight+'px'}">
             <template v-slot="{data}">
@@ -54,8 +54,8 @@
              class="gantt-blocks-wrapper">
           <blocks :scrollTop="scrollTop"
                   :scrollLeft="scrollLeft"
-                  :containerHeight="containerHeight"
-                  :containerWidth="containerWidth"
+                  :heightOfRenderAera="heightOfRenderAera"
+                  :widthOfRenderAera="widthOfRenderAera"
                   :arrayKeys="arrayKeys"
                   :itemKey="itemKey"
                   :dataKey="dataKey"
@@ -116,13 +116,17 @@ export default {
     startTime: {
       required: true,
       validator(date) {
-        return moment(date).isValid();
+        let ok = moment(date).isValid()
+        if(!ok) warn(`非法的开始时间 ${date}`)
+        return ok;
       }
     },
     endTime: {
       required: true,
       validator(date) {
-        return moment(date).isValid();
+        let ok = moment(date).isValid()
+        if(!ok) warn(`非法的结束时间 ${date}`)
+        return ok;
       }
     },
     cellWidth: {
@@ -213,8 +217,9 @@ export default {
       },
       scrollTop: 0,
       scrollLeft: 0,
-      containerHeight: window.screen.availHeight,
-      containerWidth: window.screen.availWidth,
+      //block 区域需要渲染的宽度
+      heightOfRenderAera: window.screen.availHeight,
+      widthOfRenderAera: window.screen.availWidth,
       scrollBarWitdh: 17,
     };
   },
@@ -229,7 +234,6 @@ export default {
       let { cellWidth, totalScales } = this;
       return cellWidth * totalScales;
     },
-    //计算时间块的数量
     totalScales() {
       let { start, end, scale } = this;
       return calcScalesAbout2Times(start, end, scale);
@@ -243,9 +247,9 @@ export default {
       return value;
     },
     avialableScrollLeft() {
-      // 不减这个1，一直往尽头滚会慢慢溢出
-      let { totalWidth, containerWidth, titleWidth } = this;
-      return totalWidth - containerWidth - titleWidth - 1;
+      // 不减这个1，滚动到时间轴尽头后继续滚动会慢慢的溢出
+      let { totalWidth, widthOfRenderAera, titleWidth } = this;
+      return totalWidth - widthOfRenderAera - titleWidth - 1;
     }
   },
   watch: {
@@ -324,15 +328,17 @@ export default {
     const observeContainer = throttle(entries => {
       entries.forEach(entry => {
         const cr = entry.contentRect;
-        this.containerHeight = cr.height;
-        this.containerWidth = cr.width;
+        this.heightOfRenderAera = cr.height;
+        this.widthOfRenderAera = cr.width;
       })
     })
     const observer = new ResizeObserver(observeContainer)
     observer.observe(this.$refs.blocksWrapper)
   },
   methods: {
-    // 为时间线计算偏移
+     /**
+     * 为时间线计算偏移
+     */
     getTimeLinePosition(date) {
       let { cellWidth, scale, beginTimeOfTimeLine, titleWidth } = this;
       let options = {

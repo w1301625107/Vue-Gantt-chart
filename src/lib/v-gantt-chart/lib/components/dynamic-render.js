@@ -4,11 +4,7 @@ let dynamicRender = {
       type: Number,
       required: true
     },
-    containerHeight:{
-      type: Number,
-      required: true
-    },
-    containerWidth:{
+    heightOfRenderAera:{
       type: Number,
       required: true
     },
@@ -24,8 +20,6 @@ let dynamicRender = {
   data() {
     return {
       showDatas: [],
-      // containerHeight: 960,
-      //两者避免过多的调用sliceData，造成过多的dom操作
       //上一次加载的节点
       oldCurrentIndex: 0,
       //预加载的数量,是前后都为2个
@@ -50,7 +44,7 @@ let dynamicRender = {
         this.spliceData();
       }
     },
-    containerHeight(){
+    heightOfRenderAera(){
       this.spliceData()
     }
   },
@@ -58,17 +52,22 @@ let dynamicRender = {
     this.spliceData();
   },
   methods: {
-    //分割出dom中显示的数据
+    /**
+     * 分割出dom中显示的数据
+     */
     spliceData() {
-      let { containerHeight, currentIndex, cellHeight, preload } = this;
-      if(containerHeight === 0) {
+      let { heightOfRenderAera, currentIndex, cellHeight, preload } = this;
+      if(heightOfRenderAera === 0) {
         return []
       }
-      let nums = currentIndex + Math.ceil(containerHeight / cellHeight);
+      let nums = currentIndex + Math.ceil(heightOfRenderAera / cellHeight);
       let start = currentIndex - preload >= 0 ? currentIndex - preload : 0;
       this.showDatas = this.datas.slice(start, nums + preload);
     },
-    //第一个撑开前置高度的容器块高度
+    //
+     /**
+     * 计算第一个撑开前置高度的容器块高度
+     */
     calTopSpace() {
       let { oldCurrentIndex, cellHeight, preload } = this;
       let start =

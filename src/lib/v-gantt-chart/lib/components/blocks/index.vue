@@ -46,7 +46,11 @@ export default {
     scale: {
       type: Number,
       required: true
-    }
+    },
+    widthOfRenderAera:{
+      type: Number,
+      required: true
+    },
   },
   data() {
     return {
@@ -72,19 +76,25 @@ export default {
   },
   watch: {
     scrollLeft() {
-      if(this.containerHeight === 0 ){
+      if (this.heightOfRenderAera === 0) {
         return;
       }
       this.getTimeRange();
     },
-    containerWidth(){
-      if(this.containerHeight === 0 ){
+    widthOfRenderAera() {
+      if (this.heightOfRenderAera === 0) {
         return;
       }
       this.getTimeRange();
     }
   },
   methods: {
+    /**
+     * 根据renderAarrys拼接需要渲染的数组
+     *
+     * @param {*} data
+     * @returns {[]} 该data中所有需要渲染的数据
+     */
     concatArray(data) {
       return this.renderAarrys.reduce((prev, curr) => {
         if (Array.isArray(data[curr])) {
@@ -94,13 +104,17 @@ export default {
         }
       }, []);
     },
+    /**
+     * 计算需要渲染的时间范围
+     *
+     */
     getTimeRange() {
       let {
         beginTimeOfTimeLine,
         scrollLeft,
         cellWidth,
         scale,
-        containerWidth
+        widthOfRenderAera
       } = this;
       this.startTime = beginTimeOfTimeLine
         .clone()
@@ -109,10 +123,16 @@ export default {
         .getTime();
       this.endTime = beginTimeOfTimeLine
         .clone()
-        .add(((scrollLeft + containerWidth) / cellWidth) * scale, "m")
+        .add(((scrollLeft + widthOfRenderAera) / cellWidth) * scale, "m")
         .toDate()
         .getTime();
     },
+    /**
+     * 判定数据是否在渲染的时间范围内
+     *
+     * @param {{start:string,end:string}} item
+     * @returns {boolean} 该
+     */
     isInTimeRange(item) {
       let { startTime, endTime } = this;
       let startToMs = new Date(item.start).getTime();
@@ -125,7 +145,12 @@ export default {
       }
       return false;
     },
-    //计算时间块长度
+    /**
+     * 计算时间块长度
+     *
+     * @param {{start:string,end:string}} block
+     * @returns {number} 
+     */
     getWidth(block) {
       let options = {
         scale: this.scale,
@@ -138,7 +163,12 @@ export default {
 
       return getWidthAbout2Times(block.start, block.end, options);
     },
-    //计算时间块偏移
+    /**
+     * 计算时间块偏移
+     *
+     * @param {{start:string}} block
+     * @returns {number} 
+     */
     getPosition(block) {
       let options = {
         scale: this.scale,

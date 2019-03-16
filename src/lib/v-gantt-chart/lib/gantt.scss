@@ -42,7 +42,7 @@ $font-gray:#777;
       color: $font-gray;
     }
 
-    &-scale{
+    &-scale {
       display: flex;
 
       &>div {
@@ -53,7 +53,8 @@ $font-gray:#777;
       }
     }
 
-    .gantt-timeline-block:first-child .gantt-timeline-scale div:first-child{
+    // 隐藏第一个时间节点，不然会只显示一半，不好看
+    &-block:first-child &-scale div:first-child {
       visibility: hidden;
     }
   }
@@ -61,37 +62,31 @@ $font-gray:#777;
   &-leftbar {
     width: 100%;
     height: 100%;
-    background: rgb(255, 255, 255);
+    background: #fff;
     color: $font-gray;
     font-size: 0.8rem;
 
-    &-item {
+    &-wrapper {
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+      outline: 1px solid $gray;
+      z-index: 100;
     }
 
-    &-defalutItem{
+    &-item {}
+
+    &-defalutItem {
       width: 100%;
       height: 100%;
       outline: 1px solid $gray
     }
   }
 
-
-
   &-table {
     display: flex;
     width: calc(100% - 17px);
     height: calc(100% - 17px);
-  }
-
-  &-blocks-wrapper {
-    overflow: hidden;
-  }
-
-  &-leftbar-wrapper {
-    position: relative;
-    overflow: hidden;
-    outline: 1px solid $gray;
-    z-index: 100;
   }
 
   &-markline-area {
@@ -113,6 +108,12 @@ $font-gray:#777;
     }
   }
 
+  &-blocks {
+    &-wrapper {
+      overflow: hidden;
+    }
+  }
+
   &-block {
     position: relative;
     background-image: url('./assets/block.png');
@@ -128,7 +129,7 @@ $font-gray:#777;
       height: 100%;
     }
 
-    &-defaultBlock{
+    &-defaultBlock {
       width: 100%;
       height: 100%;
       outline: 1px solid $gray;

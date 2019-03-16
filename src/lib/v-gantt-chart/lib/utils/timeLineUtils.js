@@ -4,7 +4,13 @@ export const scaleList = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120, 180,
   240,
   360, 720, 1440
 ]
-
+/**
+ * 验证是否合法scale值
+ *
+ * @export
+ * @param {number} scale
+ * @returns
+ */
 export function validateScale(scale) {
   if (!scaleList.includes(scale)) {
     throw new RangeError(
@@ -14,13 +20,13 @@ export function validateScale(scale) {
 }
 
 /**
- * 根据给出的scale 和 start 时间 计算出用于计算的启始时间
+ * 根据给出的scale 和 start 时间 计算出用于计算和生成图表的启始时间
  * eg：Start 为10:10分 刻度为60，getBeginTimeOfTimeLine函数给出的时间 为 10:00分
  *                    刻度为5，getBeginTimeOfTimeLine函数给出的时间 为 10:10分
  *                    刻度为3，getBeginTimeOfTimeLine函数给出的时间 为 10:09分
  *
  * @export
- * @param {*} start 
+ * @param {string} start 
  * @param {number} [scale=60]
  * @returns {moment}计算的启始时间
  */
@@ -40,12 +46,12 @@ export function getBeginTimeOfTimeLine(start, scale = 60) {
   return startClone;
 }
 /**
- * 根据所给 scale计算 两个时间差一共可以分成多少块
- * 注意： timdStart 并不是实在开始计算的时间，会通过getBeginTimeOfTimeLine 函数计算出分割开始时间
+ * 根据所给 scale计算 两个时间差一共可以分成多少个刻度
+ * 注意： timdStart 并不是实际的开始计算的时间，会通过getBeginTimeOfTimeLine 函数计算出分割开始时间
  *
  * @export
- * @param {*} timeStart 开始时间
- * @param {*} timeEnd 结束时间
+ * @param {string} timeStart 开始时间
+ * @param {string} timeEnd 结束时间
  * @param {number} [scale=60] 分割的刻度
  * @returns 时间块数量
  */
