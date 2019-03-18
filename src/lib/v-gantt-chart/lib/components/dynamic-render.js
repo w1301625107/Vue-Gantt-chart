@@ -4,7 +4,7 @@ let dynamicRender = {
       type: Number,
       required: true
     },
-    heightOfRenderAera:{
+    heightOfRenderAera: {
       type: Number,
       required: true
     },
@@ -23,12 +23,15 @@ let dynamicRender = {
       //上一次加载的节点
       oldCurrentIndex: 0,
       //预加载的数量,是前后都为2个
-      preload: 1
+      preload: 1 // 为 0 时加载全部行
     };
   },
   computed: {
     blockHeight() {
-      let { datas, cellHeight } = this;
+      let {
+        datas,
+        cellHeight
+      } = this;
       return datas.length * cellHeight;
     },
     //计算当前第一个数据的index
@@ -38,13 +41,26 @@ let dynamicRender = {
   },
   watch: {
     currentIndex(val) {
-      let { oldCurrentIndex, preload } = this;
-      if (val < oldCurrentIndex - preload || val > oldCurrentIndex + preload) {
+      let {
+        oldCurrentIndex,
+        preload
+      } = this;
+      if (preload === 0) {
+        this.spliceData();
+        return
+      }
+      if (oldCurrentIndex === val) {
+        return
+      }
+      // 预先多加载几个，避免过多的触发spliceData， 
+      let errorValue = 1 // 为误差值，
+      if (val < oldCurrentIndex - (preload - errorValue) || val >
+        oldCurrentIndex + (preload - errorValue)) {
         this.oldCurrentIndex = val;
         this.spliceData();
       }
     },
-    heightOfRenderAera(){
+    heightOfRenderAera() {
       this.spliceData()
     }
   },
@@ -56,22 +72,37 @@ let dynamicRender = {
      * 分割出dom中显示的数据
      */
     spliceData() {
-      let { heightOfRenderAera, currentIndex, cellHeight, preload } = this;
-      if(heightOfRenderAera === 0) {
+      let {
+        heightOfRenderAera,
+        currentIndex,
+        cellHeight,
+        preload
+      } = this;
+      if (preload === 0) {
+        this.showDatas = this.datas
+        return
+      }
+      //没有高度，不需要渲染元素
+      if (heightOfRenderAera === 0 || cellHeight === 0) {
         return []
       }
-      let nums = currentIndex + Math.ceil(heightOfRenderAera / cellHeight);
-      let start = currentIndex - preload >= 0 ? currentIndex - preload : 0;
-      this.showDatas = this.datas.slice(start, nums + preload);
+      let end = currentIndex + Math.ceil(heightOfRenderAera / cellHeight) +
+        preload;
+      let start = currentIndex - preload > 0 ? currentIndex - preload : 0;
+      this.showDatas = this.datas.slice(start, end);
     },
     //
-     /**
+    /**
      * 计算第一个撑开前置高度的容器块高度
      */
     calTopSpace() {
-      let { oldCurrentIndex, cellHeight, preload } = this;
+      let {
+        oldCurrentIndex,
+        cellHeight,
+        preload
+      } = this;
       let start =
-        oldCurrentIndex - preload >= 0 ? oldCurrentIndex - preload : 0;
+        oldCurrentIndex - preload > 0 ? oldCurrentIndex - preload : 0;
       return start * cellHeight;
     },
   }

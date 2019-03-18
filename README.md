@@ -250,6 +250,10 @@ yarn serve
 IE 需要注意一下
 
 ## Update
+1.2.4
+- 修复滚动时向上滚动时会空白一行没有渲染的问题
+- 修复左侧行名区数据过少时，无法盖住其底下标记线的问题
+
 1.2.3
 - 添加Resize Observer api  的polyfill
 
