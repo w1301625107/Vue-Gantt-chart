@@ -99,7 +99,7 @@ import {
   getBeginTimeOfTimeLine,
   calcScalesAbout2Times
 } from "./utils/timeLineUtils.js";
-import { isUndef, isDef, warn } from "./utils/tool.js";
+import { isDef, warn } from "./utils/tool.js";
 import { getPositonOffset } from "./utils/gtUtils.js";
 import throttle from "./utils/throttle.js";
 import Timeline from "./components/time-line/index.vue";
@@ -253,12 +253,6 @@ export default {
     }
   },
   watch: {
-    cellWidth() {
-      this.resetCss();
-    },
-    cellHeight() {
-      this.resetCss();
-    },
     scrollToTime: {
       handler(newV) {
         if (!newV) {
@@ -313,17 +307,8 @@ export default {
       },
       immediate: true
     },
-    scrollTop(val) {
-      this.$emit("scrollTop", val);
-    },
-    scrollLeft(val) {
-      this.$emit("scrollLeft", val);
-    }
-  },
-  created() {
   },
   mounted() {
-    this.resetCss();
     this.getSelector();
     const observeContainer = throttle(entries => {
       entries.forEach(entry => {
@@ -398,6 +383,8 @@ export default {
       gantt_leftbar.scrollTop = topValue;
       gantt_table.scrollTop = topValue;
       this.scrollTop = topValue;
+      this.$emit("scrollTop", topValue);
+
     },
     syncScrollX(event, fake = false) {
       let {
@@ -415,24 +402,8 @@ export default {
       gantt_timeline.scrollLeft = leftValue;
       gantt_markArea.style.left = "-" + leftValue + "px";
       this.scrollLeft = leftValue;
+       this.$emit("scrollLeft", leftValue);
     },
-    //修改gantt-cell-height和gantt-cell-height样式数值
-    resetCss() {
-      let style = document.getElementById("gantt-cell-style");
-      let { cellWidth, cellHeight } = this;
-      let innerText = `.gantt-cell-width{width:${cellWidth}px;}
-        .gantt-cell-height{height:${cellHeight}px;}
-        .gantt-block{background-size: ${cellWidth}px ${cellHeight}px;`;
-      if (null == style) {
-        let style = document.createElement("style");
-        style.setAttribute("id", "gantt-cell-style");
-        style.setAttribute("type", "text/css");
-        style.innerText = innerText;
-        document.head.appendChild(style);
-      } else {
-        style.innerText = innerText;
-      }
-    }
   }
 };
 </script>

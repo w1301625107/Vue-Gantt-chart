@@ -9,7 +9,7 @@
       <div class="gantt-timeline-scale "
            :style="{height:titleHeight/2+'px',
            'line-height':titleHeight/2+'px'}">
-        <div class="gantt-cell-width"
+        <div :style="cellWidthStyle"
              v-for="(hour,index) in getTimeScales(day)"
              :key="index">
           {{hour}}
@@ -70,6 +70,11 @@ export default {
       temp.push(start.clone());
 
       return temp;
+    },
+    cellWidthStyle(){
+      return {
+        'width':`${this.cellWidth}px`
+      }
     }
   },
   methods: {

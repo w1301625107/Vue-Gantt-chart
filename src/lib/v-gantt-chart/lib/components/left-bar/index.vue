@@ -3,7 +3,8 @@
     <div class="gantt-leftbar-item gantt-block-top-space"
          :style="{height:calTopSpace()+'px'}">
     </div>
-    <div class="gantt-leftbar-item gantt-cell-height"
+    <div class="gantt-leftbar-item"
+         :style="cellHeightStyle"
          v-for="(data,index) in showDatas"
          :key="dataKey?data[dataKey]:index">
       <slot :data="data"></slot>
@@ -21,6 +22,13 @@ export default {
     datas: {
       type: Array,
       required: true
+    }
+  },
+  computed:{
+    cellHeightStyle(){
+      return {
+        'height':`${this.cellHeight}px`
+      }
     }
   }
 };

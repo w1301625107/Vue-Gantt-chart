@@ -62,6 +62,9 @@ let dynamicRender = {
     },
     heightOfRenderAera() {
       this.spliceData()
+    },
+    cellHeight() {
+      this.spliceData()
     }
   },
   created() {

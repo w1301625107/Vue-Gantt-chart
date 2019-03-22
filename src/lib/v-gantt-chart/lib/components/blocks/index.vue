@@ -4,7 +4,8 @@
     <div class="gantt-block gantt-block-top-space"
          :style="{height:calTopSpace()+'px'}">
     </div>
-    <div class="gantt-block gantt-cell-height"
+    <div class="gantt-block"
+         :style="blockStyle"
          v-for="(data,index) in showDatas"
          :key="dataKey?data[dataKey]:index">
       <div class="gantt-block-item"
@@ -23,7 +24,7 @@
 import moment from "moment";
 import dr from "../dynamic-render.js";
 import { getWidthAbout2Times, getPositonOffset } from "../../utils/gtUtils.js";
-import { isUndef, isDef, warn } from "../../utils/tool.js";
+import { isUndef, warn } from "../../utils/tool.js";
 
 export default {
   name: "Blocks",
@@ -58,10 +59,6 @@ export default {
       endTime: null
     };
   },
-  created() {
-    this.getTimeRange();
-  },
-  mounted() {},
   computed: {
     beginTimeOfTimeLineFormat() {
       return this.beginTimeOfTimeLine.toString();
@@ -72,22 +69,29 @@ export default {
         return arrayKeys;
       }
       return ["gtArray"];
+    },
+    blockStyle(){
+      return{
+        backgroundSize:`${this.cellWidth}px ${this.cellHeight}px`,
+        height:`${this.cellHeight}px`
+      }
     }
   },
   watch: {
     scrollLeft() {
-      if (this.heightOfRenderAera === 0) {
-        return;
-      }
       this.getTimeRange();
     },
     widthOfRenderAera() {
-      if (this.heightOfRenderAera === 0) {
-        return;
-      }
+      this.getTimeRange();
+    },
+    cellWidth(){
       this.getTimeRange();
     }
   },
+  created() {
+    this.getTimeRange();
+  },
+  mounted() {},
   methods: {
     /**
      * 根据renderAarrys拼接需要渲染的数组
@@ -109,6 +113,9 @@ export default {
      *
      */
     getTimeRange() {
+      if (this.heightOfRenderAera === 0) {
+        return;
+      }
       let {
         beginTimeOfTimeLine,
         scrollLeft,
