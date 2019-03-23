@@ -60,6 +60,9 @@ let dynamicRender = {
         this.spliceData();
       }
     },
+    datas(){
+      this.spliceData()
+    },
     heightOfRenderAera() {
       this.spliceData()
     },

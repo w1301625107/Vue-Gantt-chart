@@ -5,10 +5,10 @@
          v-for="(day,index) in getDays"
          :key="index">
       <div class="gantt-timeline-day "
-           :style="{height:titleHeight/2+'px','line-height':titleHeight/2+'px'}">{{day.format("MM/DD")}}</div>
+           :style="heightStyle">
+        {{day.format("MM/DD")}}</div>
       <div class="gantt-timeline-scale "
-           :style="{height:titleHeight/2+'px',
-           'line-height':titleHeight/2+'px'}">
+           :style="heightStyle">
         <div :style="cellWidthStyle"
              v-for="(hour,index) in getTimeScales(day)"
              :key="index">
@@ -21,9 +21,7 @@
 
 <script>
 import moment from "moment";
-import {
-  getBeginTimeOfTimeLine,
-} from "../../utils/timeLineUtils.js";
+import { getBeginTimeOfTimeLine } from "../../utils/timeLineUtils.js";
 
 const START_DAY = Symbol();
 const MIDDLE_DAY = Symbol();
@@ -35,30 +33,30 @@ function isSameDay(one, two) {
 
 export default {
   name: "Timeline",
+
   props: {
     start: {
-      type: moment,
-      required: true
+      type: moment
     },
     end: {
-      type: moment,
-      required: true
+      type: moment
     },
     cellWidth: {
-      type: Number,
-      default: 50
+      type: Number
     },
     titleHeight: {
-      type: Number,
-      default: 40
+      type: Number
     },
     scale: {
-      type: Number,
-      default: 60
+      type: Number
     }
   },
+
   computed: {
-    //天列表
+    /**
+     * 天列表
+     * @returns {[moment]} 该data中所有需要渲染的数据
+     */
     getDays() {
       let temp = [];
       let start = this.start.clone();
@@ -71,28 +69,43 @@ export default {
 
       return temp;
     },
-    cellWidthStyle(){
+    cellWidthStyle() {
       return {
-        'width':`${this.cellWidth}px`
-      }
+        width: `${this.cellWidth}px`
+      };
+    },
+    heightStyle() {
+      return {
+        height: this.titleHeight / 2 + "px",
+        "line-height": this.titleHeight / 2 + "px"
+      };
     }
   },
+
   methods: {
-    //获取时间刻度数组
+    /**
+     * 获取时间刻度数组
+     *
+     * @param {moment} date
+     * @returns {[string]} 该data中所有需要渲染的数据
+     */
     getTimeScales(date) {
-      let temp = [];
       let { start, end } = this;
 
       if (isSameDay(date, start)) {
-        temp = this.generateTimeScale(START_DAY);
+        return this.generateTimeScale(START_DAY);
       } else if (isSameDay(date, end)) {
-        temp = this.generateTimeScale(END_DAY);
+        return this.generateTimeScale(END_DAY);
       } else {
-        temp = this.generateTimeScale(MIDDLE_DAY);
+        return this.generateTimeScale(MIDDLE_DAY);
       }
-      return temp;
     },
-    //根据类型生成时间刻度数组
+    /**
+     * 生成时间刻度数组
+     *
+     * @param {Symbol} type
+     * @returns {[string]} 该data中所有需要渲染的数据
+     */
     generateTimeScale(type) {
       let totalblock = [];
       let { start, end, scale } = this;

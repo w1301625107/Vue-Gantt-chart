@@ -8,14 +8,16 @@
         <slot name="title">welcome v-gantt-chart</slot>
       </div>
       <div ref="headerTimeline"
-           class="gantt-header-timeline">
-        <timeline :start="start"
+           class="gantt-header-timeline"
+           :style="{width:`calc(100% - ${hideYScrollBar ? 0 : scrollBarWitdh}px)`}">
+        <div class="gantt-timeline-wrapper" :style="{width:totalWidth+'px'}">
+          <timeline :start="start"
                   :end="end"
                   :cellWidth="cellWidth"
                   :titleHeight="titleHeight"
-                  :scale="scale"
-                  :style="{width:totalWidth+'px'}">
-        </timeline>
+                  :scale="scale">
+          </timeline>
+        </div>
       </div>
     </div>
     <div class="gantt-body"
@@ -75,13 +77,13 @@
           </blocks>
         </div>
       </div>
-      <div ref="scrollXBar"
+      <div ref="scrollYBar"
            class="gantt-scroll-y"
            :style="{width:`${hideYScrollBar? 0 : scrollBarWitdh}px`}"
            @scroll="syncScrollY">
         <div :style="{height:totalHeight+'px'}"></div>
       </div>
-      <div ref="scrollYBar"
+      <div ref="scrollXBar"
            class="gantt-scroll-x"
            :style="{height:`${hideXScrollBar? 0 : scrollBarWitdh}px`}"
            @scroll="syncScrollX">
@@ -111,7 +113,9 @@ import MarkLine from "./components/mark-line/index.vue";
 
 export default {
   name: "Gantt",
+
   components: { Timeline, LeftBar, Blocks, MarkLine, CurrentTime },
+
   props: {
     startTime: {
       required: true,
@@ -204,6 +208,7 @@ export default {
       default: false
     }
   },
+
   data() {
     return {
       //缓存节点
@@ -223,12 +228,20 @@ export default {
       scrollBarWitdh: 17,
     };
   },
+
   computed: {
     start() {
       return moment(this.startTime);
     },
     end() {
-      return moment(this.endTime);
+      let {start,widthOfRenderAera,scale,cellWidth} = this
+      let end = moment(this.endTime)
+      let totalWidth = calcScalesAbout2Times(start, end, scale)*cellWidth;
+      if(start.isAfter(end)||totalWidth<=widthOfRenderAera){
+        let startClone = start.clone();
+        end = startClone.add(widthOfRenderAera/cellWidth*scale,'m')
+      }
+      return end ;
     },
     totalWidth() {
       let { cellWidth, totalScales } = this;
@@ -252,6 +265,7 @@ export default {
       return totalWidth - widthOfRenderAera - titleWidth - 1;
     }
   },
+
   watch: {
     scrollToTime: {
       handler(newV) {
@@ -308,6 +322,7 @@ export default {
       immediate: true
     },
   },
+
   mounted() {
     this.getSelector();
     const observeContainer = throttle(entries => {
@@ -320,8 +335,9 @@ export default {
     const observer = new ResizeObserver(observeContainer)
     observer.observe(this.$refs.blocksWrapper)
   },
+
   methods: {
-     /**
+    /**
      * 为时间线计算偏移
      */
     getTimeLinePosition(date) {
@@ -340,9 +356,9 @@ export default {
     getSelector() {
       this.selector.gantt_leftbar = this.$refs.leftbarWrapper;
       this.selector.gantt_table = this.$refs.blocksWrapper;
-      this.selector.gantt_scroll_y = this.$refs.scrollXBar;
+      this.selector.gantt_scroll_y = this.$refs.scrollYBar;
       this.selector.gantt_timeline = this.$refs.headerTimeline;
-      this.selector.gantt_scroll_x = this.$refs.scrollYBar;
+      this.selector.gantt_scroll_x = this.$refs.scrollXBar;
       this.selector.gantt_markArea = this.$refs.marklineArea;
     },
     wheelHandle(event) {
@@ -384,7 +400,6 @@ export default {
       gantt_table.scrollTop = topValue;
       this.scrollTop = topValue;
       this.$emit("scrollTop", topValue);
-
     },
     syncScrollX(event, fake = false) {
       let {
