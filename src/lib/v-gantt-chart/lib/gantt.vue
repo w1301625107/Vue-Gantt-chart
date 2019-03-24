@@ -1,101 +1,112 @@
 <template>
+
   <div class="gantt-chart"
        @wheel="wheelHandle">
-    <div v-show="!hideHeader"
-         class="gantt-header">
-      <div class="gantt-header-title"
-           :style="{'line-height':titleHeight+'px',height:titleHeight+'px','max-width':titleWidth+'px','min-width':titleWidth+'px'}">
-        <slot name="title">welcome v-gantt-chart</slot>
+    <div class="gantt-container"
+         :style="{height:`calc(100% - ${hideXScrollBar ? 0 : scrollBarWitdh}px)`,width:`calc(100% - ${hideYScrollBar ? 0 : scrollBarWitdh}px)`}">
+
+      <div v-show="!hideHeader"
+           class="gantt-header">
+        <div class="gantt-header-title"
+             :style="{'line-height':titleHeight+'px',height:titleHeight+'px','width':titleWidth+'px','flex':'none'}">
+          <slot name="title">welcome v-gantt-chart</slot>
+        </div>
+        <div ref="headerTimeline"
+             class="gantt-header-timeline"
+             :style="{width:`100%`}">
+          <div class="gantt-timeline-wrapper"
+               :style="{width:totalWidth+'px'}">
+            <timeline :start="start"
+                      :end="end"
+                      :cellWidth="cellWidth"
+                      :titleHeight="titleHeight"
+                      :scale="scale">
+            </timeline>
+          </div>
+        </div>
       </div>
-      <div ref="headerTimeline"
-           class="gantt-header-timeline"
-           :style="{width:`calc(100% - ${hideYScrollBar ? 0 : scrollBarWitdh}px)`}">
-        <div class="gantt-timeline-wrapper" :style="{width:totalWidth+'px'}">
-          <timeline :start="start"
-                  :end="end"
-                  :cellWidth="cellWidth"
-                  :titleHeight="titleHeight"
-                  :scale="scale">
-          </timeline>
+
+      <div class="gantt-body"
+           :style="{height:`calc(100% - ${hideHeader ? 0 : titleHeight}px)`}">
+        <div class="gantt-table">
+          <div ref="marklineArea"
+               class="gantt-markline-area">
+            <CurrentTime v-if="showCurrentTime"
+                         :getTimeLinePosition="getTimeLinePosition" />
+            <mark-line v-for="(times,index) in timeLines"
+                       :key="index"
+                       :markLineTime="times.time"
+                       :getTimeLinePosition="getTimeLinePosition"
+                       :color="times.color"></mark-line>
+          </div>
+          <div ref="leftbarWrapper"
+               class="gantt-leftbar-wrapper"
+               :style="{'width':titleWidth+'px','flex':'none'}">
+            <LeftBar :datas="datas"
+                     :dataKey="dataKey"
+                     :scrollTop="scrollTop"
+                     :heightOfRenderAera="heightOfRenderAera"
+                     :widthOfRenderAera="widthOfRenderAera"
+                     :cellHeight="cellHeight"
+                     :style="{height:totalHeight+'px'}">
+              <template v-slot="{data}">
+                <slot name="left"
+                      :data="data">
+                  <div class="gantt-leftbar-defalutItem"></div>
+                </slot>
+              </template>
+            </LeftBar>
+          </div>
+          <div ref="blocksWrapper"
+               class="gantt-blocks-wrapper">
+            <blocks :scrollTop="scrollTop"
+                    :scrollLeft="scrollLeft"
+                    :heightOfRenderAera="heightOfRenderAera"
+                    :widthOfRenderAera="widthOfRenderAera"
+                    :arrayKeys="arrayKeys"
+                    :itemKey="itemKey"
+                    :dataKey="dataKey"
+                    :datas="datas"
+                    :cellWidth="cellWidth"
+                    :cellHeight="cellHeight"
+                    :scale="scale"
+                    :beginTimeOfTimeLine="beginTimeOfTimeLine"
+                    :style="{width:totalWidth+'px'}">
+              <template v-slot="{data,item}">
+                <slot name="block"
+                      :data="data"
+                      :item="item">
+                  <div class="gantt-block-defaultBlock"></div>
+                </slot>
+              </template>
+            </blocks>
+          </div>
         </div>
       </div>
     </div>
-    <div class="gantt-body"
-         :style="{height:`calc(100% - ${hideHeader ? 0 : titleHeight}px)`}">
-      <div class="gantt-table"
-           :style="{height:`calc(100% - ${hideXScrollBar ? 0 : scrollBarWitdh}px)`,width:`calc(100% - ${hideYScrollBar ? 0 : scrollBarWitdh}px)`}">
-        <div ref="marklineArea"
-             class="gantt-markline-area">
-          <CurrentTime v-if="showCurrentTime"
-                       :getTimeLinePosition="getTimeLinePosition" />
-          <mark-line v-for="(times,index) in timeLines"
-                     :key="index"
-                     :markLineTime="times.time"
-                     :getTimeLinePosition="getTimeLinePosition"
-                     :color="times.color"></mark-line>
-        </div>
-        <div ref="leftbarWrapper"
-             class="gantt-leftbar-wrapper"
-             :style="{'max-width':titleWidth+'px','min-width':titleWidth+'px'}">
-          <LeftBar :datas="datas"
-                   :dataKey="dataKey"
-                   :scrollTop="scrollTop"
-                   :heightOfRenderAera="heightOfRenderAera"
-                   :widthOfRenderAera="widthOfRenderAera"
-                   :cellHeight="cellHeight"
-                   :style="{height:totalHeight+'px'}">
-            <template v-slot="{data}">
-              <slot name="left"
-                    :data="data">
-                <div class="gantt-leftbar-defalutItem"></div>
-              </slot>
-            </template>
-          </LeftBar>
-        </div>
-        <div ref="blocksWrapper"
-             class="gantt-blocks-wrapper">
-          <blocks :scrollTop="scrollTop"
-                  :scrollLeft="scrollLeft"
-                  :heightOfRenderAera="heightOfRenderAera"
-                  :widthOfRenderAera="widthOfRenderAera"
-                  :arrayKeys="arrayKeys"
-                  :itemKey="itemKey"
-                  :dataKey="dataKey"
-                  :datas="datas"
-                  :cellWidth="cellWidth"
-                  :cellHeight="cellHeight"
-                  :scale="scale"
-                  :beginTimeOfTimeLine="beginTimeOfTimeLine"
-                  :style="{width:totalWidth+'px'}">
-            <template v-slot="{data,item}">
-              <slot name="block"
-                    :data="data"
-                    :item="item">
-                <div class="gantt-block-defaultBlock"></div>
-              </slot>
-            </template>
-          </blocks>
-        </div>
-      </div>
-      <div ref="scrollYBar"
-           class="gantt-scroll-y"
-           :style="{width:`${hideYScrollBar? 0 : scrollBarWitdh}px`}"
-           @scroll="syncScrollY">
-        <div :style="{height:totalHeight+'px'}"></div>
-      </div>
-      <div ref="scrollXBar"
-           class="gantt-scroll-x"
-           :style="{height:`${hideXScrollBar? 0 : scrollBarWitdh}px`}"
-           @scroll="syncScrollX">
-        <div :style="{width:totalWidth+'px'}"></div>
-      </div>
+
+    <div ref="scrollYBar"
+         class="gantt-scroll-y"
+         :style="{width:`${hideYScrollBar? 0 : scrollBarWitdh}px`,
+         height:`calc(100% - ${hideHeader ? 0 : titleHeight}px`,marginTop:`${hideHeader ? 0 : titleHeight}px`}"
+         @scroll="syncScrollY">
+      <div :style="{height:totalHeight+'px'}"></div>
     </div>
+
+    <div ref="scrollXBar"
+         class="gantt-scroll-x"
+         :style="{height:`${hideXScrollBar? 0 : scrollBarWitdh}px`,
+         width:`calc(100% - ${titleWidth}px )`,marginLeft:titleWidth+'px'}"
+         @scroll="syncScrollX">
+      <div :style="{width:totalWidth+'px'}"></div>
+    </div>
+
   </div>
 </template>
 
 <script>
 import moment from "moment";
-import ResizeObserver from 'resize-observer-polyfill';
+import ResizeObserver from "resize-observer-polyfill";
 import {
   scaleList,
   getBeginTimeOfTimeLine,
@@ -110,7 +121,6 @@ import LeftBar from "./components/left-bar/index.vue";
 import Blocks from "./components/blocks/index.vue";
 import MarkLine from "./components/mark-line/index.vue";
 
-
 export default {
   name: "Gantt",
 
@@ -120,16 +130,16 @@ export default {
     startTime: {
       required: true,
       validator(date) {
-        let ok = moment(date).isValid()
-        if(!ok) warn(`非法的开始时间 ${date}`)
+        let ok = moment(date).isValid();
+        if (!ok) warn(`非法的开始时间 ${date}`);
         return ok;
       }
     },
     endTime: {
       required: true,
       validator(date) {
-        let ok = moment(date).isValid()
-        if(!ok) warn(`非法的结束时间 ${date}`)
+        let ok = moment(date).isValid();
+        if (!ok) warn(`非法的结束时间 ${date}`);
         return ok;
       }
     },
@@ -225,7 +235,7 @@ export default {
       //block 区域需要渲染的宽度
       heightOfRenderAera: window.screen.availHeight,
       widthOfRenderAera: window.screen.availWidth,
-      scrollBarWitdh: 17,
+      scrollBarWitdh: 17
     };
   },
 
@@ -234,14 +244,14 @@ export default {
       return moment(this.startTime);
     },
     end() {
-      let {start,widthOfRenderAera,scale,cellWidth} = this
-      let end = moment(this.endTime)
-      let totalWidth = calcScalesAbout2Times(start, end, scale)*cellWidth;
-      if(start.isAfter(end)||totalWidth<=widthOfRenderAera){
+      let { start, widthOfRenderAera, scale, cellWidth } = this;
+      let end = moment(this.endTime);
+      let totalWidth = calcScalesAbout2Times(start, end, scale) * cellWidth;
+      if (start.isAfter(end) || totalWidth <= widthOfRenderAera) {
         let startClone = start.clone();
-        end = startClone.add(widthOfRenderAera/cellWidth*scale,'m')
+        end = startClone.add((widthOfRenderAera / cellWidth) * scale, "m");
       }
-      return end ;
+      return end;
     },
     totalWidth() {
       let { cellWidth, totalScales } = this;
@@ -320,7 +330,7 @@ export default {
         });
       },
       immediate: true
-    },
+    }
   },
 
   mounted() {
@@ -330,10 +340,10 @@ export default {
         const cr = entry.contentRect;
         this.heightOfRenderAera = cr.height;
         this.widthOfRenderAera = cr.width;
-      })
-    })
-    const observer = new ResizeObserver(observeContainer)
-    observer.observe(this.$refs.blocksWrapper)
+      });
+    });
+    const observer = new ResizeObserver(observeContainer);
+    observer.observe(this.$refs.blocksWrapper);
   },
 
   methods: {
@@ -417,8 +427,8 @@ export default {
       gantt_timeline.scrollLeft = leftValue;
       gantt_markArea.style.left = "-" + leftValue + "px";
       this.scrollLeft = leftValue;
-       this.$emit("scrollLeft", leftValue);
-    },
+      this.$emit("scrollLeft", leftValue);
+    }
   }
 };
 </script>
