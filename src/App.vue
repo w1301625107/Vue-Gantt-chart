@@ -140,8 +140,8 @@ export default {
       titleWidth: 250,
       scale: 60,
       datasNum: 100,
-      datasA: mockDatas(5),
-      datasB: mockDatas(50),
+      datasA: mockDatas(100),
+      datasB: mockDatas(100),
       dataKey: "id",
       scaleList: scaleList,
       scrollToTime: moment()

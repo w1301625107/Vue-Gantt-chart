@@ -22,6 +22,7 @@ $font-gray:#777;
     outline: 1px solid $gray;
 
     &-title {
+      flex: none;
       width: 100%;
       background: #747e80;
       color: #fff;
@@ -72,6 +73,7 @@ $font-gray:#777;
     font-size: 0.8rem;
 
     &-wrapper {
+      flex: none;
       position: relative;
       overflow: hidden;
       background: #fff;

@@ -3,19 +3,19 @@
   <div class="gantt-chart"
        @wheel="wheelHandle">
     <div class="gantt-container"
-         :style="{height:`calc(100% - ${hideXScrollBar ? 0 : scrollBarWitdh}px)`,width:`calc(100% - ${hideYScrollBar ? 0 : scrollBarWitdh}px)`}">
+         :style="{height:`calc(100% - ${scrollXBarHeight}px)`,width:`calc(100% - ${scrollYBarWidth}px)`}">
 
       <div v-show="!hideHeader"
-           class="gantt-header">
+           class="gantt-header"
+           :style="{width:`calc(100% + ${scrollYBarWidth}px)`}">
         <div class="gantt-header-title"
-             :style="{'line-height':titleHeight+'px',height:titleHeight+'px','width':titleWidth+'px','flex':'none'}">
+             :style="{'line-height':titleHeight+'px',height:titleHeight+'px','width':titleWidth+'px'}">
           <slot name="title">welcome v-gantt-chart</slot>
         </div>
         <div ref="headerTimeline"
-             class="gantt-header-timeline"
-             :style="{width:`100%`}">
+             class="gantt-header-timeline">
           <div class="gantt-timeline-wrapper"
-               :style="{width:totalWidth+'px'}">
+               :style="{width:(totalWidth+scrollYBarWidth)+'px'}">
             <timeline :start="start"
                       :end="end"
                       :cellWidth="cellWidth"
@@ -27,7 +27,7 @@
       </div>
 
       <div class="gantt-body"
-           :style="{height:`calc(100% - ${hideHeader ? 0 : titleHeight}px)`}">
+           :style="{height:`calc(100% - ${actualHeaderHeight}px)`}">
         <div class="gantt-table">
           <div ref="marklineArea"
                class="gantt-markline-area">
@@ -41,14 +41,14 @@
           </div>
           <div ref="leftbarWrapper"
                class="gantt-leftbar-wrapper"
-               :style="{'width':titleWidth+'px','flex':'none'}">
+               :style="{'width':titleWidth+'px',height:`calc(100% + ${scrollXBarHeight}px)`}">
             <LeftBar :datas="datas"
                      :dataKey="dataKey"
                      :scrollTop="scrollTop"
                      :heightOfRenderAera="heightOfRenderAera"
                      :widthOfRenderAera="widthOfRenderAera"
                      :cellHeight="cellHeight"
-                     :style="{height:totalHeight+'px'}">
+                     :style="{height:(totalHeight+scrollXBarHeight)+'px'}">
               <template v-slot="{data}">
                 <slot name="left"
                       :data="data">
@@ -87,15 +87,15 @@
 
     <div ref="scrollYBar"
          class="gantt-scroll-y"
-         :style="{width:`${hideYScrollBar? 0 : scrollBarWitdh}px`,
-         height:`calc(100% - ${hideHeader ? 0 : titleHeight}px`,marginTop:`${hideHeader ? 0 : titleHeight}px`}"
+         :style="{width:`${scrollYBarWidth}px`,
+         height:`calc(100% - ${actualHeaderHeight}px`,marginTop:`${actualHeaderHeight}px`}"
          @scroll="syncScrollY">
       <div :style="{height:totalHeight+'px'}"></div>
     </div>
 
     <div ref="scrollXBar"
          class="gantt-scroll-x"
-         :style="{height:`${hideXScrollBar? 0 : scrollBarWitdh}px`,
+         :style="{height:`${scrollXBarHeight}px`,
          width:`calc(100% - ${titleWidth}px )`,marginLeft:titleWidth+'px'}"
          @scroll="syncScrollX">
       <div :style="{width:totalWidth+'px'}"></div>
@@ -271,8 +271,17 @@ export default {
     },
     avialableScrollLeft() {
       // 不减这个1，滚动到时间轴尽头后继续滚动会慢慢的溢出
-      let { totalWidth, widthOfRenderAera, titleWidth } = this;
-      return totalWidth - widthOfRenderAera - titleWidth - 1;
+      let { totalWidth, widthOfRenderAera } = this;
+      return totalWidth - widthOfRenderAera - 1;
+    },
+    scrollXBarHeight() {
+      return this.hideXScrollBar ? 0 : this.scrollBarWitdh;
+    },
+    scrollYBarWidth() {
+      return this.hideYScrollBar ? 0 : this.scrollBarWitdh;
+    },
+    actualHeaderHeight() {
+      return this.hideHeader ? 0 : this.titleHeight;
     }
   },
 
