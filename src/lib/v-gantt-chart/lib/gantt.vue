@@ -30,13 +30,14 @@
            :style="{height:`calc(100% - ${actualHeaderHeight}px)`}">
         <div class="gantt-table">
           <div ref="marklineArea"
+               :style="{marginLeft:titleWidth+'px'}"
                class="gantt-markline-area">
             <CurrentTime v-if="showCurrentTime"
-                         :getTimeLinePosition="getTimeLinePosition" />
+                         :getPositonOffset="getPositonOffset" />
             <mark-line v-for="(times,index) in timeLines"
                        :key="index"
                        :markLineTime="times.time"
-                       :getTimeLinePosition="getTimeLinePosition"
+                       :getPositonOffset="getPositonOffset"
                        :color="times.color"></mark-line>
           </div>
           <div ref="leftbarWrapper"
@@ -70,7 +71,9 @@
                     :cellWidth="cellWidth"
                     :cellHeight="cellHeight"
                     :scale="scale"
+                    :getPositonOffset="getPositonOffset"
                     :beginTimeOfTimeLine="beginTimeOfTimeLine"
+                    :getWidthAbout2Times="getWidthAbout2Times"
                     :style="{width:totalWidth+'px'}">
               <template v-slot="{data,item}">
                 <slot name="block"
@@ -113,7 +116,7 @@ import {
   calcScalesAbout2Times
 } from "./utils/timeLineUtils.js";
 import { isDef, warn } from "./utils/tool.js";
-import { getPositonOffset } from "./utils/gtUtils.js";
+import { getPositonOffset as _getPositonOffset,getWidthAbout2Times as _getWidthAbout2Times } from "./utils/gtUtils.js";
 import throttle from "./utils/throttle.js";
 import Timeline from "./components/time-line/index.vue";
 import CurrentTime from "./components/mark-line/current-time.vue";
@@ -291,22 +294,15 @@ export default {
         if (!newV) {
           return;
         }
-        let { start, end, beginTimeOfTimeLine, scale, cellWidth } = this;
+        let { start, end } = this;
         let time = moment(newV);
         if (!(time.isAfter(start) && time.isBefore(end))) {
           warn(`当前滚动至${newV}不在${start}和${end}的范围之内`);
           return;
         }
 
-        let options = {
-          cellWidth,
-          scale
-        };
-
-        let offset = getPositonOffset(
+        let offset = this.getPositonOffset(
           newV,
-          beginTimeOfTimeLine.toString(),
-          options
         );
         // immediate 会造成dom 还没有挂载时就进行操作，故需要延迟执行
         this.$nextTick(() =>
@@ -356,19 +352,25 @@ export default {
   },
 
   methods: {
+    getWidthAbout2Times(start,end){
+      let options = {
+        scale: this.scale,
+        cellWidth: this.cellWidth
+      };
+      return _getWidthAbout2Times(start, end, options);
+    },
     /**
      * 为时间线计算偏移
      */
-    getTimeLinePosition(date) {
-      let { cellWidth, scale, beginTimeOfTimeLine, titleWidth } = this;
+    getPositonOffset(date) {
+      let { cellWidth, scale, beginTimeOfTimeLine } = this;
       let options = {
         cellWidth,
         scale
       };
 
       return (
-        getPositonOffset(date, beginTimeOfTimeLine.toString(), options) +
-        titleWidth
+        _getPositonOffset(date, beginTimeOfTimeLine.toString(), options) 
       );
     },
     //缓存节点

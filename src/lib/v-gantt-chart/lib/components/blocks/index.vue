@@ -23,7 +23,6 @@
 <script>
 import moment from "moment";
 import dr from "../dynamic-render.js";
-import { getWidthAbout2Times, getPositonOffset } from "../../utils/gtUtils.js";
 import { isUndef, warn } from "../../utils/tool.js";
 
 export default {
@@ -52,6 +51,8 @@ export default {
       type: Number,
       required: true
     },
+    getPositonOffset:Function,
+    getWidthAbout2Times:Function
   },
   data() {
     return {
@@ -159,16 +160,12 @@ export default {
      * @returns {number} 
      */
     getWidth(block) {
-      let options = {
-        scale: this.scale,
-        cellWidth: this.cellWidth
-      };
       if (isUndef(block.start) || isUndef(block.end)) {
         // warn(`错误，该数据项不含start值 与 end 值 ${JSON.stringify(block)}，无法计算宽度值。`)
         return 0;
       }
 
-      return getWidthAbout2Times(block.start, block.end, options);
+      return this.getWidthAbout2Times(block.start, block.end);
     },
     /**
      * 计算时间块偏移
@@ -177,10 +174,6 @@ export default {
      * @returns {number} 
      */
     getPosition(block) {
-      let options = {
-        scale: this.scale,
-        cellWidth: this.cellWidth
-      };
       if (isUndef(block.start)) {
         warn(
           `错误，该数据项不含start 值 ${JSON.stringify(
@@ -190,10 +183,8 @@ export default {
         return 0;
       }
 
-      return getPositonOffset(
-        block.start,
-        this.beginTimeOfTimeLineFormat,
-        options
+      return this.getPositonOffset(
+        block.start
       );
     }
   }

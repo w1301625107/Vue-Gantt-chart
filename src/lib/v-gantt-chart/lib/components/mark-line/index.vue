@@ -21,7 +21,7 @@ export default {
       type: String,
       default: "#0ca30a"
     },
-    getTimeLinePosition: {
+    getPositonOffset: {
       type: Function,
       required: true
     }
@@ -39,7 +39,7 @@ export default {
         return 0;
       } else {
         this.visible = true;
-        return this.getTimeLinePosition(this.markLineTime);
+        return this.getPositonOffset(this.markLineTime);
       }
     }
   }
