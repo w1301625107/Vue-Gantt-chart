@@ -78,13 +78,20 @@
                      :arrayKeys="arrayKeys"
                      :scrollToPostion="positionB"
                      @scrollLeft="scrollLeftB"
+                     customGenerateBlocks
                      :datas="datasB">
-        <template v-slot:block="{data,item}">
-          <Test :data="data"
-                :updateTimeLines="updateTimeLines"
-                :cellHeight="cellHeight"
-                :currentTime="currentTime"
-                :item="item"></Test>
+        <template v-slot:block="{data,getPositonOffset,getWidthAbout2Times,isInRenderingTimeRange}">
+          <div class="gantt-block-item"
+               v-for="(item,index) in data.gtArray"
+               v-if="isInRenderingTimeRange(item.start)||isInRenderingTimeRange(item.end)"
+               :key="item.id"
+               :style="{left:getPositonOffset(item.start)+'px',width:getWidthAbout2Times(item.start,item.end)+'px'}">
+            <Test :data="data"
+                  :updateTimeLines="updateTimeLines"
+                  :cellHeight="cellHeight"
+                  :currentTime="currentTime"
+                  :item="item"></Test>
+          </div>
         </template>
         <template v-slot:left="{data}">
           <TestLeft :data="data"></TestLeft>
@@ -150,9 +157,9 @@ export default {
       scrollToPostion: { x: 10000, y: 10000 },
       hideHeader: false,
       arrayKeys: ["gtArray", "error"],
-      scrollToY:0,
-      positionB:{},
-      positionA:{}
+      scrollToY: 0,
+      positionB: {},
+      positionA: {}
     };
   },
   watch: {
@@ -160,8 +167,8 @@ export default {
       this.datasA = mockDatas(newV);
       this.datasB = mockDatas(newV);
     },
-    scrollToY(val){
-      this.positionA = {x:val}
+    scrollToY(val) {
+      this.positionA = { x: val };
     }
   },
   methods: {
@@ -176,11 +183,11 @@ export default {
         }
       ];
     },
-    scrollLeftA(val){
-      this.positionB = {x:val}
+    scrollLeftA(val) {
+      this.positionB = { x: val };
     },
-    scrollLeftB(val){
-      this.positionA = {x:val}
+    scrollLeftB(val) {
+      this.positionA = { x: val };
     }
   }
 };
@@ -217,17 +224,17 @@ input[type="range"] {
   /* height: 30px; */
 }
 
-.container{
+.container {
   display: flex;
   flex-direction: column;
-  flex :1 ;
+  flex: 1;
 }
 
 .main-footer {
   /* height: 30px; */
 }
 
->>>.el-slider{
+>>> .el-slider {
   width: 100px;
 }
 </style>

@@ -8,14 +8,27 @@
          :style="blockStyle"
          v-for="(data,index) in showDatas"
          :key="dataKey?data[dataKey]:index">
-      <div class="gantt-block-item"
-           v-for="(item,index) in concatArray(data)"
-           v-if="isInTimeRange(item)"
-           :key="itemKey?item[itemKey]:index"
-           :style="{left:getPosition(item)+'px',width:getWidth(item)+'px'}">
+
+      <template v-if="!customGenerateBlocks">
+        <div class="gantt-block-item"
+             v-for="(item,index) in concatArray(data)"
+             v-if="isInRenderingTimeRange(item.start)||isInRenderingTimeRange(item.end)"
+             :key="itemKey?item[itemKey]:index"
+             :style="{left:getPosition(item)+'px',width:getWidth(item)+'px'}">
+          <slot :data="data"
+                :item="item">
+            <div class="gantt-block-defaultBlock">need slot</div>
+          </slot>
+        </div>
+      </template>
+
+      <template v-else>
         <slot :data="data"
-              :item="item"></slot>
-      </div>
+              :getPositonOffset="getPositonOffset"
+              :getWidthAbout2Times="getWidthAbout2Times"
+              :isInRenderingTimeRange="isInRenderingTimeRange">need slot</slot>
+      </template>
+
     </div>
   </div>
 </template>
@@ -47,12 +60,13 @@ export default {
       type: Number,
       required: true
     },
-    widthOfRenderAera:{
+    widthOfRenderAera: {
       type: Number,
       required: true
     },
-    getPositonOffset:Function,
-    getWidthAbout2Times:Function
+    getPositonOffset: Function,
+    getWidthAbout2Times: Function,
+    customGenerateBlocks: Boolean
   },
   data() {
     return {
@@ -71,11 +85,11 @@ export default {
       }
       return ["gtArray"];
     },
-    blockStyle(){
-      return{
-        backgroundSize:`${this.cellWidth}px ${this.cellHeight}px`,
-        height:`${this.cellHeight}px`
-      }
+    blockStyle() {
+      return {
+        backgroundSize: `${this.cellWidth}px ${this.cellHeight}px`,
+        height: `${this.cellHeight}px`
+      };
     }
   },
   watch: {
@@ -85,14 +99,14 @@ export default {
     widthOfRenderAera() {
       this.getTimeRange();
     },
-    cellWidth(){
+    cellWidth() {
       this.getTimeRange();
     }
   },
   created() {
     this.getTimeRange();
   },
-  mounted() {},
+
   methods: {
     /**
      * 根据renderAarrys拼接需要渲染的数组
@@ -117,6 +131,7 @@ export default {
       if (this.heightOfRenderAera === 0) {
         return;
       }
+
       let {
         beginTimeOfTimeLine,
         scrollLeft,
@@ -124,6 +139,7 @@ export default {
         scale,
         widthOfRenderAera
       } = this;
+
       this.startTime = beginTimeOfTimeLine
         .clone()
         .add((scrollLeft / cellWidth) * scale, "m")
@@ -138,17 +154,21 @@ export default {
     /**
      * 判定数据是否在渲染的时间范围内
      *
-     * @param {{start:string,end:string}} item
+     * @param {{time:string}} item
      * @returns {boolean} 该
      */
-    isInTimeRange(item) {
+    isInRenderingTimeRange(time) {
+      if (this.heightOfRenderAera === 0) {
+        return false;
+      }
+
       let { startTime, endTime } = this;
-      let startToMs = new Date(item.start).getTime();
-      let endToMs = new Date(item.end).getTime();
-      if (
-        (startTime <= startToMs && startToMs <= endTime) ||
-        (startTime <= endToMs && endToMs <= endTime)
-      ) {
+      if (isUndef(startTime) || isUndef(endTime)) {
+        return false;
+      }
+
+      let timeToMs = new Date(time).getTime();
+      if (startTime <= timeToMs && timeToMs <= endTime) {
         return true;
       }
       return false;
@@ -157,7 +177,7 @@ export default {
      * 计算时间块长度
      *
      * @param {{start:string,end:string}} block
-     * @returns {number} 
+     * @returns {number}
      */
     getWidth(block) {
       if (isUndef(block.start) || isUndef(block.end)) {
@@ -171,7 +191,7 @@ export default {
      * 计算时间块偏移
      *
      * @param {{start:string}} block
-     * @returns {number} 
+     * @returns {number}
      */
     getPosition(block) {
       if (isUndef(block.start)) {
@@ -183,9 +203,7 @@ export default {
         return 0;
       }
 
-      return this.getPositonOffset(
-        block.start
-      );
+      return this.getPositonOffset(block.start);
     }
   }
 };

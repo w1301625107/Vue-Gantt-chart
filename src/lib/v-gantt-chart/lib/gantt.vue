@@ -53,7 +53,6 @@
               <template v-slot="{data}">
                 <slot name="left"
                       :data="data">
-                  <div class="gantt-leftbar-defalutItem"></div>
                 </slot>
               </template>
             </LeftBar>
@@ -74,13 +73,22 @@
                     :getPositonOffset="getPositonOffset"
                     :beginTimeOfTimeLine="beginTimeOfTimeLine"
                     :getWidthAbout2Times="getWidthAbout2Times"
+                    :customGenerateBlocks="customGenerateBlocks"
                     :style="{width:totalWidth+'px'}">
-              <template v-slot="{data,item}">
+              <template v-if="!customGenerateBlocks"
+                        v-slot="{data,item}">
                 <slot name="block"
                       :data="data"
                       :item="item">
-                  <div class="gantt-block-defaultBlock"></div>
                 </slot>
+              </template>
+              <template v-else
+                        v-slot="{data,getPositonOffset,getWidthAbout2Times,isInRenderingTimeRange}">
+                <slot name="block"
+                      :data="data"
+                      :getPositonOffset="getPositonOffset"
+                      :getWidthAbout2Times="getWidthAbout2Times"
+                      :isInRenderingTimeRange="isInRenderingTimeRange"></slot>
               </template>
             </blocks>
           </div>
@@ -116,7 +124,10 @@ import {
   calcScalesAbout2Times
 } from "./utils/timeLineUtils.js";
 import { isDef, warn } from "./utils/tool.js";
-import { getPositonOffset as _getPositonOffset,getWidthAbout2Times as _getWidthAbout2Times } from "./utils/gtUtils.js";
+import {
+  getPositonOffset as _getPositonOffset,
+  getWidthAbout2Times as _getWidthAbout2Times
+} from "./utils/gtUtils.js";
 import throttle from "./utils/throttle.js";
 import Timeline from "./components/time-line/index.vue";
 import CurrentTime from "./components/mark-line/current-time.vue";
@@ -219,6 +230,10 @@ export default {
     hideYScrollBar: {
       type: Boolean,
       default: false
+    },
+    customGenerateBlocks: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -235,9 +250,10 @@ export default {
       },
       scrollTop: 0,
       scrollLeft: 0,
-      //block 区域需要渲染的宽度
-      heightOfRenderAera: window.screen.availHeight,
-      widthOfRenderAera: window.screen.availWidth,
+      //block 区域需要渲染的范围
+      //先渲染出空框架，在mounted后再得到真实的渲染范围，然后在根据范围渲染数据，比之前设置一个默认高度宽度，额外的渲染浪费更少了
+      heightOfRenderAera: 0,
+      widthOfRenderAera: 0,
       scrollBarWitdh: 17
     };
   },
@@ -272,6 +288,9 @@ export default {
       let value = getBeginTimeOfTimeLine(this.start, this.scale);
       return value;
     },
+    beginTimeOfTimeLineToString() {
+      return this.beginTimeOfTimeLine.toString();
+    },
     avialableScrollLeft() {
       // 不减这个1，滚动到时间轴尽头后继续滚动会慢慢的溢出
       let { totalWidth, widthOfRenderAera } = this;
@@ -301,9 +320,7 @@ export default {
           return;
         }
 
-        let offset = this.getPositonOffset(
-          newV,
-        );
+        let offset = this.getPositonOffset(newV);
         // immediate 会造成dom 还没有挂载时就进行操作，故需要延迟执行
         this.$nextTick(() =>
           this.syncScrollX(
@@ -340,6 +357,7 @@ export default {
 
   mounted() {
     this.getSelector();
+    // 计算准确的渲染区域范围
     const observeContainer = throttle(entries => {
       entries.forEach(entry => {
         const cr = entry.contentRect;
@@ -352,7 +370,7 @@ export default {
   },
 
   methods: {
-    getWidthAbout2Times(start,end){
+    getWidthAbout2Times(start, end) {
       let options = {
         scale: this.scale,
         cellWidth: this.cellWidth
@@ -363,15 +381,12 @@ export default {
      * 为时间线计算偏移
      */
     getPositonOffset(date) {
-      let { cellWidth, scale, beginTimeOfTimeLine } = this;
       let options = {
-        cellWidth,
-        scale
+        scale: this.scale,
+        cellWidth: this.cellWidth
       };
 
-      return (
-        _getPositonOffset(date, beginTimeOfTimeLine.toString(), options) 
-      );
+      return _getPositonOffset(date, this.beginTimeOfTimeLineToString, options);
     },
     //缓存节点
     getSelector() {

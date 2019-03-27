@@ -7,7 +7,9 @@
          :style="cellHeightStyle"
          v-for="(data,index) in showDatas"
          :key="dataKey?data[dataKey]:index">
-      <slot :data="data"></slot>
+      <slot :data="data">
+        <div class="gantt-leftbar-defalutItem">need slot</div>
+      </slot>
     </div>
   </div>
 </template>

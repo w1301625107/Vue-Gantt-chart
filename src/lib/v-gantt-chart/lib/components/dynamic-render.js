@@ -17,6 +17,7 @@ let dynamicRender = {
       required: true
     }
   },
+
   data() {
     return {
       showDatas: [],
@@ -26,6 +27,7 @@ let dynamicRender = {
       preload: 1 // 为 0 时加载全部行
     };
   },
+
   computed: {
     blockHeight() {
       let {
@@ -39,6 +41,7 @@ let dynamicRender = {
       return Math.ceil(this.scrollTop / this.cellHeight);
     }
   },
+
   watch: {
     currentIndex(val) {
       let {
@@ -60,7 +63,7 @@ let dynamicRender = {
         this.spliceData();
       }
     },
-    datas(){
+    datas() {
       this.spliceData()
     },
     heightOfRenderAera() {
@@ -70,9 +73,11 @@ let dynamicRender = {
       this.spliceData()
     }
   },
+
   created() {
     this.spliceData();
   },
+
   methods: {
     /**
      * 分割出dom中显示的数据
@@ -84,14 +89,16 @@ let dynamicRender = {
         cellHeight,
         preload
       } = this;
-      if (preload === 0) {
-        this.showDatas = this.datas
-        return
-      }
       //没有高度，不需要渲染元素
       if (heightOfRenderAera === 0 || cellHeight === 0) {
         return []
       }
+
+      if (preload === 0) {
+        this.showDatas = this.datas
+        return
+      }
+
       let end = currentIndex + Math.ceil(heightOfRenderAera / cellHeight) +
         preload;
       let start = currentIndex - preload > 0 ? currentIndex - preload : 0;

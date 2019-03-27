@@ -65,6 +65,7 @@ import Test from "./test.vue"; //你自己的gantt条容器
 import TestLeft from "./test-left.vue"; //你自己的行名称组件
 import { mockDatas } from "@src/mock/index.js"; //伪造的数据
 import moment from "moment" //时间库
+
 export default {
   name: "App",
   components: { Test, TestLeft },
@@ -79,9 +80,11 @@ export default {
     };
   },
 };
+```
 
-//渲染的数据，有特殊格式 ，目前要求数组中每一个值均为对象，且有gtAarry对象数组这个属性(默认取gtArray，也可以自定义多个数组key值)
-//数组中每一个对象需有两个属性，start和end(不提供的情况，偏移与宽度将为0)，需为合法的时间字符串.例如
+在**默认情况**下（即`customGenerateBlocks`为`false`）的渲染的数据需要**特殊格式** ，目前要求数组中每一个值均为对象，且有`gtAarry`对象数组这个属性(默认取`gtArray`，也可以自定义多个数组`key`值)
+//数组中每一个对象需有两个属性，`start`和`end`(不提供的情况，偏移与宽度将为0)，需为合法的时间字符串.例如
+```js
 [
   {
     id:'test', //非必须
@@ -104,9 +107,9 @@ export default {
 
 ```
 
-### render slot
+## Slot
 
-```
+```js
 // 假设你传入的数据为
 [
   {
@@ -126,46 +129,106 @@ export default {
 ]
 ```
 
-#### block 容器块slot
-```
- <template v-slot:block="{data,item}">
-        <!-- 你的容器块组件 -->
-        <Test :data="data" :item="item"></Test>
- </template>
- //则data 为
-  {
-    id:'test', 
-    name:'sala',
-    gtArray:[{...}]，
-    //...
-  } 
+### block 容器块slot
+#### `customGenerateBlocks` 为false（默认值） 的情况
 
- //item 为
-  {
-    name:'test', 
-    start:'2019-01-11 18:18:18',
-    end:'2019-01-11 18:18:18'
-    //...
-  }
+```html
+<template v-slot:block="{data,item}">
+    <!-- 你的容器块组件 -->
+    <Test :data="data" :item="item"></Test>
+</template>
 ```
 
-#### left 行名slot
+`data` 为
+```js
+{
+  id:'test', 
+  name:'sala',
+  gtArray:[{...}]，
+  //...
+} 
 ```
-  <template v-slot:left="{data}">
+
+`item` 为
+```js
+{
+  name:'test', 
+  start:'2019-01-11 18:18:18',
+  end:'2019-01-11 18:18:18'
+  //...
+}
+```
+
+#### `customGenerateBlocks` 为true 的情况
+
+此时`arrayKeys`，`itemkey`将不在生效，如何渲染，渲染什么，将由你自己决定，下方是一个例子
+
+```html
+<template v-slot:block="{data,
+                        getPositonOffset,
+                        getWidthAbout2Times,
+                        isInRenderingTimeRange}">
+  <div class="myBlockContainer"
+        v-for="item in data.gtArray"
+        v-if="isInRenderingTimeRange(item.start)
+              ||isInRenderingTimeRange(item.end)"
+        :key="item.id"
+        :style="{position:'absolute',
+                left:getPositonOffset(item.start)+'px',
+                width:getWidthAbout2Times(item.start,item.end)+'px'}">
+    <Test :data="data" 
+          :item="item"></Test>
+  </div>
+</template>
+```
+
+ `data` 为
+```js
+{
+  id:'test', 
+  name:'sala',
+  gtArray:[{...}]，
+  //...
+} 
+```
+
+`getPositonOffset(time:string):number `
+定位函数，根据给定字符串形式的时间生成相对时间轴起点的的偏移值
+
+`getWidthAbout2Times(start:string,end:string):number`
+为宽度计算函数，根据给定字符串形式的时间计算两个时间差的宽度值
+
+`isInRenderingTimeRange(time:string):boolean`
+判定给定的时间是否在屏幕显示的时间轴范围之内
+  
+
+### left 行名slot
+```html
+<template v-slot:left="{data}">
     <!-- 你的行名组件 -->
     <TestLeft :data="data"></TestLeft>
-  </template>
-  //则data 为
-  {
-    id:'test', 
-    name:'sala',
-    gtArray:[{...}]，
-    //...
-  }
+</template>
 ```
 
+`data` 为
+```js
+{
+  id:'test', 
+  name:'sala',
+  gtArray:[{...}]，
+  //...
+} 
+```
 
-## Doc
+### title 标题slot
+```html
+<template v-slot:title>
+    <!-- 你的表头组件 -->
+    hola
+</template>
+````
+
+## API
 
 <style>
 .param table th:first-of-type {
@@ -178,20 +241,21 @@ export default {
 	width: 100px;
 }
 </style>
+
 <div class="param">
 
 ### Param
 
 | param            | required | type  | default | describe                                   |
 | :-------------- | :------: | :-----: | :----: | :---- |
-| startTime       |    ✅     | string  |   --   | 时间轴开始时间，需为合法的时间字符串，如：‘2019-01-11 18:18:18’|
-| endTime         |    ✅     | string  |   --   | 时间轴结束时间，需为合法的时间字符串，如：‘2019-01-11 18:18:18’|
+| startTime       |    ✅     | string  |   --   | 时间轴开始时间，需为合法的时间字符串，如：`2019-01-11 18:18:18`|
+| endTime         |    ✅     | string  |   --   | 时间轴结束时间，需为合法的时间字符串，如：`2019-01-11 18:18:18`|
 | cellWidth       |    ❌     | number  |   50   | 时间区间的宽度 |
 | cellHeight      |    ❌     | number  |   20   | 时间区间的高度 |
 | titleHeight     |    ❌     | number  |   40   | 表头的高度    |
 | titleWidth      |    ❌     | number  |  200   | 表头和行的宽度 |
-| scale           |    ❌     | number  |   60   | 时间轴的刻度值。单位:分钟，允许值[1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120，180,240,360, 720, 1440]                                    |
-| datas           |    ✅     |  array  |   --   | 渲染的数据，有特殊格式 ，目前要求数组中每一个值均为对象，且有gtAarry对象数组这个属性，gtArray中每一个对象需有两个属性，start和end(不提供的情况，偏移与宽度将为0)，需为合法的时间字符串.例如```[{id:'test',gtArray:[{start:'2019-01-11 18:18:18',end:'2019-01-11 18:18:18'}]}] ``` 其他不做限制。 |
+| scale           |    ❌     | number  |   60   | 时间轴的刻度值。单位:分钟，允许值`[1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120，180,240,360, 720, 1440] `                                   |
+| datas           |    ✅     |  array  |   --   | 在**默认情况**下（即`customGenerateBlocks`为`false`）的渲染的数据需要**特殊格式** ，目前要求数组中每一个值均为对象，且有gtAarry对象数组这个属性，gtArray中每一个对象需有两个属性，start和end(不提供的情况，偏移与宽度将为0)，需为合法的时间字符串.例如```[{id:'test',gtArray:[{start:'2019-01-11 18:18:18',end:'2019-01-11 18:18:18'}]}] ``` 其他不做限制。 |
 | arrayKeys|    ❌     | array  |   ["gtArray"]   | 需要渲染的数组的key  |
 | dataKey         |    ❌     | string  |   --   | 渲染的每一行的key  |
 | itemKey         |    ❌     | string  |   --   | 渲染的每一个gantt容器的key  |
@@ -203,8 +267,11 @@ export default {
 | hideXS |    ❌     | boolean  |   false   | 隐藏时间轴和表头 |
 | hideXScrollBar |    ❌     | boolean  |   false   | 隐藏横向滚动轴 |
 | hideYScrollBar |    ❌     | boolean  |   false   | 隐藏纵向滚动轴 |
+| customGenerateBlocks |    ❌     | boolean  |   false | 开启自定义生成渲染块，具体使用见说明 |
+
 
 </div>
+
 <style>
 .event table th:first-of-type {
 	width: 100px;
@@ -216,6 +283,7 @@ export default {
 	width: 300px;
 }
 </style>
+
 <div class="event">
 
 ### Event
@@ -224,12 +292,11 @@ export default {
 | :---  |:-----:|:---------|
 | scrollLeft| number | X轴的滚动值|
 | scrollTop | number | Y轴的滚动值|
+
 </div>
 
 ## Next plan
 - 加快渲染速度
-
-
 
 ## Run Demo
 
@@ -247,10 +314,14 @@ yarn serve
 ```
 
 ## Caution
-IE 需要注意一下
+IE 需要自己处理一些ployfill
 
 
 ## Update
+1.3.0
+- 优化渲染速度
+- 相比之前的自定义渲染，添加一个新的slot，支持自定义的定位和渲染，更加的灵活
+
 1.2.6
 - 修复当时间线宽度比渲染宽度小的情况下的部分白屏
 - 修复数据刷新时不重新渲染的问题
