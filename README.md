@@ -3,6 +3,11 @@
 <p align="center">基于 Vue  实现的 gantt-like 图表 ,用于排班展示</p>
 <p align="center"></p>
 
+[![npm](https://img.shields.io/npm/v/v-gantt-chart.svg)](https://www.npmjs.com/package/v-gantt-chart)
+[![npm](https://img.shields.io/npm/dm/v-gantt-chart.svg)](https://www.npmjs.com/package/v-gantt-chart)
+[![npm](https://img.shields.io/npm/dt/v-gantt-chart.svg)](https://www.npmjs.com/package/v-gantt-chart)
+![](https://img.shields.io/badge/license-MIT-000000.svg)
+
 ### [Demo预览地址](https://w1301625107.github.io/Vue-Gantt-chart/dist/index)
 
 ## Feature
