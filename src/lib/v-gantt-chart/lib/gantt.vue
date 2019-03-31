@@ -71,9 +71,10 @@
                     :cellHeight="cellHeight"
                     :scale="scale"
                     :getPositonOffset="getPositonOffset"
-                    :beginTimeOfTimeLine="beginTimeOfTimeLine"
                     :getWidthAbout2Times="getWidthAbout2Times"
                     :customGenerateBlocks="customGenerateBlocks"
+                    :startTimeOfRenderArea="startTimeOfRenderArea"
+                    :endTimeOfRenderArea="endTimeOfRenderArea"
                     :style="{width:totalWidth+'px'}">
               <template v-if="!customGenerateBlocks"
                         v-slot="{data,item}">
@@ -88,7 +89,9 @@
                       :data="data"
                       :getPositonOffset="getPositonOffset"
                       :getWidthAbout2Times="getWidthAbout2Times"
-                      :isInRenderingTimeRange="isInRenderingTimeRange"></slot>
+                      :isInRenderingTimeRange="isInRenderingTimeRange"
+                      :startTimeOfRenderArea="startTimeOfRenderArea"
+                      :endTimeOfRenderArea="endTimeOfRenderArea"></slot>
               </template>
             </blocks>
           </div>
@@ -254,6 +257,8 @@ export default {
       //先渲染出空框架，在mounted后再得到真实的渲染范围，然后在根据范围渲染数据，比之前设置一个默认高度宽度，额外的渲染浪费更少了
       heightOfRenderAera: 0,
       widthOfRenderAera: 0,
+      startTimeOfRenderArea:null,
+      endTimeOfRenderArea:null,
       scrollBarWitdh: 17
     };
   },
@@ -308,6 +313,15 @@ export default {
   },
 
   watch: {
+    scrollLeft() {
+      this.getTimeRange();
+    },
+    widthOfRenderAera() {
+      this.getTimeRange();
+    },
+    cellWidth() {
+      this.getTimeRange();
+    },
     scrollToTime: {
       handler(newV) {
         if (!newV) {
@@ -370,6 +384,34 @@ export default {
   },
 
   methods: {
+    /**
+     * 计算需要渲染的时间范围
+     *
+     */
+    getTimeRange() {
+      if (this.heightOfRenderAera === 0) {
+        return;
+      }
+
+      let {
+        beginTimeOfTimeLine,
+        scrollLeft,
+        cellWidth,
+        scale,
+        widthOfRenderAera
+      } = this;
+
+      this.startTimeOfRenderArea = beginTimeOfTimeLine
+        .clone()
+        .add((scrollLeft / cellWidth) * scale, "m")
+        .toDate()
+        .getTime();
+      this.endTimeOfRenderArea = beginTimeOfTimeLine
+        .clone()
+        .add(((scrollLeft + widthOfRenderAera) / cellWidth) * scale, "m")
+        .toDate()
+        .getTime();
+    },
     getWidthAbout2Times(start, end) {
       let options = {
         scale: this.scale,

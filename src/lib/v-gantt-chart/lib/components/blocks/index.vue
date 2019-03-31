@@ -36,7 +36,7 @@
 <script>
 import moment from "moment";
 import dr from "../dynamic-render.js";
-import { isUndef, warn } from "../../utils/tool.js";
+import { isUndef, warn, isDef } from "../../utils/tool.js";
 
 export default {
   name: "Blocks",
@@ -48,10 +48,6 @@ export default {
       type: Array
     },
     scrollLeft: Number,
-    beginTimeOfTimeLine: {
-      type: moment,
-      required: true
-    },
     cellWidth: {
       type: Number,
       required: true
@@ -64,20 +60,13 @@ export default {
       type: Number,
       required: true
     },
+    endTimeOfRenderArea: [Number, null],
+    startTimeOfRenderArea: [Number, null],
     getPositonOffset: Function,
     getWidthAbout2Times: Function,
     customGenerateBlocks: Boolean
   },
-  data() {
-    return {
-      startTime: null,
-      endTime: null
-    };
-  },
   computed: {
-    beginTimeOfTimeLineFormat() {
-      return this.beginTimeOfTimeLine.toString();
-    },
     renderAarrys() {
       let { arrayKeys } = this;
       if (arrayKeys.length > 0) {
@@ -91,20 +80,6 @@ export default {
         height: `${this.cellHeight}px`
       };
     }
-  },
-  watch: {
-    scrollLeft() {
-      this.getTimeRange();
-    },
-    widthOfRenderAera() {
-      this.getTimeRange();
-    },
-    cellWidth() {
-      this.getTimeRange();
-    }
-  },
-  created() {
-    this.getTimeRange();
   },
 
   methods: {
@@ -124,34 +99,6 @@ export default {
       }, []);
     },
     /**
-     * 计算需要渲染的时间范围
-     *
-     */
-    getTimeRange() {
-      if (this.heightOfRenderAera === 0) {
-        return;
-      }
-
-      let {
-        beginTimeOfTimeLine,
-        scrollLeft,
-        cellWidth,
-        scale,
-        widthOfRenderAera
-      } = this;
-
-      this.startTime = beginTimeOfTimeLine
-        .clone()
-        .add((scrollLeft / cellWidth) * scale, "m")
-        .toDate()
-        .getTime();
-      this.endTime = beginTimeOfTimeLine
-        .clone()
-        .add(((scrollLeft + widthOfRenderAera) / cellWidth) * scale, "m")
-        .toDate()
-        .getTime();
-    },
-    /**
      * 判定数据是否在渲染的时间范围内
      *
      * @param {{time:string}} item
@@ -162,13 +109,13 @@ export default {
         return false;
       }
 
-      let { startTime, endTime } = this;
-      if (isUndef(startTime) || isUndef(endTime)) {
+      let { startTimeOfRenderArea, endTimeOfRenderArea } = this;
+      if (isUndef(startTimeOfRenderArea) || isUndef(endTimeOfRenderArea)) {
         return false;
       }
 
       let timeToMs = new Date(time).getTime();
-      if (startTime <= timeToMs && timeToMs <= endTime) {
+      if (startTimeOfRenderArea <= timeToMs && timeToMs <= endTimeOfRenderArea) {
         return true;
       }
       return false;
