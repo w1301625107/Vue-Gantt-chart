@@ -145,7 +145,7 @@ export default {
 
   props: {
     startTime: {
-      required: true,
+      default: () => dayjs(),
       validator(date) {
         let ok = dayjs(date).isValid();
         if (!ok) warn(`非法的开始时间 ${date}`);
@@ -153,7 +153,7 @@ export default {
       }
     },
     endTime: {
-      required: true,
+      default: () => dayjs(),
       validator(date) {
         let ok = dayjs(date).isValid();
         if (!ok) warn(`非法的结束时间 ${date}`);
@@ -185,7 +185,7 @@ export default {
     },
     datas: {
       type: Array,
-      required: true
+      default: () => []
     },
     dataKey: {
       type: String,
