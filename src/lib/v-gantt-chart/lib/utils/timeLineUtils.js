@@ -1,4 +1,4 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export const scaleList = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120, 180,
   240,
@@ -28,7 +28,7 @@ export function validateScale(scale) {
  * @export
  * @param {string} start 
  * @param {number} [scale=60]
- * @returns {moment}计算的启始时间
+ * @returns {dayjs}计算的启始时间
  */
 export function getBeginTimeOfTimeLine(start, scale = 60) {
   validateScale(scale)
@@ -37,10 +37,10 @@ export function getBeginTimeOfTimeLine(start, scale = 60) {
   let rate = scale / 60;
   if (scale > 60) {
     timeBlocks = Math.floor(start.hour() / rate);
-    startClone.hour(timeBlocks * rate).minute(0).seconds(0);
+    startClone = startClone.hour(timeBlocks * rate).minute(0).second(0);
   } else {
-    timeBlocks = Math.floor(start.minutes() / scale);
-    startClone.minutes(timeBlocks * scale).seconds(0);
+    timeBlocks = Math.floor(start.minute() / scale);
+    startClone = startClone.minute(timeBlocks * scale).second(0);
   }
 
   return startClone;
@@ -56,9 +56,6 @@ export function getBeginTimeOfTimeLine(start, scale = 60) {
  * @returns 时间块数量
  */
 export function calcScalesAbout2Times(timeStart, timeEnd, scale = 60) {
-  if (!moment.isMoment(timeStart) || !moment.isMoment(timeEnd)) {
-    throw new TypeError('参数必须为moment 对象')
-  }
   if (timeStart.isAfter(timeEnd)) {
     throw new TypeError('错误的参数顺序，函数calcScalesAbout2Times的第一个时间参数必须大于第二个时间参数')
   }
@@ -69,7 +66,7 @@ export function calcScalesAbout2Times(timeStart, timeEnd, scale = 60) {
   let count = 0;
   while (!startBlocksTime.isAfter(timeEnd)) {
     count++;
-    startBlocksTime.add(scale, "m")
+    startBlocksTime = startBlocksTime.add(scale, "minute")
   }
 
   return count;

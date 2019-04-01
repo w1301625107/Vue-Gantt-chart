@@ -3,18 +3,18 @@
        class="gantt-markline"
        :style="{'background-color':color,'left':getPosition()+'px'}">
     <div class="gantt-markline-label"
-         :style="{'background-color':color}">{{moment(markLineTime).format("HH:mm:ss")}}</div>
+         :style="{'background-color':color}">{{dayjs(markLineTime).format("HH:mm:ss")}}</div>
   </div>
 </template>
 
 <script>
-import moment from "moment";
+import dayjs from "dayjs";
 export default {
   name: "MarkLine",
   props: {
     markLineTime: {
       validator(date) {
-        return moment(date).isValid();
+        return dayjs(date).isValid();
       }
     },
     color: {
@@ -29,7 +29,7 @@ export default {
   data() {
     return {
       visible: false,
-      moment:moment
+      dayjs:dayjs
     };
   },
   methods: {

@@ -34,9 +34,8 @@
 </template>
 
 <script>
-import moment from "moment";
 import dr from "../dynamic-render.js";
-import { isUndef, warn, isDef } from "../../utils/tool.js";
+import { isUndef, warn } from "../../utils/tool.js";
 
 export default {
   name: "Blocks",

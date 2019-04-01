@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import moment from "moment";
+import dayjs from "dayjs";
 import MarkLine from "./index.vue";
 export default {
   name: "CurrentTime",
@@ -18,12 +18,12 @@ export default {
   },
   data() {
     return {
-      currentTime: moment().toString()
+      currentTime: dayjs().toString()
     };
   },
   created() {
     const timeNow = setInterval(() => {
-      this.currentTime = moment().toString();
+      this.currentTime = dayjs().toString();
     }, 1000);
     this.$once("hook:beforeDestroy", () => {
       clearInterval(timeNow);

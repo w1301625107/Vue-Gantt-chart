@@ -1,4 +1,4 @@
-// import moment from 'moment' //替换moment 兼容性会好一点，但是速度就很慢了，之前测了一下，大概快30倍？有点忘记了
+// import dayjs from 'dayjs' //替换dayjs 兼容性会好一点，但是速度就很慢了，之前测了一下，大概快30倍？有点忘记了
 
 //缓存 解析值，加速一点点吧
 
@@ -77,7 +77,7 @@ function diffTimeByMinutes(start, end) {
 
 
 // function parseTime(time){
-//   return moment(time)
+//   return dayjs(time)
 // }
 
 // function diffTimeByMinutes(start,end){

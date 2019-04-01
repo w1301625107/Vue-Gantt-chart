@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import moment from "moment";
+import dayjs from "dayjs";
 import { getBeginTimeOfTimeLine } from "../../utils/timeLineUtils.js";
 
 const START_DAY = Symbol();
@@ -36,10 +36,10 @@ export default {
 
   props: {
     start: {
-      type: moment
+      type: dayjs
     },
     end: {
-      type: moment
+      type: dayjs
     },
     cellWidth: {
       type: Number
@@ -55,17 +55,16 @@ export default {
   computed: {
     /**
      * 天列表
-     * @returns {[moment]} 该data中所有需要渲染的数据
+     * @returns {[dayjs]} 该data中所有需要渲染的数据
      */
     getDays() {
       let temp = [];
-      let start = this.start.clone();
-      let end = this.end;
+      let { start, end } = this;
 
-      for (; !isSameDay(start, end); start.add(1, "d")) {
-        temp.push(start.clone());
+      for (; !isSameDay(start, end); start = start.add(1, "day")) {
+        temp.push(start);
       }
-      temp.push(start.clone());
+      temp.push(start);
 
       return temp;
     },
@@ -86,7 +85,7 @@ export default {
     /**
      * 获取时间刻度数组
      *
-     * @param {moment} date
+     * @param {dayjs} date
      * @returns {[string]} 该data中所有需要渲染的数据
      */
     getTimeScales(date) {
@@ -117,16 +116,16 @@ export default {
           if (isSameDay(start, end)) {
             b = end;
           } else {
-            b = start.clone().endOf("day");
+            b = start.endOf("day");
           }
           break;
         case END_DAY: //和end 同一天
-          a = end.clone().startOf("day");
-          b = end.clone();
+          a = end.startOf("day");
+          b = end;
           break;
         case MIDDLE_DAY: //start和end中间的天
-          a = start.clone().startOf("day");
-          b = start.clone().endOf("day");
+          a = start.startOf("day");
+          b = start.endOf("day");
           break;
         default:
           throw new TypeError("错误的计算类型");
@@ -137,7 +136,7 @@ export default {
         } else {
           totalblock.push(a.format("HH:mm"));
         }
-        a.add(scale, "m");
+        a = a.add(scale, "minute");
       }
 
       return totalblock;

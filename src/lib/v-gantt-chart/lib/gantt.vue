@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import moment from "moment";
+import dayjs from "dayjs";
 import ResizeObserver from "resize-observer-polyfill";
 import {
   scaleList,
@@ -147,7 +147,7 @@ export default {
     startTime: {
       required: true,
       validator(date) {
-        let ok = moment(date).isValid();
+        let ok = dayjs(date).isValid();
         if (!ok) warn(`非法的开始时间 ${date}`);
         return ok;
       }
@@ -155,7 +155,7 @@ export default {
     endTime: {
       required: true,
       validator(date) {
-        let ok = moment(date).isValid();
+        let ok = dayjs(date).isValid();
         if (!ok) warn(`非法的结束时间 ${date}`);
         return ok;
       }
@@ -208,7 +208,7 @@ export default {
     },
     scrollToTime: {
       validator(date) {
-        return moment(date).isValid();
+        return dayjs(date).isValid();
       }
     },
     scrollToPostion: {
@@ -257,23 +257,22 @@ export default {
       //先渲染出空框架，在mounted后再得到真实的渲染范围，然后在根据范围渲染数据，比之前设置一个默认高度宽度，额外的渲染浪费更少了
       heightOfRenderAera: 0,
       widthOfRenderAera: 0,
-      startTimeOfRenderArea:null,
-      endTimeOfRenderArea:null,
+      startTimeOfRenderArea: null,
+      endTimeOfRenderArea: null,
       scrollBarWitdh: 17
     };
   },
 
   computed: {
     start() {
-      return moment(this.startTime);
+      return dayjs(this.startTime);
     },
     end() {
       let { start, widthOfRenderAera, scale, cellWidth } = this;
-      let end = moment(this.endTime);
+      let end = dayjs(this.endTime);
       let totalWidth = calcScalesAbout2Times(start, end, scale) * cellWidth;
       if (start.isAfter(end) || totalWidth <= widthOfRenderAera) {
-        let startClone = start.clone();
-        end = startClone.add((widthOfRenderAera / cellWidth) * scale, "m");
+        end = start.add((widthOfRenderAera / cellWidth) * scale, "minute");
       }
       return end;
     },
@@ -328,7 +327,7 @@ export default {
           return;
         }
         let { start, end } = this;
-        let time = moment(newV);
+        let time = dayjs(newV);
         if (!(time.isAfter(start) && time.isBefore(end))) {
           warn(`当前滚动至${newV}不在${start}和${end}的范围之内`);
           return;
@@ -402,13 +401,11 @@ export default {
       } = this;
 
       this.startTimeOfRenderArea = beginTimeOfTimeLine
-        .clone()
-        .add((scrollLeft / cellWidth) * scale, "m")
+        .add((scrollLeft / cellWidth) * scale, "minute")
         .toDate()
         .getTime();
       this.endTimeOfRenderArea = beginTimeOfTimeLine
-        .clone()
-        .add(((scrollLeft + widthOfRenderAera) / cellWidth) * scale, "m")
+        .add(((scrollLeft + widthOfRenderAera) / cellWidth) * scale, "minute")
         .toDate()
         .getTime();
     },
