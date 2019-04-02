@@ -1,8 +1,8 @@
 {
   "name": "v-gantt-chart",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "display gantt-like vaule,like use this to order bus schedule.",
-  "main": "index.js",
+  "main": "dist/v-gantt-chart.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/w1301625107/Vue-Gantt-chart.git"
@@ -14,52 +14,36 @@
   "keywords": [
     "vue-gantt-chart",
     "gantt",
-    "gantt-chart"
+    "gantt-chart",
+    "v-gantt-chart"
   ],
   "author": "wuchouchou",
   "license": "MIT",
   "scripts": {
-    "build": "vue-cli-service build --target lib  index.js",
-    "lint": "vue-cli-service lint"
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
     "dayjs": "^1.8.11",
     "resize-observer-polyfill": "^1.5.1",
-    "vue": "^2.6.6"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.5.0",
-    "@vue/cli-plugin-eslint": "^3.5.0",
-    "@vue/cli-service": "^3.5.0",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.8.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "node-sass": "^4.11.0",
-    "sass-loader": "^7.1.0",
-    "vue-template-compiler": "^2.5.21"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
+    "vue": "^2.5.21"
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-3": "^6.24.1",
+    "cross-env": "^5.0.5",
+    "css-loader": "^0.28.7",
+    "url-loader": "^1.1.0",
+    "node-sass": "^4.11.0",
+    "sass-loader": "^6.0.6",
+    "vue-loader": "^13.0.5",
+    "vue-template-compiler": "^2.5.21",
+    "webpack": "^3.6.0"
+  }
 }

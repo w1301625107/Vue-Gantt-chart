@@ -3,6 +3,9 @@
 <p align="center">基于 Vue  实现的 gantt-like 图表 ,用于排班展示</p>
 <p align="center"></p>
 
+[![npm](https://img.shields.io/npm/v/v-gantt-chart.svg)](https://www.npmjs.com/package/v-gantt-chart)
+![](https://img.shields.io/badge/license-MIT-000000.svg)
+
 ### [Demo预览地址](https://w1301625107.github.io/Vue-Gantt-chart/dist/index)
 
 ## Feature
@@ -248,14 +251,14 @@ export default {
 
 | param            | required | type  | default | describe                                   |
 | :-------------- | :------: | :-----: | :----: | :---- |
-| startTime       |    ✅     | string  |   --   | 时间轴开始时间，需为合法的时间字符串，如：`2019-01-11 18:18:18`|
-| endTime         |    ✅     | string  |   --   | 时间轴结束时间，需为合法的时间字符串，如：`2019-01-11 18:18:18`|
+| startTime       |    ❌     | string  |   当前时间   | 时间轴开始时间，需为合法的时间字符串，如：`2019-01-11 18:18:18`|
+| endTime         |    ❌     | string  |   当前时间   | 时间轴结束时间，需为合法的时间字符串，如：`2019-01-11 18:18:18`|
 | cellWidth       |    ❌     | number  |   50   | 时间区间的宽度 |
 | cellHeight      |    ❌     | number  |   20   | 时间区间的高度 |
 | titleHeight     |    ❌     | number  |   40   | 表头的高度    |
 | titleWidth      |    ❌     | number  |  200   | 表头和行的宽度 |
 | scale           |    ❌     | number  |   60   | 时间轴的刻度值。单位:分钟，允许值`[1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120，180,240,360, 720, 1440] `                                   |
-| datas           |    ✅     |  array  |   --   | 在**默认情况**下（即`customGenerateBlocks`为`false`）的渲染的数据需要**特殊格式** ，目前要求数组中每一个值均为对象，且有gtAarry对象数组这个属性，gtArray中每一个对象需有两个属性，start和end(不提供的情况，偏移与宽度将为0)，需为合法的时间字符串.例如```[{id:'test',gtArray:[{start:'2019-01-11 18:18:18',end:'2019-01-11 18:18:18'}]}] ``` 其他不做限制。 |
+| datas           |    ❌     |  array  |   []   | 在**默认情况**下（即`customGenerateBlocks`为`false`）的渲染的数据需要**特殊格式** ，目前要求数组中每一个值均为对象，且有gtAarry对象数组这个属性，gtArray中每一个对象需有两个属性，start和end(不提供的情况，偏移与宽度将为0)，需为合法的时间字符串.例如```[{id:'test',gtArray:[{start:'2019-01-11 18:18:18',end:'2019-01-11 18:18:18'}]}] ``` 其他不做限制。 |
 | arrayKeys|    ❌     | array  |   ["gtArray"]   | 需要渲染的数组的key  |
 | dataKey         |    ❌     | string  |   --   | 渲染的每一行的key  |
 | itemKey         |    ❌     | string  |   --   | 渲染的每一个gantt容器的key  |
@@ -318,6 +321,10 @@ IE 需要自己处理一些ployfill
 
 
 ## Update
+1.3.1
+- 替换moment 为dayjs
+- 为startTime，endTime，datas添加默认值
+
 1.3.0
 - 优化渲染速度
 - 相比之前的自定义渲染，添加一个新的slot，支持自定义的定位和渲染，更加的灵活
