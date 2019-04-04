@@ -18,9 +18,9 @@
   },
   "homepage": "https://github.com/w1301625107/Vue-Gantt-chart#readme",
   "dependencies": {
+    "dayjs": "^1.8.12",
     "element-ui": "^2.6.1",
     "mockjs": "^1.0.1-beta3",
-    "moment": "^2.24.0",
     "v-gantt-chart": "latest",
     "vue": "^2.6.6"
   },
@@ -34,7 +34,6 @@
     "eslint-plugin-vue": "^5.0.0",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
-    "vue-cli-plugin-moment": "^0.1.1",
     "vue-template-compiler": "^2.5.21"
   },
   "eslintConfig": {

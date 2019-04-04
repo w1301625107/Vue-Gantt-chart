@@ -50,16 +50,16 @@
                      :scrollToPostion="positionA"
                      @scrollLeft="scrollLeftA"
                      :datas="datasA">
-        <template v-slot:block="{data,item}">
+         <template v-slot:block="{data,item}">
           <Test :data="data"
                 :updateTimeLines="updateTimeLines"
                 :cellHeight="cellHeight"
                 :currentTime="currentTime"
                 :item="item"></Test>
-        </template>
+        </template> 
         <template v-slot:left="{data}">
           <TestLeft :data="data"></TestLeft>
-        </template>
+        </template> 
         <template v-slot:title>
           铁胆火车侠日程表
         </template>
@@ -80,7 +80,7 @@
                      @scrollLeft="scrollLeftB"
                      customGenerateBlocks
                      :datas="datasB">
-        <template v-slot:block="{data,getPositonOffset,getWidthAbout2Times,isInRenderingTimeRange}">
+        <template v-slot:block="{data,getPositonOffset,getWidthAbout2Times,isInRenderingTimeRange,startTimeOfRenderArea,endTimeOfRenderArea}">
           <div class="gantt-block-item"
                v-for="(item,index) in data.gtArray"
                v-if="isInRenderingTimeRange(item.start)||isInRenderingTimeRange(item.end)"
@@ -109,7 +109,7 @@
 import Test from "./components/test.vue";
 import TestLeft from "./components/test-left.vue";
 import { mockDatas } from "../mock/index.js";
-import moment from "moment";
+import dayjs from "dayjs";
 
 const scaleList = `1,2,3,4,5,6,10,12,15,20,30,60,120,180,240,360,720,1440`
   .split(",")
@@ -121,25 +121,24 @@ export default {
     return {
       timeLines: [
         {
-          time: moment()
-            .add(2, "h")
+          time: dayjs()
+            .add(2, "hour")
             .toString()
         },
         {
-          time: moment()
-            .add(5, "h")
+          time: dayjs()
+            .add(5, "hour")
             .toString(),
           color: "#747e80"
         }
       ],
-      currentTime: moment(),
-      startTime: moment()
-        .subtract(5, "h")
+      currentTime: dayjs(),
+      startTime: dayjs()
+        .subtract(5, "hour")
         .toString(),
-      endTime: moment()
-        .add(2, "d")
-        .add(2, "h")
-        .add(5, "s")
+      endTime: dayjs()
+        .add(2, "day")
+        .add(2, "hour")
         .toString(),
       cellWidth: 50,
       cellHeight: 30,
@@ -151,8 +150,8 @@ export default {
       datasB: mockDatas(100),
       dataKey: "id",
       scaleList: scaleList,
-      scrollToTime: moment()
-        .add(1, "d")
+      scrollToTime: dayjs()
+        .add(1, "day")
         .toString(),
       scrollToPostion: { x: 10000, y: 10000 },
       hideHeader: false,

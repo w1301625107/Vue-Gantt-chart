@@ -67,15 +67,15 @@ Vue.use(vGanttChart});
 import Test from "./test.vue"; //你自己的gantt条容器
 import TestLeft from "./test-left.vue"; //你自己的行名称组件
 import { mockDatas } from "@src/mock/index.js"; //伪造的数据
-import moment from "moment" //时间库
+import dayjs from "dayjs" //时间库
 
 export default {
   name: "App",
   components: { Test, TestLeft },
   data() {
     return {
-      startTime: moment().toString(),//时间轴开始时间
-      endTime: moment() 
+      startTime: dayjs().toString(),//时间轴开始时间
+      endTime: dayjs() 
         .add(2, "d")
         .add(2, "h")
         .add(5, "s").toString(), //时间结束时间
@@ -321,6 +321,9 @@ IE 需要自己处理一些ployfill
 
 
 ## Update
+1.3.2
+- 修正滚动的触发和滚动范围限制的问题
+
 1.3.1
 - 替换moment 为dayjs
 - 为startTime，endTime，datas添加默认值

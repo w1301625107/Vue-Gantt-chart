@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import moment from "moment";
+import dayjs from "dayjs";
 
 const NOW_PLAN = '#D5F8EA'
 const FUTHER_PLAN = '#BFF2FE'
@@ -45,20 +45,21 @@ export default {
   props: {
     data: Object,
     item: Object,
-    currentTime: moment,
+    currentTime: dayjs,
     updateTimeLines: Function,
-    cellHeight:Number
+    cellHeight:Number,
+    startTimeOfRenderArea:Number
   },
   data() {
     return {
-      moment: moment
+      dayjs: dayjs
     };
   },
   computed: {
     statusColor() {
       let { item, currentTime } = this;
-      let start = moment(item.start);
-      let end = moment(item.end);
+      let start = dayjs(item.start);
+      let end = dayjs(item.end);
       if (start.isBefore(currentTime) && end.isAfter(currentTime)) {
         return NOW_PLAN; // NOW
       } else if (end.isBefore(currentTime)) {
@@ -68,10 +69,10 @@ export default {
       }
     },
     startToString() {
-      return moment(this.item.start).format("HH:mm");
+      return dayjs(this.item.start).format("HH:mm");
     },
     endToString() {
-      return moment(this.item.end).format("HH:mm");
+      return dayjs(this.item.end).format("HH:mm");
     }
   },
   methods: {
