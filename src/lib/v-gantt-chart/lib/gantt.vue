@@ -300,6 +300,10 @@ export default {
       let { totalWidth, widthOfRenderAera } = this;
       return totalWidth - widthOfRenderAera - 1;
     },
+    avialableScrollTop() {
+      let { totalHeight, heightOfRenderAera } = this;
+      return totalHeight - heightOfRenderAera - 1;
+    },
     scrollXBarHeight() {
       return this.hideXScrollBar ? 0 : this.scrollBarWitdh;
     },
@@ -439,24 +443,51 @@ export default {
     wheelHandle(event) {
       let { deltaX, deltaY } = event;
       this.$nextTick(() => {
-        if (deltaY != 0) {
-          this.syncScrollY(
-            { target: { scrollTop: this.scrollTop + deltaY } },
-            true
-          );
-        }
-        if (deltaX != 0) {
+        let {
+          scrollTop,
+          scrollLeft,
+          avialableScrollLeft,
+          avialableScrollTop
+        } = this;
+
+        if (deltaY !== 0) {
           if (
-            this.scrollLeft + deltaX >=
-            this.avialableScrollLeft /*超出滚动限制*/
+            scrollTop + deltaY >= avialableScrollTop &&
+            scrollTop !== avialableScrollTop
           ) {
-            return;
+            this.syncScrollY(
+              { target: { scrollTop: avialableScrollTop } },
+              true
+            );
+          } else if (
+            scrollTop + deltaY < 0 &&
+            scrollTop !== 0 /*滚动为0限制*/
+          ) {
+            this.syncScrollY({ target: { scrollTop: 0 } }, true);
+          } else {
+            this.syncScrollY(
+              { target: { scrollTop: scrollTop + deltaY } },
+              true
+            );
           }
-          if (this.scrollLeft + deltaX < 0 /*滚动为0限制*/) {
+        }
+        if (deltaX !== 0) {
+          if (
+            scrollLeft + deltaX >= avialableScrollLeft &&
+            scrollLeft !== avialableScrollLeft
+          ) {
+            this.syncScrollX(
+              { target: { scrollLeft: avialableScrollLeft } },
+              true
+            );
+          } else if (
+            scrollLeft + deltaX < 0 &&
+            scrollLeft !== 0 /*滚动为0限制*/
+          ) {
             this.syncScrollX({ target: { scrollLeft: 0 } }, true);
           } else {
             this.syncScrollX(
-              { target: { scrollLeft: this.scrollLeft + deltaX } },
+              { target: { scrollLeft: scrollLeft + deltaX } },
               true
             );
           }
@@ -468,7 +499,8 @@ export default {
       let { gantt_leftbar, gantt_table, gantt_scroll_y } = this.selector;
       let topValue = event.target.scrollTop;
       if (fake) {
-        gantt_scroll_y.scrollTop = topValue; //会触发一次真的滚动事件，避免重复触发
+        //会触发一次真的滚动事件event, 后面的代码会在第二个事件中执行
+        gantt_scroll_y.scrollTop = topValue;
         return;
       }
       gantt_leftbar.scrollTop = topValue;
@@ -485,7 +517,8 @@ export default {
       } = this.selector;
       let leftValue = event.target.scrollLeft;
       if (fake) {
-        gantt_scroll_x.scrollLeft = leftValue; //会触发一次真的滚动事件，避免重复触发
+        //会触发一次真的滚动事件event, 后面的代码会在第二个事件中执行
+        gantt_scroll_x.scrollLeft = leftValue;
         return;
       }
       gantt_table.scrollLeft = leftValue;
