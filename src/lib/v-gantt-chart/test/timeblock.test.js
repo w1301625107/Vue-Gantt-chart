@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
-var func = require('../src/utils/timeblock')
-var dayjs = require('dayjs')
+var func = require('../lib/utils/timeLineUtils')
+import dayjs from 'dayjs'
 
 describe('测试timeLineUtils.js', function() {
   describe('测试calcScalesAbout2Times函数', function() {
@@ -10,11 +10,6 @@ describe('测试timeLineUtils.js', function() {
         .to.be.equal(1);
     });
 
-    it('参数值非dayjs 类型报错', function() {
-      expect(() => func.calcScalesAbout2Times(new Date(
-          '2018-10-10 10:00:00'), dayjs('2018-10-10 10:00:00'),
-        11)).to.throw('参数必须为dayjs 对象');
-    });
 
     it('start 在 end 之后 报错', function() {
       expect(() => func.calcScalesAbout2Times(dayjs(
