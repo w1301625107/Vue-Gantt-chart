@@ -26,7 +26,7 @@ export function validateScale(scale) {
  *                    刻度为3，getBeginTimeOfTimeLine函数给出的时间 为 10:09分
  *
  * @export
- * @param {string} start 
+ * @param {dayjs} start 
  * @param {number} [scale=60]
  * @returns {dayjs}计算的启始时间
  */
@@ -50,8 +50,8 @@ export function getBeginTimeOfTimeLine(start, scale = 60) {
  * 注意： timdStart 并不是实际的开始计算的时间，会通过getBeginTimeOfTimeLine 函数计算出分割开始时间
  *
  * @export
- * @param {string} timeStart 开始时间
- * @param {string} timeEnd 结束时间
+ * @param {dayjs} timeStart 开始时间
+ * @param {dayjs} timeEnd 结束时间
  * @param {number} [scale=60] 分割的刻度
  * @returns 时间块数量
  */

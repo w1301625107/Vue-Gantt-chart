@@ -17,5 +17,5 @@ export default function throttle(fn, interval = 100) { //fn为要执行的函数
       timer = null;
       _self.apply(_me, args);
     }, interval);
-  };
-};
+  }
+}
