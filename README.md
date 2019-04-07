@@ -6,6 +6,8 @@
 [![npm](https://img.shields.io/npm/v/v-gantt-chart.svg)](https://www.npmjs.com/package/v-gantt-chart)
 ![](https://img.shields.io/badge/license-MIT-000000.svg)
 
+### [React版本](https://github.com/w1301625107/React-Gantt-chart)
+
 ### [Demo预览地址](https://w1301625107.github.io/Vue-Gantt-chart/dist/index)
 
 ## Feature
@@ -21,6 +23,7 @@
 ![](https://raw.githubusercontent.com/w1301625107/vue-gantt-chart/master/screenshot/page1.png)
 
 ## Install 
+[![v-gantt-chart](https://nodei.co/npm/v-gantt-chart.png)](https://npmjs.org/package/v-gantt-chart)
 
 ``` bash
 npm i v-gantt-chart --save
@@ -321,6 +324,9 @@ IE 需要自己处理一些ployfill
 
 
 ## Update
+1.3.3
+- 修复时间轴的日期数字在某些情况下撑开div，导致时间轴不准确的问题
+
 1.3.2
 - 修正滚动的触发和滚动范围限制的问题
 

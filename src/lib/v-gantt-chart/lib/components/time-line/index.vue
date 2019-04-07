@@ -2,7 +2,7 @@
   <div class="gantt-timeline"
        :style="{'margin-left':-cellWidth/2+'px'}">
     <div class="gantt-timeline-block"
-         v-for="(day,index) in getDays"
+         v-for="(day,index) in getDays" :style="{width:getTimeScales(day).length*cellWidth+'px'}"
          :key="index">
       <div class="gantt-timeline-day "
            :style="heightStyle">

@@ -44,6 +44,7 @@ $font-gray:#777;
     display: flex;
 
     &-day {
+      overflow: hidden;
       font-weight: bold;
       color: $font-gray;
     }
