@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import vGanttChart from './lib/v-gantt-chart'
+import vGanttChart from './lib/v-gantt-chart/index'
 // import vGanttChart from "v-gantt-chart"
 import { Popover } from 'element-ui'
 // import 'element-ui/lib/theme-chalk/index.css';
