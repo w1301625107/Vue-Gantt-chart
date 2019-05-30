@@ -182,7 +182,9 @@ export default {
 <template v-slot:block="{data,
                         getPositonOffset,
                         getWidthAbout2Times,
-                        isInRenderingTimeRange}">
+                        isInRenderingTimeRange,
+                        startTimeOfRenderArea,
+                        endTimeOfRenderArea}">
   <div class="myBlockContainer"
         v-for="item in data.gtArray"
         v-if="isInRenderingTimeRange(item.start)
@@ -206,6 +208,13 @@ export default {
   //...
 } 
 ```
+除了data，还会提供以下属性和函数供调用
+
+`startTimeOfRenderArea` 
+为当前渲染范围的时间轴开始时间的毫秒数
+
+`endTimeOfRenderArea` 
+为当前渲染范围的时间轴结束时间的毫秒数
 
 `getPositonOffset(time:string):number `
 定位函数，根据给定字符串形式的时间生成相对时间轴起点的的偏移值
