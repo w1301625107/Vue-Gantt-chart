@@ -3,9 +3,11 @@
 <p align="center">基于 Vue  实现的 gantt-like 图表 ,用于排班展示</p>
 <p align="center"></p>
 
+
 [![npm](https://img.shields.io/npm/v/v-gantt-chart.svg)](https://www.npmjs.com/package/v-gantt-chart)
 ![](https://img.shields.io/badge/license-MIT-000000.svg)
 
+[![v-gantt-chart](https://nodei.co/npm/v-gantt-chart.png)](https://npmjs.org/package/v-gantt-chart)
 ### [React版本](https://github.com/w1301625107/React-Gantt-chart)
 
 ### [Demo预览地址](https://w1301625107.github.io/Vue-Gantt-chart/dist/index)
@@ -20,12 +22,12 @@
 
 ## Screenshot
 
-![](https://raw.githubusercontent.com/w1301625107/vue-gantt-chart/master/screenshot/page1.png)
+![](screenshot/page1.png)
 
 ## Install 
-[![v-gantt-chart](https://nodei.co/npm/v-gantt-chart.png)](https://npmjs.org/package/v-gantt-chart)
 
-``` bash
+
+```bash
 npm i v-gantt-chart --save
 ```
 
@@ -88,20 +90,24 @@ export default {
 };
 ```
 
-在**默认情况**下（即`customGenerateBlocks`为`false`）的渲染的数据需要**特殊格式** ，目前要求数组中每一个值均为对象，且有`gtAarry`对象数组这个属性(默认取`gtArray`，也可以自定义多个数组`key`值)
-//数组中每一个对象需有两个属性，`start`和`end`(不提供的情况，偏移与宽度将为0)，需为合法的时间字符串.例如
+
+###  data
+在**默认情况**下（即`customGenerateBlocks`为`false`）的渲染的数据需要**特殊格式** ，目前要求数组中每一个值均为对象，且有`gtAarry`对象数组这个属性(默认取`gtArray`，也可以通过`arrayKeys`属性自定义需要渲染的数组)
+
+
+数组中每一个对象需有两个属性，`start`和`end`(不提供的情况，偏移与宽度将为0)，数值需为合法的时间字符串.例如
 ```js
 [
   {
     id:'test', //非必须
-    gtArray:[ //默认的需要渲染的数组的key
+    gtArray:[ //默认的需要渲染的数组
       {
         name:'test', //非必须
         start:'2019-01-11 18:18:18',
         end:'2019-01-11 18:18:18'
       }
     ]，
-    customKey:[ //自定义的需要渲染的数组的key
+    customKey:[ //自定义的需要渲染的数组
       {
         id:'test', //非必须
         start:'2019-01-11 18:18:18',
@@ -119,24 +125,24 @@ export default {
 // 假设你传入的数据为
 [
   {
-    id:'test', 
+    id:'arrayOne', 
     name:'sala',
     gtArray:[ 
       {
-        name:'test', 
+        name:'itemOne', 
         start:'2019-01-11 18:18:18',
         end:'2019-01-11 18:18:18'
-        //...
+        // ...其他属性
       }
     ]，
-    //...
+    //...其他属性
   }
-  //...
+  //... 其他数组数据
 ]
 ```
 
-### block 容器块slot
-#### `customGenerateBlocks` 为false（默认值） 的情况
+### block 容器块slot 有 __`两种`__ 需要注意 
+#### ⭐️ `customGenerateBlocks` 为 `false`（默认值） 的情况
 
 ```html
 <template v-slot:block="{data,item}">
@@ -145,29 +151,32 @@ export default {
 </template>
 ```
 
-`data` 为
+`data` 为 gantt图表中每一行的所有数据
+如下
+
 ```js
 {
-  id:'test', 
+  id:'arrayOne', 
   name:'sala',
   gtArray:[{...}]，
   //...
 } 
 ```
 
-`item` 为
+`item` 为 gantt图表中一个小方块对数据 
+如下
 ```js
 {
-  name:'test', 
+  name:'itemOne', 
   start:'2019-01-11 18:18:18',
   end:'2019-01-11 18:18:18'
   //...
 }
 ```
 
-#### `customGenerateBlocks` 为true 的情况
+#### ⭐️ `customGenerateBlocks` 为 `true` 的情况
 
-此时`arrayKeys`，`itemkey`将不在生效，如何渲染，渲染什么，将由你自己决定，下方是一个例子
+此时`arrayKeys`，`itemkey`将不再次生效，如何渲染，渲染什么，将由你自己决定，下方是一个例子
 
 ```html
 <template v-slot:block="{data,
@@ -188,7 +197,7 @@ export default {
 </template>
 ```
 
- `data` 为
+ `data` 为gantt图表中每一行的所有数据
 ```js
 {
   id:'test', 
@@ -216,7 +225,7 @@ export default {
 </template>
 ```
 
-`data` 为
+`data` 为 gantt图表中每一行的所有数据
 ```js
 {
   id:'test', 
