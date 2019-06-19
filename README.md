@@ -8,9 +8,31 @@
 ![](https://img.shields.io/badge/license-MIT-000000.svg)
 
 [![v-gantt-chart](https://nodei.co/npm/v-gantt-chart.png)](https://npmjs.org/package/v-gantt-chart)
-### [React版本](https://github.com/w1301625107/React-Gantt-chart)
+## [React版本](https://github.com/w1301625107/React-Gantt-chart)
 
-### [Demo预览地址](https://w1301625107.github.io/Vue-Gantt-chart/dist/index)
+## [Demo预览地址](https://w1301625107.github.io/Vue-Gantt-chart/dist/index)
+
+## Catalog
+- [Feature](#feature)  
+- [Screenshot](#screenshot)  
+- [Install](#install)  
+- [Use](#use)   
+    - [template code](#template-code)    
+    - [script code](#script-code)    
+    - [data](#data)  
+- [Slot](#slot)    
+    - [block 容器块slot 有 __`两种`__ 需要注意](#block-容器块slot-有-__两种__-需要注意)      
+      - [⭐️ `customGenerateBlocks` 为 `false`（默认值） 的情况](#⭐️-customgenerateblocks-为-false默认值-的情况)      
+      - [⭐️ `customGenerateBlocks` 为 `true` 的情况](#⭐️-customgenerateblocks-为-true-的情况)    
+    - [left 行名slot](#left-行名slot)    
+    - [title 标题slot](#title-标题slot)  
+- [API](#api)    
+  - [Param](#param)    
+  - [Event](#event)  
+- [Run Demo](#run-demo)    
+- [Caution](#caution)  
+- [Update](#update)      
+- [License](#license)
 
 ## Feature
 
@@ -142,6 +164,7 @@ export default {
 ```
 
 ### block 容器块slot 有 __`两种`__ 需要注意 
+
 #### ⭐️ `customGenerateBlocks` 为 `false`（默认值） 的情况
 
 ```html
@@ -245,12 +268,13 @@ export default {
 ```
 
 ### title 标题slot
+
 ```html
 <template v-slot:title>
     <!-- 你的表头组件 -->
     hola
 </template>
-````
+```
 
 ## API
 
@@ -266,9 +290,11 @@ export default {
 }
 </style>
 
-<div class="param">
+
 
 ### Param
+
+<div class="param">
 
 | param            | required | type  | default | describe                                   |
 | :-------------- | :------: | :-----: | :----: | :---- |
@@ -308,9 +334,11 @@ export default {
 }
 </style>
 
-<div class="event">
+
 
 ### Event
+
+<div class="event">
 
 | event | type | describle|
 | :---  |:-----:|:---------|
@@ -318,9 +346,6 @@ export default {
 | scrollTop | number | Y轴的滚动值|
 
 </div>
-
-## Next plan
-- 加快渲染速度
 
 ## Run Demo
 
@@ -338,7 +363,8 @@ yarn serve
 ```
 
 ## Caution
-IE 需要自己处理一些ployfill
+- IE 需要自己处理一些ployfill,应该是promise
+- MacOS 系统需要在偏好设置中的通用开启始终显示滚动条，否则可能会看不到滚动条
 
 
 ## Update
@@ -393,6 +419,7 @@ IE 需要自己处理一些ployfill
 - 支持隐藏表头和时间轴功能
 - 支持自定义需要渲染的数组key
 - 修复横线滚动越界问题
-#### License
+
+## License
 
 _MIT_ ©wuchouchou
