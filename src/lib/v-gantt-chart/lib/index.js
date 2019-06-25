@@ -13,7 +13,7 @@ const myPlugin = {
 }
 // 新增
 if (typeof window !== 'undefined' && window.Vue) {
-  window.Vue.use(gantt)
+  window.Vue.use(myPlugin)
 }
 
 // 最后将插件导出，并在main.js中通过Vue.use()即可使用插件

@@ -2,7 +2,7 @@
   <div class="gantt-blocks"
        :style="{height:blockHeight+'px'}">
     <div class="gantt-block gantt-block-top-space"
-         :style="{height:calTopSpace()+'px'}">
+         :style="{height:topSpace+'px'}">
     </div>
     <div class="gantt-block"
          :style="blockStyle"

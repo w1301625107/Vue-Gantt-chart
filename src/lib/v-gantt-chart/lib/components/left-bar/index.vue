@@ -1,7 +1,7 @@
 <template>
   <div class="gantt-leftbar">
     <div class="gantt-leftbar-item gantt-block-top-space"
-         :style="{height:calTopSpace()+'px'}">
+         :style="{height:topSpace+'px'}">
     </div>
     <div class="gantt-leftbar-item"
          :style="cellHeightStyle"
