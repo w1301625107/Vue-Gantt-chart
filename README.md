@@ -47,7 +47,7 @@
 ![](screenshot/page1.png)
 
 ## Install 
-
+### npm 安装
 
 ```bash
 npm i v-gantt-chart --save
@@ -61,6 +61,27 @@ import Vue from 'vue'
 import vGanttChart from 'v-gantt-chart';
 
 Vue.use(vGanttChart});
+```
+
+### 使用链接引入
+因为没有用那些CDN提供，所以需要你自己下载到本地引入，dist文件地址位于[./src/lib/v-gantt-chart/dist](https://github.com/w1301625107/Vue-Gantt-chart/tree/master/src/lib/v-gantt-chart/dist)
+
+```html
+<body>
+  <div id="app">
+    <v-gantt-chart></v-gantt-chart>
+  </div>
+</body>
+  <!-- 先引入vue -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- 再引入v-gantt-chart.js -->
+  <script src="./v-gantt-chart.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+    })
+  </script>
+</html>
 ```
 
 ## Use
@@ -368,6 +389,11 @@ yarn serve
 
 
 ## Update
+
+1.3.4
+- 修复打包文件错误，导致无法链接引入的问题
+- 代码优化
+
 1.3.3
 - 修复时间轴的日期数字在某些情况下撑开div，导致时间轴不准确的问题
 
