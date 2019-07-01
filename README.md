@@ -6,8 +6,10 @@
 
 [![npm](https://img.shields.io/npm/v/v-gantt-chart.svg)](https://www.npmjs.com/package/v-gantt-chart)
 ![](https://img.shields.io/badge/license-MIT-000000.svg)
+[![HitCount](http://hits.dwyl.io/w1301625107/Vue-Gantt-chart.svg)](http://hits.dwyl.io/w1301625107/Vue-Gantt-chart)
 
 [![v-gantt-chart](https://nodei.co/npm/v-gantt-chart.png)](https://npmjs.org/package/v-gantt-chart)
+
 ## [React版本](https://github.com/w1301625107/React-Gantt-chart)
 
 ## [Demo预览地址](https://w1301625107.github.io/Vue-Gantt-chart/dist/index)
@@ -64,7 +66,9 @@ Vue.use(vGanttChart});
 ```
 
 ### 使用链接引入
-因为没有用那些CDN提供，所以需要你自己下载到本地引入，dist文件地址位于[./src/lib/v-gantt-chart/dist](https://github.com/w1301625107/Vue-Gantt-chart/tree/master/src/lib/v-gantt-chart/dist)
+```html
+<script src="https://unpkg.com/v-gantt-chart/dist/v-gantt-chart.js"></script>
+```
 
 ```html
 <body>
