@@ -50,16 +50,16 @@
                      :scrollToPostion="positionA"
                      @scrollLeft="scrollLeftA"
                      :datas="datasA">
-         <template v-slot:block="{data,item}">
+        <template v-slot:block="{data,item}">
           <Test :data="data"
                 :updateTimeLines="updateTimeLines"
                 :cellHeight="cellHeight"
                 :currentTime="currentTime"
                 :item="item"></Test>
-        </template> 
+        </template>
         <template v-slot:left="{data}">
           <TestLeft :data="data"></TestLeft>
-        </template> 
+        </template>
         <template v-slot:title>
           铁胆火车侠日程表
         </template>
@@ -80,7 +80,8 @@
                      @scrollLeft="scrollLeftB"
                      customGenerateBlocks
                      :datas="datasB">
-        <template v-slot:block="{data,getPositonOffset,getWidthAbout2Times,isInRenderingTimeRange,startTimeOfRenderArea,endTimeOfRenderArea}">
+        <template
+                  v-slot:block="{data,getPositonOffset,getWidthAbout2Times,isInRenderingTimeRange,startTimeOfRenderArea,endTimeOfRenderArea}">
           <div class="gantt-block-item"
                v-for="(item,index) in data.gtArray"
                v-if="isInRenderingTimeRange(item.start)||isInRenderingTimeRange(item.end)"
@@ -101,7 +102,8 @@
         </template>
       </v-gantt-chart>
     </div>
-    <footer class="main-footer">MIT ©wuchouchou<span style="float:right">注:该demo由两个甘特组件组合而成</span></footer>
+    <footer class="main-footer">MIT ©wuchouchou<span
+            style="float:right">注:该demo由两个甘特组件组合而成</span></footer>
   </div>
 </template>
 
@@ -224,6 +226,7 @@ input[type="range"] {
 }
 
 .container {
+  height: 100%;
   display: flex;
   flex-direction: column;
   flex: 1;

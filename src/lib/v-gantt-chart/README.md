@@ -64,7 +64,9 @@ Vue.use(vGanttChart});
 ```
 
 ### 使用链接引入
-因为没有用那些CDN提供，所以需要你自己下载到本地引入，dist文件地址位于[./src/lib/v-gantt-chart/dist](https://github.com/w1301625107/Vue-Gantt-chart/tree/master/src/lib/v-gantt-chart/dist)
+```html
+<script src="https://unpkg.com/v-gantt-chart/dist/v-gantt-chart.js"></script>
+```
 
 ```html
 <body>
@@ -75,7 +77,7 @@ Vue.use(vGanttChart});
   <!-- 先引入vue -->
   <script src="https://unpkg.com/vue/dist/vue.js"></script>
   <!-- 再引入v-gantt-chart.js -->
-  <script src="./v-gantt-chart.js"></script>
+  <script src="https://unpkg.com/v-gantt-chart/dist/v-gantt-chart.js"></script>
   <script>
     new Vue({
       el: '#app',
