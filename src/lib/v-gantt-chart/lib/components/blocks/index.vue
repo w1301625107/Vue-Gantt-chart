@@ -114,7 +114,7 @@ export default {
       }
 
       let timeToMs = new Date(time).getTime();
-      if (startTimeOfRenderArea <= timeToMs && timeToMs <= endTimeOfRenderArea) {
+      if (startTimeOfRenderArea <= timeToMs || timeToMs <= endTimeOfRenderArea) {
         return true;
       }
       return false;

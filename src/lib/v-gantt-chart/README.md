@@ -392,6 +392,9 @@ yarn serve
 
 ## Update
 
+1.3.5 
+- 修复甘特条长度超过可视范围时显示不正常的问题([bug:#7](https://github.com/w1301625107/Vue-Gantt-chart/issues/7))
+
 1.3.4
 - 修复打包文件错误，导致无法链接引入的问题
 - 代码优化
