@@ -1,42 +1,69 @@
 <template>
   <div id="app">
-    <header class="top-bar">Vue-Gantt-Chart
-      <label for="cellWidth">cellWidth</label>
-      <input type="range"
-             min="20"
-             max="100"
-             v-model.number="cellWidth">
-      <label for="cellHeight">cellHeight</label>
-      <input type="range"
-             min="20"
-             max="100"
-             v-model.number="cellHeight">
-      <label for="titleWith">titleWidth</label>
-      <input type="range"
-             min="0"
-             max="250"
-             v-model.number="titleWidth">
-      <label for="hideHeader">hideHeader</label>
-      <input id="hideHeader"
-             v-model="hideHeader"
-             type="checkbox">
-      <label for="datasNum">datasNum</label>
-      <input id="datasNum"
-             v-model.number.lazy="datasNum">
-      <label for="scrollToY">scrollToY</label>
-      <input id="scrollToY"
-             v-model.number.lazy="scrollToY">
-      <label for="scale">scale</label>
-      <select id="scale"
-              v-model.number="scale">
-        <option v-for="i in scaleList"
-                :key="i">{{i}}</option>
-      </select>
-      <span>minute</span>
+    <header class="top-bar">
+      <el-form :inline="true"
+               size="small">
+        <el-form-item label="Vue-Gantt-Chart">
+          <el-date-picker v-model="times"
+                          size="small"
+                          type="datetimerange"
+                          range-separator="至"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"
+                          style="width:300px">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="行数">
+          <el-input v-model.number="rowNum"
+                    size="small"
+                    style="width:60px"
+                    placeholder=""></el-input>
+        </el-form-item>
+        <el-form-item label="块数">
+          <el-input v-model.number="colNum"
+                    size="small"
+                    style="width:60px"
+                    placeholder=""></el-input>
+        </el-form-item>
+        <el-form-item label="cellHeight">
+          <el-slider v-model="cellHeight"
+                     :min="20"
+                     :max="100"
+                     style="width:60px"
+                     size="small"></el-slider>
+        </el-form-item>
+        <el-form-item label="cellWidth">
+          <el-slider v-model="cellWidth"
+                     :min="20"
+                     :max="100"
+                     style="width:60px"
+                     size="small"></el-slider>
+        </el-form-item>
+        <el-form-item label="scale">
+          <el-select v-model="scale"
+                     placeholder=""
+                     style="width:80px"
+                     size="small">
+            <el-option v-for="item in scaleList"
+                       :key="item"
+                       :label="item"
+                       :value="item">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-checkbox v-model="hideHeader">hideHeader</el-checkbox>
+        </el-form-item>
+        <el-form-item>
+          <el-checkbox v-model="hideSecondGantt">hideSecondGantt</el-checkbox>
+        </el-form-item>
+
+      </el-form>
+
     </header>
     <div class="container">
-      <v-gantt-chart :startTime="startTime"
-                     :endTime="endTime"
+      <v-gantt-chart :startTime="times[0]"
+                     :endTime="times[1]"
                      :cellWidth="cellWidth"
                      :cellHeight="cellHeight"
                      :timeLines="timeLines"
@@ -60,12 +87,12 @@
         <template v-slot:left="{data}">
           <TestLeft :data="data"></TestLeft>
         </template>
-        <template v-slot:title>
-          铁胆火车侠日程表
+        <template v-slot:title>铁胆火车侠日程表
         </template>
       </v-gantt-chart>
-      <v-gantt-chart :startTime="startTime"
-                     :endTime="endTime"
+      <v-gantt-chart v-if="!hideSecondGantt"
+                     :startTime="times[0]"
+                     :endTime="times[1]"
                      :cellWidth="cellWidth"
                      :cellHeight="cellHeight"
                      :timeLines="timeLines"
@@ -81,10 +108,10 @@
                      customGenerateBlocks
                      :datas="datasB">
         <template
-                  v-slot:block="{data,getPositonOffset,getWidthAbout2Times,isInRenderingTimeRange,startTimeOfRenderArea,endTimeOfRenderArea}">
+                  v-slot:block="{data,getPositonOffset,getWidthAbout2Times,isInRenderingTimeRange,startTimeOfRenderArea,endTimeOfRenderArea,isAcrossRenderingTimeRange}">
           <div class="gantt-block-item"
                v-for="(item,index) in data.gtArray"
-               v-if="isInRenderingTimeRange(item.start)||isInRenderingTimeRange(item.end)"
+               v-if="isInRenderingTimeRange(item.start)||isInRenderingTimeRange(item.end)||isAcrossRenderingTimeRange(item.start,item.end)"
                :key="item.id"
                :style="{left:getPositonOffset(item.start)+'px',width:getWidthAbout2Times(item.start,item.end)+'px'}">
             <Test :data="data"
@@ -135,21 +162,24 @@ export default {
         }
       ],
       currentTime: dayjs(),
-      startTime: dayjs()
-        .subtract(5, "hour")
-        .toString(),
-      endTime: dayjs()
-        .add(2, "day")
-        .add(2, "hour")
-        .toString(),
       cellWidth: 50,
       cellHeight: 30,
       titleHeight: 40,
       titleWidth: 250,
       scale: 60,
-      datasNum: 100,
-      datasA: mockDatas(100),
-      datasB: mockDatas(100),
+      times: [
+        dayjs()
+          .subtract(5, "hour")
+          .toString(),
+        dayjs()
+          .add(2, "day")
+          .add(2, "hour")
+          .toString()
+      ],
+      rowNum: 100,
+      colNum: 10,
+      datasA: [],
+      datasB: [],
       dataKey: "id",
       scaleList: scaleList,
       scrollToTime: dayjs()
@@ -157,6 +187,7 @@ export default {
         .toString(),
       scrollToPostion: { x: 10000, y: 10000 },
       hideHeader: false,
+      hideSecondGantt: false,
       arrayKeys: ["gtArray", "error"],
       scrollToY: 0,
       positionB: {},
@@ -164,15 +195,21 @@ export default {
     };
   },
   watch: {
-    datasNum(newV) {
-      this.datasA = mockDatas(newV);
-      this.datasB = mockDatas(newV);
-    },
+    rowNum: "updateData",
+    colNum: "updateData",
+    times: "updateData",
     scrollToY(val) {
       this.positionA = { x: val };
     }
   },
+  mounted() {
+    this.updateData();
+  },
   methods: {
+    updateData() {
+      this.datasA = mockDatas(this.rowNum, this.colNum, this.times);
+      this.datasB = mockDatas(this.rowNum, this.colNum, this.times);
+    },
     updateTimeLines(timeA, timeB) {
       this.timeLines = [
         {
