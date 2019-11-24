@@ -1,7 +1,7 @@
 <template>
 
   <div class="gantt-chart"
-       @wheel="wheelHandle">
+       @wheel.passive="wheelHandle">
     <div class="gantt-container"
          :style="{height:`calc(100% - ${scrollXBarHeight}px)`,width:`calc(100% - ${scrollYBarWidth}px)`}">
 
@@ -84,12 +84,13 @@
                 </slot>
               </template>
               <template v-else
-                        v-slot="{data,getPositonOffset,getWidthAbout2Times,isInRenderingTimeRange}">
+                        v-slot="{data,getPositonOffset,getWidthAbout2Times,isInRenderingTimeRange,isAcrossRenderingTimeRange}">
                 <slot name="block"
                       :data="data"
                       :getPositonOffset="getPositonOffset"
                       :getWidthAbout2Times="getWidthAbout2Times"
                       :isInRenderingTimeRange="isInRenderingTimeRange"
+                      :isAcrossRenderingTimeRange="isAcrossRenderingTimeRange"
                       :startTimeOfRenderArea="startTimeOfRenderArea"
                       :endTimeOfRenderArea="endTimeOfRenderArea"></slot>
               </template>
@@ -103,7 +104,7 @@
          class="gantt-scroll-y"
          :style="{width:`${scrollYBarWidth}px`,
          height:`calc(100% - ${actualHeaderHeight}px`,marginTop:`${actualHeaderHeight}px`}"
-         @scroll="syncScrollY">
+         @scroll.passive="syncScrollY">
       <div :style="{height:totalHeight+'px'}"></div>
     </div>
 
@@ -111,7 +112,7 @@
          class="gantt-scroll-x"
          :style="{height:`${scrollXBarHeight}px`,
          width:`calc(100% - ${titleWidth}px )`,marginLeft:titleWidth+'px'}"
-         @scroll="syncScrollX">
+         @scroll.passive="syncScrollX">
       <div :style="{width:totalWidth+'px'}"></div>
     </div>
 

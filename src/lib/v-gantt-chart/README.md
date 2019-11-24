@@ -5,9 +5,12 @@
 
 
 [![npm](https://img.shields.io/npm/v/v-gantt-chart.svg)](https://www.npmjs.com/package/v-gantt-chart)
+[![total](https://img.shields.io/npm/dt/v-gantt-chart.svg)](https://img.shields.io/npm/dt/v-gantt-chart.svg)
 ![](https://img.shields.io/badge/license-MIT-000000.svg)
+[![HitCount](http://hits.dwyl.io/w1301625107/Vue-Gantt-chart.svg)](http://hits.dwyl.io/w1301625107/Vue-Gantt-chart)
 
 [![v-gantt-chart](https://nodei.co/npm/v-gantt-chart.png)](https://npmjs.org/package/v-gantt-chart)
+
 ## [React版本](https://github.com/w1301625107/React-Gantt-chart)
 
 ## [Demo预览地址](https://w1301625107.github.io/Vue-Gantt-chart/dist/index)
@@ -77,7 +80,7 @@ Vue.use(vGanttChart});
   <!-- 先引入vue -->
   <script src="https://unpkg.com/vue/dist/vue.js"></script>
   <!-- 再引入v-gantt-chart.js -->
-  <script src="https://unpkg.com/v-gantt-chart/dist/v-gantt-chart.js"></script>
+  <script src="./v-gantt-chart.js"></script>
   <script>
     new Vue({
       el: '#app',
@@ -230,10 +233,11 @@ export default {
                         getWidthAbout2Times,
                         isInRenderingTimeRange,
                         startTimeOfRenderArea,
+                        isAcrossRenderingTimeRange,
                         endTimeOfRenderArea}">
   <div class="myBlockContainer"
         v-for="item in data.gtArray"
-        v-if="isInRenderingTimeRange(item.start)
+        v-if="isInRenderingTimeRange(item.start)||isAcrossRenderingTimeRange(item.start,item.end)
               ||isInRenderingTimeRange(item.end)"
         :key="item.id"
         :style="{position:'absolute',
@@ -270,6 +274,9 @@ export default {
 
 `isInRenderingTimeRange(time:string):boolean`
 判定给定的时间是否在屏幕显示的时间轴范围之内
+
+`isAcrossRenderingTimeRange(timeStart,timeEnd):boolean`
+判定给定的时间是否跨越了屏幕显示的时间轴范围之内
   
 
 ### left 行名slot
@@ -391,6 +398,8 @@ yarn serve
 
 
 ## Update
+1.3.6
+- 修复甘特条显示判定条件，slot添加新的api:isAcrossRenderingTimeRange
 
 1.3.5 
 - 修复甘特条长度超过可视范围时显示不正常的问题([bug:#7](https://github.com/w1301625107/Vue-Gantt-chart/issues/7))

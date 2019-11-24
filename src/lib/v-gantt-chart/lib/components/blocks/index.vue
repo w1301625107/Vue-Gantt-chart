@@ -12,7 +12,7 @@
       <template v-if="!customGenerateBlocks">
         <div class="gantt-block-item"
              v-for="(item,index) in concatArray(data)"
-             v-if="isInRenderingTimeRange(item.start)||isInRenderingTimeRange(item.end)"
+             v-if="isInRenderingTimeRangeOrIsAcrossRenderingTimeRange(item.start,item.end)"
              :key="itemKey?item[itemKey]:index"
              :style="{left:getPosition(item)+'px',width:getWidth(item)+'px'}">
           <slot :data="data"
@@ -26,7 +26,8 @@
         <slot :data="data"
               :getPositonOffset="getPositonOffset"
               :getWidthAbout2Times="getWidthAbout2Times"
-              :isInRenderingTimeRange="isInRenderingTimeRange">need slot</slot>
+              :isInRenderingTimeRange="isInRenderingTimeRange"
+              :isAcrossRenderingTimeRange="isAcrossRenderingTimeRange">need slot</slot>
       </template>
 
     </div>
@@ -98,10 +99,49 @@ export default {
       }, []);
     },
     /**
-     * 判定数据是否在渲染的时间范围内
+     * 判定时间段是否跨越了渲染的时间范围 或者判定时间是否在渲染的时间范围内
+     *
+     * @param {{timeStart:string}} item
+     * @param {{timeEnd:string}} item
+     * @returns {boolean}
+     */
+    isInRenderingTimeRangeOrIsAcrossRenderingTimeRange(timeStart, timeEnd) {
+      if (this.heightOfRenderAera === 0) {
+        return false;
+      }
+
+      let { startTimeOfRenderArea, endTimeOfRenderArea } = this;
+      if (isUndef(startTimeOfRenderArea) || isUndef(endTimeOfRenderArea)) {
+        return false;
+      }
+
+      let timeStartToMs = new Date(timeStart).getTime();
+      let timeEndToMs = new Date(timeEnd).getTime();
+      if (
+        startTimeOfRenderArea >= timeStartToMs &&
+        timeEndToMs >= endTimeOfRenderArea
+      ) {
+        return true;
+      }
+      if (
+        startTimeOfRenderArea <= timeStartToMs &&
+        timeStartToMs <= endTimeOfRenderArea
+      ) {
+        return true;
+      }
+      if (
+        startTimeOfRenderArea <= timeEndToMs &&
+        timeEndToMs <= endTimeOfRenderArea
+      ) {
+        return true;
+      }
+      return false;
+    },
+    /**
+     * 判定时间是否在渲染的时间范围内
      *
      * @param {{time:string}} item
-     * @returns {boolean} 该
+     * @returns {boolean}
      */
     isInRenderingTimeRange(time) {
       if (this.heightOfRenderAera === 0) {
@@ -114,7 +154,37 @@ export default {
       }
 
       let timeToMs = new Date(time).getTime();
-      if (startTimeOfRenderArea <= timeToMs || timeToMs <= endTimeOfRenderArea) {
+      if (
+        startTimeOfRenderArea <= timeToMs &&
+        timeToMs <= endTimeOfRenderArea
+      ) {
+        return true;
+      }
+      return false;
+    },
+    /**
+     * 判定时间段是否跨越了渲染的时间范围
+     *
+     * @param {{timeStart:string}} item
+     * @param {{timeEnd:string}} item
+     * @returns {boolean}
+     */
+    isAcrossRenderingTimeRange(timeStart, timeEnd) {
+      if (this.heightOfRenderAera === 0) {
+        return false;
+      }
+
+      let { startTimeOfRenderArea, endTimeOfRenderArea } = this;
+      if (isUndef(startTimeOfRenderArea) || isUndef(endTimeOfRenderArea)) {
+        return false;
+      }
+
+      let timeStartToMs = new Date(timeStart).getTime();
+      let timeEndToMs = new Date(timeEnd).getTime();
+      if (
+        startTimeOfRenderArea >= timeStartToMs &&
+        timeEndToMs >= endTimeOfRenderArea
+      ) {
         return true;
       }
       return false;
