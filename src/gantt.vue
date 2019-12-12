@@ -360,13 +360,13 @@ export default {
 
   watch: {
     scrollLeft() {
-      this.getTimeRange();
+      this.calcTimeRange();
     },
     widthOfRenderAera() {
-      this.getTimeRange();
+      this.calcTimeRange();
     },
     cellWidth() {
-      this.getTimeRange();
+      this.calcTimeRange();
     },
     scrollToTime: {
       handler(newV) {
@@ -400,13 +400,13 @@ export default {
         if (!newV) {
           return;
         }
-        let x = Number.isNaN(newV.x) ? undefined : newV.x;
-        let y = Number.isNaN(newV.y) ? undefined : newV.y;
+        let x = Number.parseFloat(newV.x);
+        let y = Number.parseFloat(newV.y) ;
         this.$nextTick(() => {
-          if (isDef(x) && x !== this.scrollLeft) {
+          if (!Number.isNaN(x) && x !== this.scrollLeft) {
             this.syncScrollX({ target: { scrollLeft: x } }, true);
           }
-          if (isDef(y) && y !== this.scrollTop) {
+          if (!Number.isNaN(y) && y !== this.scrollTop) {
             this.syncScrollY({ target: { scrollTop: y } }, true);
           }
         });
@@ -416,7 +416,7 @@ export default {
   },
 
   mounted() {
-    this.getSelector();
+    this.cacheSelector();
     // 计算准确的渲染区域范围
     const observeContainer = throttle(entries => {
       entries.forEach(entry => {
@@ -427,6 +427,10 @@ export default {
     });
     const observer = new ResizeObserver(observeContainer);
     observer.observe(this.$refs.blocksWrapper);
+    this.$once("hook:beforeDestroy", () => {
+      observer.disconnect()
+      this.releaseSelector()
+    })
   },
 
   methods: {
@@ -434,7 +438,7 @@ export default {
      * 计算需要渲染的时间范围
      *
      */
-    getTimeRange() {
+    calcTimeRange() {
       if (this.heightOfRenderAera === 0) {
         return;
       }
@@ -475,13 +479,19 @@ export default {
       return _getPositonOffset(date, this.beginTimeOfTimeLineToString, options);
     },
     //缓存节点
-    getSelector() {
+    cacheSelector() {
       this.selector.gantt_leftbar = this.$refs.leftbarWrapper;
       this.selector.gantt_table = this.$refs.blocksWrapper;
       this.selector.gantt_scroll_y = this.$refs.scrollYBar;
       this.selector.gantt_timeline = this.$refs.headerTimeline;
       this.selector.gantt_scroll_x = this.$refs.scrollXBar;
       this.selector.gantt_markArea = this.$refs.marklineArea;
+    },
+    releaseSelector() {
+      let key
+      for (key in this.selector) {
+        this.selector[key] = null
+      }
     },
     wheelHandle(event) {
       let { deltaX, deltaY } = event;
