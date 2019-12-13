@@ -1936,6 +1936,17 @@ eval("var getBuiltIn = __webpack_require__(/*! ../internals/get-built-in */ \"./
 
 /***/ }),
 
+/***/ "./node_modules/core-js/internals/parse-float.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/core-js/internals/parse-float.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var global = __webpack_require__(/*! ../internals/global */ \"./node_modules/core-js/internals/global.js\");\nvar trim = __webpack_require__(/*! ../internals/string-trim */ \"./node_modules/core-js/internals/string-trim.js\").trim;\nvar whitespaces = __webpack_require__(/*! ../internals/whitespaces */ \"./node_modules/core-js/internals/whitespaces.js\");\n\nvar nativeParseFloat = global.parseFloat;\nvar FORCED = 1 / nativeParseFloat(whitespaces + '-0') !== -Infinity;\n\n// `parseFloat` method\n// https://tc39.github.io/ecma262/#sec-parsefloat-string\nmodule.exports = FORCED ? function parseFloat(string) {\n  var trimmedString = trim(String(string));\n  var result = nativeParseFloat(trimmedString);\n  return result === 0 && trimmedString.charAt(0) == '-' ? -0 : result;\n} : nativeParseFloat;\n\n\n//# sourceURL=webpack:///./node_modules/core-js/internals/parse-float.js?");
+
+/***/ }),
+
 /***/ "./node_modules/core-js/internals/parse-int.js":
 /*!*****************************************************!*\
   !*** ./node_modules/core-js/internals/parse-int.js ***!
@@ -2417,6 +2428,17 @@ eval("\nvar DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ \"
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("var $ = __webpack_require__(/*! ../internals/export */ \"./node_modules/core-js/internals/export.js\");\n\n// `Number.isNaN` method\n// https://tc39.github.io/ecma262/#sec-number.isnan\n$({ target: 'Number', stat: true }, {\n  isNaN: function isNaN(number) {\n    // eslint-disable-next-line no-self-compare\n    return number != number;\n  }\n});\n\n\n//# sourceURL=webpack:///./node_modules/core-js/modules/es.number.is-nan.js?");
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es.number.parse-float.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/core-js/modules/es.number.parse-float.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var $ = __webpack_require__(/*! ../internals/export */ \"./node_modules/core-js/internals/export.js\");\nvar parseFloat = __webpack_require__(/*! ../internals/parse-float */ \"./node_modules/core-js/internals/parse-float.js\");\n\n// `Number.parseFloat` method\n// https://tc39.github.io/ecma262/#sec-number.parseFloat\n$({ target: 'Number', stat: true, forced: Number.parseFloat != parseFloat }, {\n  parseFloat: parseFloat\n});\n\n\n//# sourceURL=webpack:///./node_modules/core-js/modules/es.number.parse-float.js?");
 
 /***/ }),
 

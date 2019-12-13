@@ -298,7 +298,7 @@ input[type="range"] {
   width: 100px;
 }
 .top-bar {
-  /* height: 30px; */
+  height: 40px;
 }
 
 .container {
