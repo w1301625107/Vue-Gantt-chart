@@ -13,7 +13,7 @@
 
 ## [React版本](https://github.com/w1301625107/React-Gantt-chart)
 
-## [Demo预览地址](https://w1301625107.github.io/Vue-Gantt-chart/dist/index)
+## [Demo预览地址](https://w1301625107.github.io/Vue-Gantt-chart/demo/index)
 
 ## Catalog
 - [Feature](#feature)  
