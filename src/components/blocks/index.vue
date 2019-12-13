@@ -11,28 +11,26 @@
       :key="dataKey ? data[dataKey] : index"
     >
       <template v-if="!customGenerateBlocks">
-        <div
-          class="gantt-block-item"
-          v-for="(item, index) in concatArray(data)"
-          :key="itemKey ? item[itemKey] : index"
-          :style="{
-            left: getPosition(item) + 'px',
-            width: getWidth(item) + 'px'
-          }"
-        >
-          <template
+        <template v-for="(item, index) in concatArray(data)">
+          <div
             v-if="
               isInRenderingTimeRangeOrIsAcrossRenderingTimeRange(
                 item.start,
                 item.end
               )
             "
+            class="gantt-block-item"
+            :key="itemKey ? item[itemKey] : index"
+            :style="{
+              left: getPosition(item) + 'px',
+              width: getWidth(item) + 'px'
+            }"
           >
             <slot :data="data" :item="item">
               <div class="gantt-block-defaultBlock">need slot</div>
             </slot>
-          </template>
-        </div>
+          </div>
+        </template>
       </template>
 
       <template v-else>

@@ -300,8 +300,6 @@ export default {
       //先渲染出空框架，在mounted后再得到真实的渲染范围，然后在根据范围渲染数据，比之前设置一个默认高度宽度，额外的渲染浪费更少了
       heightOfRenderAera: 0,
       widthOfRenderAera: 0,
-      startTimeOfRenderArea: null,
-      endTimeOfRenderArea: null,
       scrollBarWitdh: 17
     };
   },
@@ -355,19 +353,38 @@ export default {
     },
     actualHeaderHeight() {
       return this.hideHeader ? 0 : this.titleHeight;
+    },
+    startTimeOfRenderArea() {
+      if (this.heightOfRenderAera === 0) {
+        return;
+      }
+      let { beginTimeOfTimeLine, scrollLeft, cellWidth, scale } = this;
+
+      return beginTimeOfTimeLine
+        .add((scrollLeft / cellWidth) * scale, "minute")
+        .toDate()
+        .getTime();
+    },
+    endTimeOfRenderArea() {
+      if (this.heightOfRenderAera === 0) {
+        return;
+      }
+      let {
+        beginTimeOfTimeLine,
+        scrollLeft,
+        cellWidth,
+        scale,
+        widthOfRenderAera
+      } = this;
+
+      return beginTimeOfTimeLine
+        .add(((scrollLeft + widthOfRenderAera) / cellWidth) * scale, "minute")
+        .toDate()
+        .getTime();
     }
   },
 
   watch: {
-    scrollLeft() {
-      this.calcTimeRange();
-    },
-    widthOfRenderAera() {
-      this.calcTimeRange();
-    },
-    cellWidth() {
-      this.calcTimeRange();
-    },
     scrollToTime: {
       handler(newV) {
         if (!newV) {
@@ -381,17 +398,8 @@ export default {
         }
 
         let offset = this.getPositonOffset(newV);
-        // immediate 会造成dom 还没有挂载时就进行操作，故需要延迟执行
-        this.$nextTick(() =>
-          this.syncScrollX(
-            {
-              target: {
-                scrollLeft: offset
-              }
-            },
-            true
-          )
-        );
+
+        this.manualScroll(offset);
       },
       immediate: true
     },
@@ -401,15 +409,13 @@ export default {
           return;
         }
         let x = Number.parseFloat(newV.x);
-        let y = Number.parseFloat(newV.y) ;
-        this.$nextTick(() => {
-          if (!Number.isNaN(x) && x !== this.scrollLeft) {
-            this.syncScrollX({ target: { scrollLeft: x } }, true);
-          }
-          if (!Number.isNaN(y) && y !== this.scrollTop) {
-            this.syncScrollY({ target: { scrollTop: y } }, true);
-          }
-        });
+        let y = Number.parseFloat(newV.y);
+        if (!Number.isNaN(x) && x !== this.scrollLeft) {
+          this.manualScroll(x);
+        }
+        if (!Number.isNaN(y) && y !== this.scrollTop) {
+          this.manualScroll(undefined, y);
+        }
       },
       immediate: true
     }
@@ -428,38 +434,12 @@ export default {
     const observer = new ResizeObserver(observeContainer);
     observer.observe(this.$refs.blocksWrapper);
     this.$once("hook:beforeDestroy", () => {
-      observer.disconnect()
-      this.releaseSelector()
-    })
+      observer.disconnect();
+      this.releaseSelector();
+    });
   },
 
   methods: {
-    /**
-     * 计算需要渲染的时间范围
-     *
-     */
-    calcTimeRange() {
-      if (this.heightOfRenderAera === 0) {
-        return;
-      }
-
-      let {
-        beginTimeOfTimeLine,
-        scrollLeft,
-        cellWidth,
-        scale,
-        widthOfRenderAera
-      } = this;
-
-      this.startTimeOfRenderArea = beginTimeOfTimeLine
-        .add((scrollLeft / cellWidth) * scale, "minute")
-        .toDate()
-        .getTime();
-      this.endTimeOfRenderArea = beginTimeOfTimeLine
-        .add(((scrollLeft + widthOfRenderAera) / cellWidth) * scale, "minute")
-        .toDate()
-        .getTime();
-    },
     getWidthAbout2Times(start, end) {
       let options = {
         scale: this.scale,
@@ -488,62 +468,55 @@ export default {
       this.selector.gantt_markArea = this.$refs.marklineArea;
     },
     releaseSelector() {
-      let key
+      let key;
       for (key in this.selector) {
-        this.selector[key] = null
+        this.selector[key] = null;
       }
     },
     wheelHandle(event) {
       let { deltaX, deltaY } = event;
-      this.$nextTick(() => {
-        let {
-          scrollTop,
-          scrollLeft,
-          avialableScrollLeft,
-          avialableScrollTop
-        } = this;
+      let {
+        scrollTop,
+        scrollLeft,
+        avialableScrollLeft,
+        avialableScrollTop
+      } = this;
 
-        if (deltaY !== 0) {
-          if (
-            scrollTop + deltaY >= avialableScrollTop &&
-            scrollTop !== avialableScrollTop
-          ) {
-            this.syncScrollY(
-              { target: { scrollTop: avialableScrollTop } },
-              true
-            );
-          } else if (
-            scrollTop + deltaY < 0 &&
-            scrollTop !== 0 /*滚动为0限制*/
-          ) {
-            this.syncScrollY({ target: { scrollTop: 0 } }, true);
-          } else {
-            this.syncScrollY(
-              { target: { scrollTop: scrollTop + deltaY } },
-              true
-            );
-          }
+      if (deltaY !== 0) {
+        if (
+          scrollTop + deltaY >= avialableScrollTop &&
+          scrollTop !== avialableScrollTop
+        ) {
+          this.manualScroll(undefined, avialableScrollTop);
+        } else if (scrollTop + deltaY < 0 && scrollTop !== 0 /*滚动为0限制*/) {
+          this.manualScroll(undefined, 0);
+        } else {
+          this.manualScroll(undefined, scrollTop + deltaY);
         }
-        if (deltaX !== 0) {
-          if (
-            scrollLeft + deltaX >= avialableScrollLeft &&
-            scrollLeft !== avialableScrollLeft
-          ) {
-            this.syncScrollX(
-              { target: { scrollLeft: avialableScrollLeft } },
-              true
-            );
-          } else if (
-            scrollLeft + deltaX < 0 &&
-            scrollLeft !== 0 /*滚动为0限制*/
-          ) {
-            this.syncScrollX({ target: { scrollLeft: 0 } }, true);
-          } else {
-            this.syncScrollX(
-              { target: { scrollLeft: scrollLeft + deltaX } },
-              true
-            );
-          }
+      }
+      if (deltaX !== 0) {
+        if (
+          scrollLeft + deltaX >= avialableScrollLeft &&
+          scrollLeft !== avialableScrollLeft
+        ) {
+          this.manualScroll(avialableScrollLeft);
+        } else if (
+          scrollLeft + deltaX < 0 &&
+          scrollLeft !== 0 /*滚动为0限制*/
+        ) {
+          this.manualScroll(0);
+        } else {
+          this.manualScroll(scrollLeft + deltaX);
+        }
+      }
+    },
+    manualScroll(x, y) {
+      this.$nextTick(() => {
+        if (x != undefined) {
+          this.syncScrollX({ target: { scrollLeft: x } }, true);
+        }
+        if (y != undefined) {
+          this.syncScrollY({ target: { scrollTop: y } }, true);
         }
       });
     },
@@ -556,9 +529,7 @@ export default {
         gantt_scroll_y.scrollTop = topValue;
         return;
       }
-      gantt_leftbar.scrollTop = topValue;
-      gantt_table.scrollTop = topValue;
-      this.scrollTop = topValue;
+      this.scrollTop = gantt_table.scrollTop = gantt_leftbar.scrollTop = topValue;
       this.$emit("scrollTop", topValue);
     },
     syncScrollX(event, fake = false) {
@@ -574,10 +545,8 @@ export default {
         gantt_scroll_x.scrollLeft = leftValue;
         return;
       }
-      gantt_table.scrollLeft = leftValue;
-      gantt_timeline.scrollLeft = leftValue;
-      gantt_markArea.style.left = "-" + leftValue + "px";
-      this.scrollLeft = leftValue;
+      this.scrollLeft = gantt_timeline.scrollLeft = gantt_table.scrollLeft = leftValue;
+      gantt_markArea.style.left = -leftValue + "px";
       this.$emit("scrollLeft", leftValue);
     }
   }
