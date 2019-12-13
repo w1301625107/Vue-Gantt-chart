@@ -398,6 +398,10 @@ yarn serve
 
 
 ## Update
+1.3.7
+- 修复时间轴时间变化后不自动刷新的问题([bug:#22](https://github.com/w1301625107/Vue-Gantt-chart/issues/22))
+- 精简代码
+
 1.3.6
 - 修复甘特条显示判定条件，slot添加新的api:isAcrossRenderingTimeRange
 
