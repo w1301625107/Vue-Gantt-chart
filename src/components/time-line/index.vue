@@ -61,7 +61,7 @@ export default {
      * @returns {[dayjs]} 该data中所有需要渲染的数据
      */
     getDays() {
-      let temp = [];
+      const temp = [];
       let { start, end } = this;
 
       for (; !isSameDay(start, end); start = start.add(1, "day")) {
@@ -92,7 +92,7 @@ export default {
      * @returns {[string]} 该data中所有需要渲染的数据
      */
     getTimeScales(date) {
-      let { start, end } = this;
+      const { start, end } = this;
 
       if (isSameDay(date, start)) {
         return this.generateTimeScale(START_DAY);
@@ -109,8 +109,8 @@ export default {
      * @returns {[string]} 该data中所有需要渲染的数据
      */
     generateTimeScale(type) {
-      let totalblock = [];
-      let { start, end, scale } = this;
+      const totalblock = [];
+      const { start, end, scale } = this;
       let a, b;
       switch (type) {
         case START_DAY: //和start同一天

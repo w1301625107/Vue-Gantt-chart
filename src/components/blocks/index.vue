@@ -81,7 +81,7 @@ export default {
   },
   computed: {
     renderAarrys() {
-      let { arrayKeys } = this;
+      const { arrayKeys } = this;
       if (arrayKeys.length > 0) {
         return arrayKeys;
       }
@@ -123,13 +123,13 @@ export default {
         return false;
       }
 
-      let { startTimeOfRenderArea, endTimeOfRenderArea } = this;
+      const { startTimeOfRenderArea, endTimeOfRenderArea } = this;
       if (isUndef(startTimeOfRenderArea) || isUndef(endTimeOfRenderArea)) {
         return false;
       }
 
-      let timeStartToMs = new Date(timeStart).getTime();
-      let timeEndToMs = new Date(timeEnd).getTime();
+      const timeStartToMs = new Date(timeStart).getTime();
+      const timeEndToMs = new Date(timeEnd).getTime();
       if (
         startTimeOfRenderArea >= timeStartToMs &&
         timeEndToMs >= endTimeOfRenderArea
@@ -161,12 +161,12 @@ export default {
         return false;
       }
 
-      let { startTimeOfRenderArea, endTimeOfRenderArea } = this;
+      const { startTimeOfRenderArea, endTimeOfRenderArea } = this;
       if (isUndef(startTimeOfRenderArea) || isUndef(endTimeOfRenderArea)) {
         return false;
       }
 
-      let timeToMs = new Date(time).getTime();
+      const timeToMs = new Date(time).getTime();
       if (
         startTimeOfRenderArea <= timeToMs &&
         timeToMs <= endTimeOfRenderArea
@@ -187,13 +187,13 @@ export default {
         return false;
       }
 
-      let { startTimeOfRenderArea, endTimeOfRenderArea } = this;
+      const { startTimeOfRenderArea, endTimeOfRenderArea } = this;
       if (isUndef(startTimeOfRenderArea) || isUndef(endTimeOfRenderArea)) {
         return false;
       }
 
-      let timeStartToMs = new Date(timeStart).getTime();
-      let timeEndToMs = new Date(timeEnd).getTime();
+      const timeStartToMs = new Date(timeStart).getTime();
+      const timeEndToMs = new Date(timeEnd).getTime();
       if (
         startTimeOfRenderArea >= timeStartToMs &&
         timeEndToMs >= endTimeOfRenderArea

@@ -3,8 +3,8 @@
 //缓存 解析值，加速一点点吧
 
 const cacheParseTime = (function() {
-  let cacheString = {};
-  let cacheValue = {};
+  const cacheString = {};
+  const cacheValue = {};
 
   return function(timeName, timeString) {
     if (cacheString[timeName] !== timeString) {
@@ -29,9 +29,9 @@ const cacheParseTime = (function() {
  * @returns number
  */
 export function getWidthAbout2Times(start, end, arg) {
-  let { scale, cellWidth } = arg;
-  let pStart = cacheParseTime("pStart", start);
-  let pEnd = parseTime(end);
+  const { scale, cellWidth } = arg;
+  const pStart = cacheParseTime("pStart", start);
+  const pEnd = parseTime(end);
   return (diffTimeByMinutes(pStart, pEnd) / scale) * cellWidth;
 }
 
@@ -46,9 +46,9 @@ export function getWidthAbout2Times(start, end, arg) {
  * @returns number
  */
 export function getPositonOffset(time, beginTimeOfTimeLine, arg) {
-  let { scale, cellWidth } = arg;
-  let pTime = cacheParseTime("pStart", time);
-  let pBeginTimeOfTimeLine = cacheParseTime(
+  const { scale, cellWidth } = arg;
+  const pTime = cacheParseTime("pStart", time);
+  const pBeginTimeOfTimeLine = cacheParseTime(
     "pBeginTimeOfTimeLine",
     beginTimeOfTimeLine
   );
@@ -66,7 +66,7 @@ function parseTime(time) {
  * @returns
  */
 function diffTimeByMinutes(start, end) {
-  let diff = end.getTime() - start.getTime();
+  const diff = end.getTime() - start.getTime();
   return diff / 1000 / 60;
 }
 

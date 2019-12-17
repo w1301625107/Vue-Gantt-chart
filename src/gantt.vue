@@ -190,7 +190,7 @@ export default {
     startTime: {
       default: () => dayjs(),
       validator(date) {
-        let ok = dayjs(date).isValid();
+        const ok = dayjs(date).isValid();
         if (!ok) warn(`非法的开始时间 ${date}`);
         return ok;
       }
@@ -198,7 +198,7 @@ export default {
     endTime: {
       default: () => dayjs(),
       validator(date) {
-        let ok = dayjs(date).isValid();
+        const ok = dayjs(date).isValid();
         if (!ok) warn(`非法的结束时间 ${date}`);
         return ok;
       }
@@ -256,8 +256,8 @@ export default {
     },
     scrollToPostion: {
       validator(obj) {
-        let validX = isDef(obj.x) ? !Number.isNaN(obj.x) : true;
-        let validY = isDef(obj.y) ? !Number.isNaN(obj.y) : true;
+        const validX = isDef(obj.x) ? !Number.isNaN(obj.x) : true;
+        const validY = isDef(obj.y) ? !Number.isNaN(obj.y) : true;
         if (!validX && !validY) {
           warn("scrollToPostion x或y 有值为非Number类型");
           return false;
@@ -309,28 +309,28 @@ export default {
       return dayjs(this.startTime);
     },
     end() {
-      let { start, widthOfRenderAera, scale, cellWidth } = this;
+      const { start, widthOfRenderAera, scale, cellWidth } = this;
       let end = dayjs(this.endTime);
-      let totalWidth = calcScalesAbout2Times(start, end, scale) * cellWidth;
+      const totalWidth = calcScalesAbout2Times(start, end, scale) * cellWidth;
       if (start.isAfter(end) || totalWidth <= widthOfRenderAera) {
         end = start.add((widthOfRenderAera / cellWidth) * scale, "minute");
       }
       return end;
     },
     totalWidth() {
-      let { cellWidth, totalScales } = this;
+      const { cellWidth, totalScales } = this;
       return cellWidth * totalScales;
     },
     totalScales() {
-      let { start, end, scale } = this;
+      const { start, end, scale } = this;
       return calcScalesAbout2Times(start, end, scale);
     },
     totalHeight() {
-      let { datas, cellHeight } = this;
+      const { datas, cellHeight } = this;
       return datas.length * cellHeight;
     },
     beginTimeOfTimeLine() {
-      let value = getBeginTimeOfTimeLine(this.start, this.scale);
+      const value = getBeginTimeOfTimeLine(this.start, this.scale);
       return value;
     },
     beginTimeOfTimeLineToString() {
@@ -338,11 +338,11 @@ export default {
     },
     avialableScrollLeft() {
       // 不减这个1，滚动到时间轴尽头后继续滚动会慢慢的溢出
-      let { totalWidth, widthOfRenderAera } = this;
+      const { totalWidth, widthOfRenderAera } = this;
       return totalWidth - widthOfRenderAera - 1;
     },
     avialableScrollTop() {
-      let { totalHeight, heightOfRenderAera } = this;
+      const { totalHeight, heightOfRenderAera } = this;
       return totalHeight - heightOfRenderAera - 1;
     },
     scrollXBarHeight() {
@@ -358,7 +358,7 @@ export default {
       if (this.heightOfRenderAera === 0) {
         return;
       }
-      let { beginTimeOfTimeLine, scrollLeft, cellWidth, scale } = this;
+      const { beginTimeOfTimeLine, scrollLeft, cellWidth, scale } = this;
 
       return beginTimeOfTimeLine
         .add((scrollLeft / cellWidth) * scale, "minute")
@@ -369,7 +369,7 @@ export default {
       if (this.heightOfRenderAera === 0) {
         return;
       }
-      let {
+      const {
         beginTimeOfTimeLine,
         scrollLeft,
         cellWidth,
@@ -390,15 +390,13 @@ export default {
         if (!newV) {
           return;
         }
-        let { start, end } = this;
-        let time = dayjs(newV);
+        const { start, end } = this;
+        const time = dayjs(newV);
         if (!(time.isAfter(start) && time.isBefore(end))) {
           warn(`当前滚动至${newV}不在${start}和${end}的范围之内`);
           return;
         }
-
-        let offset = this.getPositonOffset(newV);
-
+        const offset = this.getPositonOffset(newV);
         this.manualScroll(offset);
       },
       immediate: true
@@ -408,8 +406,8 @@ export default {
         if (!newV) {
           return;
         }
-        let x = Number.parseFloat(newV.x);
-        let y = Number.parseFloat(newV.y);
+        const x = Number.parseFloat(newV.x);
+        const y = Number.parseFloat(newV.y);
         if (!Number.isNaN(x) && x !== this.scrollLeft) {
           this.manualScroll(x);
         }
@@ -441,7 +439,7 @@ export default {
 
   methods: {
     getWidthAbout2Times(start, end) {
-      let options = {
+      const options = {
         scale: this.scale,
         cellWidth: this.cellWidth
       };
@@ -451,7 +449,7 @@ export default {
      * 为时间线计算偏移
      */
     getPositonOffset(date) {
-      let options = {
+      const options = {
         scale: this.scale,
         cellWidth: this.cellWidth
       };
@@ -474,8 +472,8 @@ export default {
       }
     },
     wheelHandle(event) {
-      let { deltaX, deltaY } = event;
-      let {
+      const { deltaX, deltaY } = event;
+      const {
         scrollTop,
         scrollLeft,
         avialableScrollLeft,
@@ -513,38 +511,27 @@ export default {
     manualScroll(x, y) {
       this.$nextTick(() => {
         if (x != undefined) {
-          this.syncScrollX({ target: { scrollLeft: x } }, true);
+          this.selector.gantt_scroll_x.scrollLeft = x;
         }
         if (y != undefined) {
-          this.syncScrollY({ target: { scrollTop: y } }, true);
+          this.selector.gantt_scroll_y.scrollTop = y;
         }
       });
     },
     //同步fixleft和block的滚动
-    syncScrollY(event, fake = false) {
-      let { gantt_leftbar, gantt_table, gantt_scroll_y } = this.selector;
-      let topValue = event.target.scrollTop;
-      if (fake) {
-        //会触发一次真的滚动事件event, 后面的代码会在第二个事件中执行
-        gantt_scroll_y.scrollTop = topValue;
-        return;
-      }
+    syncScrollY(event) {
+      const { gantt_leftbar, gantt_table, } = this.selector;
+      const topValue = event.target.scrollTop;
       this.scrollTop = gantt_table.scrollTop = gantt_leftbar.scrollTop = topValue;
       this.$emit("scrollTop", topValue);
     },
-    syncScrollX(event, fake = false) {
-      let {
+    syncScrollX(event) {
+      const {
         gantt_table,
         gantt_timeline,
         gantt_markArea,
-        gantt_scroll_x
       } = this.selector;
-      let leftValue = event.target.scrollLeft;
-      if (fake) {
-        //会触发一次真的滚动事件event, 后面的代码会在第二个事件中执行
-        gantt_scroll_x.scrollLeft = leftValue;
-        return;
-      }
+      const leftValue = event.target.scrollLeft;
       this.scrollLeft = gantt_timeline.scrollLeft = gantt_table.scrollLeft = leftValue;
       gantt_markArea.style.left = -leftValue + "px";
       this.$emit("scrollLeft", leftValue);
