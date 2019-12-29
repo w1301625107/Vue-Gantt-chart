@@ -348,6 +348,9 @@ export default {
 | hideXScrollBar |    ❌     | boolean  |   false   | 隐藏横向滚动轴 |
 | hideYScrollBar |    ❌     | boolean  |   false   | 隐藏纵向滚动轴 |
 | customGenerateBlocks |    ❌     | boolean  |   false | 开启自定义生成渲染块，具体使用见说明 |
+| timeRangeCorrection |    ❌     | boolean  |   false | 时间矫正，默认开启。关闭后时间轴不会自动填充剩余空间，错误的先后时间会引起错误 |
+| preload |    ❌     | number  |   1 | 可视范围外渲染行数。如值为1时，屏幕只能显示10条，但是会顶部，底部会多渲染一条，避免滚动时出现空白。当值为0，渲染全部数据 |
+
 
 
 </div>
@@ -398,6 +401,12 @@ yarn serve
 
 
 ## Update
+1.4.0
+- 添加时间矫正开关
+- 添加可配置可视范围外渲染行数
+- 精简代码
+- 添加测试
+
 1.3.7
 - 修复时间轴时间变化后不自动刷新的问题([bug:#22](https://github.com/w1301625107/Vue-Gantt-chart/issues/22))
 - 精简代码
