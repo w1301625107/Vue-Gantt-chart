@@ -73,9 +73,9 @@
               :datas="datas"
               :dataKey="dataKey"
               :scrollTop="scrollTop"
-              :heightOfRenderAera="heightOfRenderAera"
-              :widthOfRenderAera="widthOfRenderAera"
+              :heightOfBlocksWrapper="heightOfBlocksWrapper"
               :cellHeight="cellHeight"
+              :preload="preload"
               :style="{ height: totalHeight + scrollXBarHeight + 'px' }"
             >
               <template v-slot="{ data }">
@@ -87,8 +87,8 @@
             <blocks
               :scrollTop="scrollTop"
               :scrollLeft="scrollLeft"
-              :heightOfRenderAera="heightOfRenderAera"
-              :widthOfRenderAera="widthOfRenderAera"
+              :heightOfBlocksWrapper="heightOfBlocksWrapper"
+              :widthOfBlocksWrapper="widthOfBlocksWrapper"
               :arrayKeys="arrayKeys"
               :itemKey="itemKey"
               :dataKey="dataKey"
@@ -101,6 +101,7 @@
               :customGenerateBlocks="customGenerateBlocks"
               :startTimeOfRenderArea="startTimeOfRenderArea"
               :endTimeOfRenderArea="endTimeOfRenderArea"
+              :preload="preload"
               :style="{ width: totalWidth + 'px' }"
             >
               <template v-if="!customGenerateBlocks" v-slot="{ data, item }">
@@ -280,6 +281,13 @@ export default {
     customGenerateBlocks: {
       type: Boolean,
       default: false
+    },
+    timeRangeCorrection: {
+      type: Boolean,
+      default: true
+    },
+    preload: {
+      type: Number
     }
   },
 
@@ -298,8 +306,8 @@ export default {
       scrollLeft: 0,
       //block 区域需要渲染的范围
       //先渲染出空框架，在mounted后再得到真实的渲染范围，然后在根据范围渲染数据，比之前设置一个默认高度宽度，额外的渲染浪费更少了
-      heightOfRenderAera: 0,
-      widthOfRenderAera: 0,
+      heightOfBlocksWrapper: 0,
+      widthOfBlocksWrapper: 0,
       scrollBarWitdh: 17
     };
   },
@@ -309,11 +317,21 @@ export default {
       return dayjs(this.startTime);
     },
     end() {
-      const { start, widthOfRenderAera, scale, cellWidth } = this;
+      const {
+        start,
+        widthOfBlocksWrapper,
+        scale,
+        cellWidth,
+        timeRangeCorrection
+      } = this;
       let end = dayjs(this.endTime);
       const totalWidth = calcScalesAbout2Times(start, end, scale) * cellWidth;
-      if (start.isAfter(end) || totalWidth <= widthOfRenderAera) {
-        end = start.add((widthOfRenderAera / cellWidth) * scale, "minute");
+      // 时间纠正和补偿
+      if (
+        timeRangeCorrection &&
+        (start.isAfter(end) || totalWidth <= widthOfBlocksWrapper)
+      ) {
+        end = start.add((widthOfBlocksWrapper / cellWidth) * scale, "minute");
       }
       return end;
     },
@@ -338,12 +356,12 @@ export default {
     },
     avialableScrollLeft() {
       // 不减这个1，滚动到时间轴尽头后继续滚动会慢慢的溢出
-      const { totalWidth, widthOfRenderAera } = this;
-      return totalWidth - widthOfRenderAera - 1;
+      const { totalWidth, widthOfBlocksWrapper } = this;
+      return totalWidth - widthOfBlocksWrapper - 1;
     },
     avialableScrollTop() {
-      const { totalHeight, heightOfRenderAera } = this;
-      return totalHeight - heightOfRenderAera - 1;
+      const { totalHeight, heightOfBlocksWrapper } = this;
+      return totalHeight - heightOfBlocksWrapper - 1;
     },
     scrollXBarHeight() {
       return this.hideXScrollBar ? 0 : this.scrollBarWitdh;
@@ -355,7 +373,7 @@ export default {
       return this.hideHeader ? 0 : this.titleHeight;
     },
     startTimeOfRenderArea() {
-      if (this.heightOfRenderAera === 0) {
+      if (this.heightOfBlocksWrapper === 0) {
         return;
       }
       const { beginTimeOfTimeLine, scrollLeft, cellWidth, scale } = this;
@@ -366,7 +384,7 @@ export default {
         .getTime();
     },
     endTimeOfRenderArea() {
-      if (this.heightOfRenderAera === 0) {
+      if (this.heightOfBlocksWrapper === 0) {
         return;
       }
       const {
@@ -374,11 +392,15 @@ export default {
         scrollLeft,
         cellWidth,
         scale,
-        widthOfRenderAera
+        widthOfBlocksWrapper,
+        totalWidth
       } = this;
 
+      const renderWidth =
+        totalWidth < widthOfBlocksWrapper ? totalWidth : widthOfBlocksWrapper;
+
       return beginTimeOfTimeLine
-        .add(((scrollLeft + widthOfRenderAera) / cellWidth) * scale, "minute")
+        .add(((scrollLeft + renderWidth) / cellWidth) * scale, "minute")
         .toDate()
         .getTime();
     }
@@ -397,7 +419,7 @@ export default {
           return;
         }
         const offset = this.getPositonOffset(newV);
-        this.manualScroll(offset);
+        this.$nextTick(this.manualScroll(offset));
       },
       immediate: true
     },
@@ -409,10 +431,10 @@ export default {
         const x = Number.parseFloat(newV.x);
         const y = Number.parseFloat(newV.y);
         if (!Number.isNaN(x) && x !== this.scrollLeft) {
-          this.manualScroll(x);
+          this.$nextTick(this.manualScroll(x));
         }
         if (!Number.isNaN(y) && y !== this.scrollTop) {
-          this.manualScroll(undefined, y);
+          this.$nextTick(this.manualScroll(undefined, y));
         }
       },
       immediate: true
@@ -425,8 +447,8 @@ export default {
     const observeContainer = throttle(entries => {
       entries.forEach(entry => {
         const cr = entry.contentRect;
-        this.heightOfRenderAera = cr.height;
-        this.widthOfRenderAera = cr.width;
+        this.heightOfBlocksWrapper = cr.height;
+        this.widthOfBlocksWrapper = cr.width;
       });
     });
     const observer = new ResizeObserver(observeContainer);
@@ -509,28 +531,22 @@ export default {
       }
     },
     manualScroll(x, y) {
-      this.$nextTick(() => {
-        if (x != undefined) {
-          this.selector.gantt_scroll_x.scrollLeft = x;
-        }
-        if (y != undefined) {
-          this.selector.gantt_scroll_y.scrollTop = y;
-        }
-      });
+      if (x != undefined) {
+        this.selector.gantt_scroll_x.scrollLeft = x;
+      }
+      if (y != undefined) {
+        this.selector.gantt_scroll_y.scrollTop = y;
+      }
     },
     //同步fixleft和block的滚动
     syncScrollY(event) {
-      const { gantt_leftbar, gantt_table, } = this.selector;
+      const { gantt_leftbar, gantt_table } = this.selector;
       const topValue = event.target.scrollTop;
       this.scrollTop = gantt_table.scrollTop = gantt_leftbar.scrollTop = topValue;
       this.$emit("scrollTop", topValue);
     },
     syncScrollX(event) {
-      const {
-        gantt_table,
-        gantt_timeline,
-        gantt_markArea,
-      } = this.selector;
+      const { gantt_table, gantt_timeline, gantt_markArea } = this.selector;
       const leftValue = event.target.scrollLeft;
       this.scrollLeft = gantt_timeline.scrollLeft = gantt_table.scrollLeft = leftValue;
       gantt_markArea.style.left = -leftValue + "px";

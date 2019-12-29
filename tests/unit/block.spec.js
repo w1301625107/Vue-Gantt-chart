@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { expect } from "chai"
 import { shallowMount, mount } from "@vue/test-utils"
-import Gantt from "./help.vue"
+import Gantt from "./help/help.vue"
 import Vue from "vue"
 
 // Vue.config.silent = true;
@@ -9,7 +9,11 @@ import Vue from "vue"
 describe("block.vue 渲染测试", () => {
   const wrapper = mount(Gantt)
   const ganttInstance = wrapper.find(".gantt-chart")
-  ganttInstance.setData({ widthOfRenderAera: 1000, heightOfRenderAera: 228 })
+  
+  beforeEach(function() {
+    ganttInstance.setData({ widthOfBlocksWrapper: 1000, heightOfBlocksWrapper: 228 ,scrollLeft:0})
+    wrapper.setData({cellWidth: 50,scale: 60,times: ["Thu, 12 Dec 2019 00:00:00 GMT+0800 (中国标准时间)","Fri, 13 Dec 2019 23:59:00 GMT+0800 (中国标准时间)"],timeRangeCorrection:true,})
+  });
 
   it("初始 gantt 渲染块数量正确", done => {
     Vue.config.errorHandler = done
@@ -38,7 +42,6 @@ describe("block.vue 渲染测试", () => {
   })
 
   it("cellwidth变动后 gantt 渲染块数量正确", done => {
-    ganttInstance.setData({ scrollLeft: 0})
     wrapper.setData({ cellWidth: 150})
     Vue.config.errorHandler = done
     Vue.nextTick(() => {
@@ -48,8 +51,7 @@ describe("block.vue 渲染测试", () => {
   })
 
   it("scale变动后 gantt 渲染块数量正确", done => {
-    ganttInstance.setData({ scrollLeft: 0})
-    wrapper.setData({ scale: 10,cellWidth: 50})
+    wrapper.setData({ scale: 10})
     Vue.config.errorHandler = done
     Vue.nextTick(() => {
       expect(wrapper.findAll(".gantt-block-item").length).to.equal(2)
@@ -57,12 +59,30 @@ describe("block.vue 渲染测试", () => {
     })
   })
 
-  it("blockwraper 大小变动时 渲染块数量正确", done => {
-    ganttInstance.setData({ scrollLeft: 0,widthOfRenderAera: 300,})
-
-    wrapper.setData({ scale: 60,cellWidth: 50})
+  it("blockwraper 宽度变动时 渲染块数量正确", done => {
+    ganttInstance.setData({ widthOfBlocksWrapper: 300,})
     Vue.config.errorHandler = done
     Vue.nextTick(() => {
+      expect(wrapper.findAll(".gantt-block-item").length).to.equal(2)
+      done()
+    })
+  })
+
+  it("blockwraper 宽度为0时 渲染块数量正确", done => {
+    ganttInstance.setData({ widthOfBlocksWrapper: 0,})
+    Vue.config.errorHandler = done
+    Vue.nextTick(() => {
+      // 因为第一个元素和时间轴开始时间正好是同一个时间
+      expect(wrapper.findAll(".gantt-block-item").length).to.equal(1)
+      done()
+    })
+  })
+
+  it("时间范围变化时 渲染块数量正确", done => {
+    wrapper.setData({times: ["Thu, 12 Dec 2019 00:00:00 GMT+0800 (中国标准时间)","Thu, 12 Dec 2019 06:00:00 GMT+0800 (中国标准时间)"],timeRangeCorrection:false})
+    Vue.config.errorHandler = done
+    Vue.nextTick(() => {
+      // 因为第一个元素和时间轴开始时间正好是同一个时间
       expect(wrapper.findAll(".gantt-block-item").length).to.equal(2)
       done()
     })

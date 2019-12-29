@@ -1,4 +1,4 @@
-const fakeOneRecord=[
+const fakeOneRecord = [
   {
     id: "JHR283UQ",
     gtArray: [
@@ -41,11 +41,9 @@ const fakeOneRecord=[
         id: "MX5073",
         start: "Fri, 13 Dec 2019 20:30:00 GMT+0800 (中国标准时间)",
         end: "Fri, 13 Dec 2019 23:30:00 GMT+0800 (中国标准时间)"
-      },
+      }
     ]
   }
-]
+];
 
-export {
-  fakeOneRecord,
-}
+export { fakeOneRecord };

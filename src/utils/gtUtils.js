@@ -3,13 +3,19 @@
 //缓存 解析值，加速一点点吧
 
 const cacheParseTime = (function() {
-  const cacheString = {};
-  const cacheValue = {};
+  let cacheString = {};
+  let cacheValue = {};
+  let count = 0;
 
   return function(timeName, timeString) {
     if (cacheString[timeName] !== timeString) {
+      // 避免缓存过多对象
+      if (count++ > 10000) {
+        cacheString = {};
+        cacheValue = {};
+      }
       cacheString[timeName] = timeString;
-      cacheValue[timeName] = parseTime(timeString);
+      return (cacheValue[timeName] = parseTime(timeString));
     }
 
     return cacheValue[timeName];

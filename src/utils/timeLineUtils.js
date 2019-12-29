@@ -50,20 +50,20 @@ export function validateScale(scale) {
 export function getBeginTimeOfTimeLine(start, scale = 60) {
   validateScale(scale);
   let timeBlocks;
-  let startClone = start.clone();
+  let result = start.clone();
   let rate = scale / 60;
   if (scale > 60) {
     timeBlocks = Math.floor(start.hour() / rate);
-    startClone = startClone
+    result = result
       .hour(timeBlocks * rate)
       .minute(0)
       .second(0);
   } else {
     timeBlocks = Math.floor(start.minute() / scale);
-    startClone = startClone.minute(timeBlocks * scale).second(0);
+    result = result.minute(timeBlocks * scale).second(0);
   }
 
-  return startClone;
+  return result;
 }
 /**
  * 根据所给 scale计算 两个时间差一共可以分成多少个刻度
@@ -85,11 +85,11 @@ export function calcScalesAbout2Times(timeStart, timeEnd, scale = 60) {
   validateScale(scale);
 
   let startBlocksTime = getBeginTimeOfTimeLine(timeStart, scale);
-  let count = 0;
+  let result = 0;
   while (!startBlocksTime.isAfter(timeEnd)) {
-    count++;
+    result++;
     startBlocksTime = startBlocksTime.add(scale, "minute");
   }
 
-  return count;
+  return result;
 }

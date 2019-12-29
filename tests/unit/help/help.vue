@@ -1,22 +1,25 @@
 <template>
   <div id="app" style="width:1000px">
-    <v-gantt-chart :startTime="times[0]"
-                   :endTime="times[1]"
-                   :cellWidth="cellWidth"
-                   :cellHeight="cellHeight"
-                   :timeLines="timeLines"
-                   :titleHeight="titleHeight"
-                   :scale="scale"
-                   :titleWidth="titleWidth"
-                   showCurrentTime
-                   :hideHeader="hideHeader"
-                   hideXScrollBar
-                   hideYScrollBar
-                   :dataKey="dataKey"
-                   :arrayKeys="arrayKeys"
-                   :scrollToPostion="positionA"
-                   @scrollLeft="scrollLeftA"
-                   :datas="datasA">
+    <v-gantt-chart
+      :startTime="times[0]"
+      :endTime="times[1]"
+      :cellWidth="cellWidth"
+      :cellHeight="cellHeight"
+      :timeLines="timeLines"
+      :titleHeight="titleHeight"
+      :scale="scale"
+      :titleWidth="titleWidth"
+      showCurrentTime
+      :hideHeader="hideHeader"
+      hideXScrollBar
+      hideYScrollBar
+      :dataKey="dataKey"
+      :arrayKeys="arrayKeys"
+      :scrollToPostion="positionA"
+      :timeRangeCorrection="timeRangeCorrection"
+      @scrollLeft="scrollLeftA"
+      :datas="datasA"
+    >
     </v-gantt-chart>
   </div>
 </template>
@@ -25,7 +28,7 @@
 // import { mockDatas } from "../../src/demo/mock/index.js";
 import { fakeOneRecord } from "./fakeData";
 import dayjs from "dayjs";
-import vGanttChart from "../../src/gantt.vue";
+import vGanttChart from "../../../src/gantt.vue";
 export default {
   name: "App",
   components: { vGanttChart },
@@ -48,7 +51,10 @@ export default {
       titleHeight: 40,
       titleWidth: 0,
       scale: 60,
-      times: ["Thu, 12 Dec 2019 00:00:00 GMT+0800 (中国标准时间)","Fri, 13 Dec 2019 23:59:00 GMT+0800 (中国标准时间)"],
+      times: [
+        "Thu, 12 Dec 2019 00:00:00 GMT+0800 (中国标准时间)",
+        "Fri, 13 Dec 2019 23:59:00 GMT+0800 (中国标准时间)"
+      ],
       datasA: fakeOneRecord,
       dataKey: "id",
       scrollToTime: dayjs()
@@ -57,7 +63,8 @@ export default {
       scrollToPostion: { x: 10000, y: 10000 },
       hideHeader: false,
       arrayKeys: ["gtArray", "error"],
-      positionA: {}
+      positionA: {},
+      timeRangeCorrection: true
     };
   },
   watch: {},

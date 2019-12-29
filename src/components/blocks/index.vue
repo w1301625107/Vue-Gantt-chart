@@ -69,7 +69,7 @@ export default {
       type: Number,
       required: true
     },
-    widthOfRenderAera: {
+    widthOfBlocksWrapper: {
       type: Number,
       required: true
     },
@@ -119,7 +119,7 @@ export default {
      * @returns {boolean}
      */
     isInRenderingTimeRangeOrIsAcrossRenderingTimeRange(timeStart, timeEnd) {
-      if (this.heightOfRenderAera === 0) {
+      if (this.heightOfBlocksWrapper === 0) {
         return false;
       }
 
@@ -157,7 +157,7 @@ export default {
      * @returns {boolean}
      */
     isInRenderingTimeRange(time) {
-      if (this.heightOfRenderAera === 0) {
+      if (this.heightOfBlocksWrapper === 0) {
         return false;
       }
 
@@ -183,7 +183,7 @@ export default {
      * @returns {boolean}
      */
     isAcrossRenderingTimeRange(timeStart, timeEnd) {
-      if (this.heightOfRenderAera === 0) {
+      if (this.heightOfBlocksWrapper === 0) {
         return false;
       }
 
