@@ -332,7 +332,10 @@ export default {
         timeRangeCorrection &&
         (start.isAfter(end) || totalWidth <= widthOfBlocksWrapper)
       ) {
-        end = start.add((widthOfBlocksWrapper / cellWidth) * scale, "minute");
+        end = getBeginTimeOfTimeLine(start, scale).add(
+          (widthOfBlocksWrapper / cellWidth) * scale,
+          "minute"
+        );
       }
       return end;
     },
