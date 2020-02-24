@@ -9,13 +9,17 @@
       <div class="gantt-timeline-day " :style="heightStyle">
         {{ day.format("MM/DD") }}
       </div>
-      <div class="gantt-timeline-scale " :style="heightStyle">
+      <div
+        v-if="!isDayScale"
+        class="gantt-timeline-scale "
+        :style="heightStyle"
+      >
         <div
           :style="cellWidthStyle"
-          v-for="(hour, index) in getTimeScales(day)"
+          v-for="(time, index) in getTimeScales(day)"
           :key="index"
         >
-          {{ hour }}
+          {{ scale >= 60 ? time.format("HH") : time.format("HH:mm") }}
         </div>
       </div>
     </div>
@@ -95,8 +99,8 @@ export default {
     },
     heightStyle() {
       return {
-        height: this.titleHeight / 2 + "px",
-        "line-height": this.titleHeight / 2 + "px"
+        height: this.titleHeight / (this.isDayScale ? 1 : 2) + "px",
+        "line-height": this.titleHeight / (this.isDayScale ? 1 : 2) + "px"
       };
     }
   },
@@ -151,11 +155,7 @@ export default {
           throw new TypeError("错误的计算类型");
       }
       while (!a.isAfter(b)) {
-        if (scale >= 60) {
-          totalblock.push(a.format("HH"));
-        } else {
-          totalblock.push(a.format("HH:mm"));
-        }
+        totalblock.push(a);
         a = a.add(scale, "minute");
       }
 
