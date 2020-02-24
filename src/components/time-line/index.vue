@@ -24,7 +24,11 @@
 
 <script>
 import dayjs from "dayjs";
-import { getBeginTimeOfTimeLine } from "../../utils/timeLineUtils.js";
+import {
+  isDayScale,
+  MINUTE_OF_ONE_DAY,
+  getBeginTimeOfTimeLine
+} from "../../utils/timeLineUtils.js";
 
 const START_DAY = Symbol();
 const MIDDLE_DAY = Symbol();
@@ -56,18 +60,31 @@ export default {
   },
 
   computed: {
+    isDayScale() {
+      const { scale } = this;
+      return isDayScale(scale);
+    },
     /**
      * 天列表
      * @returns {[dayjs]} 该data中所有需要渲染的数据
      */
     getDays() {
       const temp = [];
-      let { start, end } = this;
+      let { start, end, scale, isDayScale } = this;
+      let tempStart = start.clone();
 
-      for (; !isSameDay(start, end); start = start.add(1, "day")) {
-        temp.push(start);
+      if (isDayScale && scale > MINUTE_OF_ONE_DAY) {
+        while (tempStart.isBefore(end)) {
+          temp.push(tempStart);
+          tempStart = tempStart.add(scale / MINUTE_OF_ONE_DAY, "day");
+        }
+      } else {
+        while (!isSameDay(tempStart, end)) {
+          temp.push(tempStart);
+          tempStart = tempStart.add(1, "day");
+        }
+        temp.push(tempStart);
       }
-      temp.push(start);
 
       return temp;
     },

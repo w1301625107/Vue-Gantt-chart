@@ -167,6 +167,7 @@ import dayjs from "dayjs";
 import ResizeObserver from "resize-observer-polyfill";
 import {
   scaleList,
+  isDayScale,
   getBeginTimeOfTimeLine,
   calcScalesAbout2Times
 } from "./utils/timeLineUtils.js";
@@ -224,7 +225,7 @@ export default {
       type: Number,
       default: 60,
       validator(value) {
-        return scaleList.includes(value);
+        return scaleList.includes(value) || isDayScale(value);
       }
     },
     datas: {

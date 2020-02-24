@@ -35,5 +35,14 @@ describe("time-line.vue 渲染测试", () => {
     })
   })
 
+  it("scale 大于一天的刻度总数 渲染正确", done => {
+    wrapper.setProps({scale:2880})
+    Vue.config.errorHandler = done
+    Vue.nextTick(() => {
+      expect(wrapper.findAll(".gantt-timeline-block").length).to.equal(1)
+      done()
+    })
+  })
+
 
 })
