@@ -33,6 +33,9 @@
               :cellWidth="cellWidth"
               :titleHeight="titleHeight"
               :scale="scale"
+              :startTimeOfRenderArea="dayjs(startTimeOfRenderArea)"
+              :endTimeOfRenderArea="dayjs(endTimeOfRenderArea)"
+              :getPositonOffset="getPositonOffset"
             >
             </timeline>
           </div>
@@ -309,7 +312,8 @@ export default {
       //先渲染出空框架，在mounted后再得到真实的渲染范围，然后在根据范围渲染数据，比之前设置一个默认高度宽度，额外的渲染浪费更少了
       heightOfBlocksWrapper: 0,
       widthOfBlocksWrapper: 0,
-      scrollBarWitdh: 17
+      scrollBarWitdh: 17,
+      dayjs
     };
   },
 
