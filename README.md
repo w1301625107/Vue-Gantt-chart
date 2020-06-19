@@ -63,7 +63,7 @@ import Vue from 'vue'
 
 import vGanttChart from 'v-gantt-chart';
 
-Vue.use(vGanttChart});
+Vue.use(vGanttChart);
 ```
 
 ### 使用链接引入
