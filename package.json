@@ -1,6 +1,6 @@
 {
   "name": "v-gantt-chart",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "display gantt-like vaule,like use this to order bus schedule.",
   "main": "dist/v-gantt-chart.js",
   "files": [
