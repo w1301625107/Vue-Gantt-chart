@@ -12,22 +12,24 @@
         :style="{ width: getTimeScales(day).length * cellWidth + 'px' }"
         :key="index"
       >
-        <div class="gantt-timeline-day " :style="heightStyle">
-          {{ day.format("MM/DD") }}
-        </div>
-        <div
-          v-if="!isDayScale"
-          class="gantt-timeline-scale "
-          :style="heightStyle"
-        >
-          <div
-            :style="cellWidthStyle"
-            v-for="(time, index) in getTimeScales(day)"
-            :key="index"
-          >
-            {{ scale >= 60 ? time.format("HH") : time.format("HH:mm") }}
+        <slot :day="day" :getTimeScales="getTimeScales">
+          <div class="gantt-timeline-day " :style="heightStyle">
+            {{ day.format("MM/DD") }}
           </div>
-        </div>
+          <div
+            v-if="!isDayScale"
+            class="gantt-timeline-scale "
+            :style="heightStyle"
+          >
+            <div
+              :style="cellWidthStyle"
+              v-for="(time, index) in getTimeScales(day)"
+              :key="index"
+            >
+              {{ scale >= 60 ? time.format("HH") : time.format("HH:mm") }}
+            </div>
+          </div>
+        </slot>
       </div>
     </template>
   </div>

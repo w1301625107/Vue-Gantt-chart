@@ -37,6 +37,9 @@
               :endTimeOfRenderArea="dayjs(endTimeOfRenderArea)"
               :getPositonOffset="getPositonOffset"
             >
+              <template v-slot="{ day , getTimeScales }">
+                <slot name="timeline" :day="day" :getTimeScales="getTimeScales"> </slot>
+              </template>
             </timeline>
           </div>
         </div>
