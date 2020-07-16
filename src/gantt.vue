@@ -1,5 +1,11 @@
 <template>
-  <div class="gantt-chart" @wheel.passive="wheelHandle">
+  <div
+    class="gantt-chart"
+    @wheel.passive="wheelHandle"
+    @touchstart.passive="touchStartHandle"
+    @touchmove.passive="touchMoveHandle"
+    @touchend.passive="touchEndHandle"
+  >
     <div
       class="gantt-container"
       :style="{
@@ -37,8 +43,9 @@
               :endTimeOfRenderArea="dayjs(endTimeOfRenderArea)"
               :getPositonOffset="getPositonOffset"
             >
-              <template v-slot="{ day , getTimeScales }">
-                <slot name="timeline" :day="day" :getTimeScales="getTimeScales"> </slot>
+              <template v-slot="{ day, getTimeScales }">
+                <slot name="timeline" :day="day" :getTimeScales="getTimeScales">
+                </slot>
               </template>
             </timeline>
           </div>
@@ -316,7 +323,11 @@ export default {
       heightOfBlocksWrapper: 0,
       widthOfBlocksWrapper: 0,
       scrollBarWitdh: 17,
-      dayjs
+      dayjs,
+      preTouchPosition: {
+        x: 0,
+        y: 0
+      }
     };
   },
 
@@ -471,6 +482,24 @@ export default {
   },
 
   methods: {
+    touchMoveHandle(e) {
+      const finger = e.touches[0];
+      this.wheelHandle({
+        deltaX: this.preTouchPosition.x - finger.screenX,
+        deltaY: this.preTouchPosition.y - finger.screenY
+      });
+      this.preTouchPosition.x = finger.screenX;
+      this.preTouchPosition.y = finger.screenY;
+    },
+    touchStartHandle(e) {
+      const finger = e.touches[0];
+      this.preTouchPosition.x = finger.screenX;
+      this.preTouchPosition.y = finger.screenY;
+    },
+    touchEndHandle() {
+      this.preTouchPosition.x = 0;
+      this.preTouchPosition.y = 0;
+    },
     getWidthAbout2Times(start, end) {
       const options = {
         scale: this.scale,
