@@ -3,6 +3,9 @@
   "version": "1.4.0",
   "description": "display gantt-like vaule,like use this to order bus schedule.",
   "main": "dist/v-gantt-chart.js",
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/w1301625107/Vue-Gantt-chart.git"

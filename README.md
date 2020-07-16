@@ -27,7 +27,8 @@
     - [block 容器块slot 有 __`两种`__ 需要注意](#block-容器块slot-有-__两种__-需要注意)      
       - [⭐️ `customGenerateBlocks` 为 `false`（默认值） 的情况](#⭐️-customgenerateblocks-为-false默认值-的情况)      
       - [⭐️ `customGenerateBlocks` 为 `true` 的情况](#⭐️-customgenerateblocks-为-true-的情况)    
-    - [left 行名slot](#left-行名slot)    
+    - [left 行名slot](#left-行名slot) 
+    - [timeline 行名slot](#timeline-时间轴slot)       
     - [title 标题slot](#title-标题slot)  
 - [API](#api)    
   - [Param](#param)    
@@ -297,6 +298,27 @@ export default {
 } 
 ```
 
+### timeline 时间轴slot
+```html
+<template v-slot:timeline="{day , getTimeScales}">
+    <!-- 你的时间刻度组件 -->
+    <TestTimeline :day="day"></TestTimeline>
+</template>
+```
+
+`day` 为 每一个刻度对应的dayjs 对象
+
+`getTimeScales(day:dayjs):dayjs[]` 
+计算当前day可以分划多少刻度，参数为day,返回dayjs对象数组
+
+
+```html
+<template v-slot:timeline="{day , getTimeScales}">
+    <!-- 你的时间刻度组件 -->
+    <span v-for="i in getTimeScales(day)"> {{i.format('HH:mm')}}</span>
+</template>
+```
+
 ### title 标题slot
 
 ```html
@@ -344,7 +366,6 @@ export default {
 | scrollToTime    |    ❌     | string  |   --   | 滚动到指定的时间，需为合法的时间字符串  |
 | scrollToPostion |    ❌     | object  |   --   | 滚动到指定的位置 格式为``` {x:number,y:number}```  |
 | hideHeader |    ❌     | boolean  |   false   | 隐藏时间轴和表头 |
-| hideXS |    ❌     | boolean  |   false   | 隐藏时间轴和表头 |
 | hideXScrollBar |    ❌     | boolean  |   false   | 隐藏横向滚动轴 |
 | hideYScrollBar |    ❌     | boolean  |   false   | 隐藏纵向滚动轴 |
 | customGenerateBlocks |    ❌     | boolean  |   false | 开启自定义生成渲染块，具体使用见说明 |
@@ -428,6 +449,12 @@ yarn serve
 
 
 ## Update
+1.5.0
+- 时间轴添加天的倍数的刻度支持
+- 时间轴添加slot 支持
+- 时间轴添加lazy 渲染支持
+- 添加手机触摸支持 ([bug:#16](https://github.com/w1301625107/Vue-Gantt-chart/issues/16))
+
 1.4.0
 - 添加时间矫正开关
 - 添加可配置可视范围外渲染行数
