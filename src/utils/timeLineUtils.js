@@ -20,6 +20,13 @@ export const scaleList = [
   720,
   1440
 ];
+
+export const MINUTE_OF_ONE_DAY = 60 * 24;
+
+export function isDayScale(scale) {
+  return scale >= MINUTE_OF_ONE_DAY && scale % MINUTE_OF_ONE_DAY === 0;
+}
+
 /**
  * 验证是否合法scale值
  *
@@ -28,9 +35,11 @@ export const scaleList = [
  * @returns
  */
 export function validateScale(scale) {
-  if (!scaleList.includes(scale)) {
+  if (!scaleList.includes(scale) && !isDayScale(scale)) {
     throw new RangeError(
-      `错误的scale值，输入值为${scale},可用的scale值为${scaleList.join(",")}`
+      `错误的scale值，输入值为${scale},可用的scale值为${scaleList.join(
+        ","
+      )},或者为1440的整数倍`
     );
   }
   return true;

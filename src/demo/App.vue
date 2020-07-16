@@ -57,9 +57,9 @@
           >
             <el-option
               v-for="item in scaleList"
-              :key="item"
-              :label="item"
-              :value="item"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             >
             </el-option>
           </el-select>
@@ -102,6 +102,9 @@
         <template v-slot:left="{ data }">
           <TestLeft :data="data"></TestLeft>
         </template>
+        <!-- <template v-slot:timeline="{ day , getTimeScales }">
+          <TestTimeline :day="day" :getTimeScales="getTimeScales"></TestTimeline>
+        </template> -->
         <template v-slot:title>铁胆火车侠日程表 </template>
       </v-gantt-chart>
       <v-gantt-chart
@@ -174,17 +177,32 @@
 </template>
 
 <script>
-import Test from "./components/test.vue";
-import TestLeft from "./components/test-left.vue";
-import { mockDatas } from "./mock/index.js";
-import dayjs from "dayjs";
+import Test from "./components/test.vue"
+import TestLeft from "./components/test-left.vue"
+import TestTimeline from "./components/test-timeline.vue"
+import { mockDatas } from "./mock/index.js"
+import dayjs from "dayjs"
 
-const scaleList = `1,2,3,4,5,6,10,12,15,20,30,60,120,180,240,360,720,1440`
+const scaleList = `1,2,3,4,5,6,10,12,15,20,30,60,120,180,240,360,720,1440,2880,4320`
   .split(",")
-  .map(n => parseInt(n));
+  .map(n => {
+    let value = parseInt(n)
+    let label
+    if(value<60){
+        label=value+'minute'
+    }else if(value>=60 && value< 1440){
+        label=value/60+'hour'
+    }else{
+      label = value/1440 +'day'
+    }
+    return {
+      value,
+      label
+    }
+  })
 export default {
   name: "App",
-  components: { Test, TestLeft },
+  components: { Test, TestLeft,TestTimeline },
   data() {
     return {
       timeLines: [
@@ -201,7 +219,7 @@ export default {
         }
       ],
       currentTime: dayjs(),
-      cellWidth: 50,
+      cellWidth: 100,
       cellHeight: 30,
       titleHeight: 40,
       titleWidth: 250,
@@ -211,7 +229,7 @@ export default {
           .subtract(5, "hour")
           .toString(),
         dayjs()
-          .add(2, "day")
+          .add(29, "day")
           .add(2, "hour")
           .toString()
       ],
@@ -267,7 +285,7 @@ export default {
       this.positionA = { x: val };
     }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -302,7 +320,7 @@ input[type="range"] {
 }
 
 .container {
-  height: 100%;
+  height: calc(100% - 58px);
   display: flex;
   flex-direction: column;
   flex: 1;

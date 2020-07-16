@@ -1,5 +1,11 @@
 <template>
-  <div class="gantt-chart" @wheel.passive="wheelHandle">
+  <div
+    class="gantt-chart"
+    @wheel.passive="wheelHandle"
+    @touchstart.passive="touchStartHandle"
+    @touchmove.passive="touchMoveHandle"
+    @touchend.passive="touchEndHandle"
+  >
     <div
       class="gantt-container"
       :style="{
@@ -33,7 +39,14 @@
               :cellWidth="cellWidth"
               :titleHeight="titleHeight"
               :scale="scale"
+              :startTimeOfRenderArea="dayjs(startTimeOfRenderArea)"
+              :endTimeOfRenderArea="dayjs(endTimeOfRenderArea)"
+              :getPositonOffset="getPositonOffset"
             >
+              <template v-slot="{ day, getTimeScales }">
+                <slot name="timeline" :day="day" :getTimeScales="getTimeScales">
+                </slot>
+              </template>
             </timeline>
           </div>
         </div>
@@ -167,6 +180,7 @@ import dayjs from "dayjs";
 import ResizeObserver from "resize-observer-polyfill";
 import {
   scaleList,
+  isDayScale,
   getBeginTimeOfTimeLine,
   calcScalesAbout2Times
 } from "./utils/timeLineUtils.js";
@@ -224,7 +238,7 @@ export default {
       type: Number,
       default: 60,
       validator(value) {
-        return scaleList.includes(value);
+        return scaleList.includes(value) || isDayScale(value);
       }
     },
     datas: {
@@ -308,7 +322,12 @@ export default {
       //先渲染出空框架，在mounted后再得到真实的渲染范围，然后在根据范围渲染数据，比之前设置一个默认高度宽度，额外的渲染浪费更少了
       heightOfBlocksWrapper: 0,
       widthOfBlocksWrapper: 0,
-      scrollBarWitdh: 17
+      scrollBarWitdh: 17,
+      dayjs,
+      preTouchPosition: {
+        x: 0,
+        y: 0
+      }
     };
   },
 
@@ -331,7 +350,10 @@ export default {
         timeRangeCorrection &&
         (start.isAfter(end) || totalWidth <= widthOfBlocksWrapper)
       ) {
-        end = start.add((widthOfBlocksWrapper / cellWidth) * scale, "minute");
+        end = getBeginTimeOfTimeLine(start, scale).add(
+          (widthOfBlocksWrapper / cellWidth) * scale,
+          "minute"
+        );
       }
       return end;
     },
@@ -460,6 +482,24 @@ export default {
   },
 
   methods: {
+    touchMoveHandle(e) {
+      const finger = e.touches[0];
+      this.wheelHandle({
+        deltaX: this.preTouchPosition.x - finger.screenX,
+        deltaY: this.preTouchPosition.y - finger.screenY
+      });
+      this.preTouchPosition.x = finger.screenX;
+      this.preTouchPosition.y = finger.screenY;
+    },
+    touchStartHandle(e) {
+      const finger = e.touches[0];
+      this.preTouchPosition.x = finger.screenX;
+      this.preTouchPosition.y = finger.screenY;
+    },
+    touchEndHandle() {
+      this.preTouchPosition.x = 0;
+      this.preTouchPosition.y = 0;
+    },
     getWidthAbout2Times(start, end) {
       const options = {
         scale: this.scale,

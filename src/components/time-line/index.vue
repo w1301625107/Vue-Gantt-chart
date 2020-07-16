@@ -1,30 +1,55 @@
 <template>
   <div class="gantt-timeline" :style="{ 'margin-left': -cellWidth / 2 + 'px' }">
     <div
-      class="gantt-timeline-block"
-      v-for="(day, index) in getDays"
-      :style="{ width: getTimeScales(day).length * cellWidth + 'px' }"
-      :key="index"
-    >
-      <div class="gantt-timeline-day " :style="heightStyle">
-        {{ day.format("MM/DD") }}
+      v-if="lazy"
+      class="gantt-timeline-padding_block"
+      :style="{ width: paddingWidth + 'px' }"
+    ></div>
+    <template v-for="(day, index) in allDayBlocks">
+      <div
+        class="gantt-timeline-block"
+        v-if="!lazy || isInRenderingDayRange(day)"
+        :style="{ width: getTimeScales(day).length * cellWidth + 'px' }"
+        :key="index"
+      >
+        <slot :day="day" :getTimeScales="getTimeScales">
+          <div class="gantt-timeline-day " :style="heightStyle">
+            {{ day.format("MM/DD") }}
+          </div>
+          <div
+            v-if="!isDayScale"
+            class="gantt-timeline-scale "
+            :style="heightStyle"
+          >
+            <div
+              :style="cellWidthStyle"
+              v-for="(time, index) in getTimeScales(day)"
+              :key="index"
+            >
+              {{ scale >= 60 ? time.format("HH") : time.format("HH:mm") }}
+            </div>
+          </div>
+        </slot>
       </div>
-      <div class="gantt-timeline-scale " :style="heightStyle">
-        <div
-          :style="cellWidthStyle"
-          v-for="(hour, index) in getTimeScales(day)"
-          :key="index"
-        >
-          {{ hour }}
-        </div>
-      </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script>
 import dayjs from "dayjs";
-import { getBeginTimeOfTimeLine } from "../../utils/timeLineUtils.js";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isBetween from "dayjs/plugin/isBetween";
+
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isBetween);
+
+import {
+  isDayScale,
+  MINUTE_OF_ONE_DAY,
+  getBeginTimeOfTimeLine
+} from "../../utils/timeLineUtils.js";
 
 const START_DAY = Symbol();
 const MIDDLE_DAY = Symbol();
@@ -32,6 +57,10 @@ const END_DAY = Symbol();
 
 function isSameDay(one, two) {
   return one.isSame(two, "day");
+}
+
+function isSameOrBetween(start, end, mid) {
+  return mid.isSameOrAfter(start) && mid.isSameOrBefore(end);
 }
 
 export default {
@@ -52,23 +81,64 @@ export default {
     },
     scale: {
       type: Number
+    },
+    endTimeOfRenderArea: [dayjs, null],
+    startTimeOfRenderArea: [dayjs, null],
+    getPositonOffset: {
+      type: Function
+    },
+    lazy: {
+      type: Boolean,
+      default: true
     }
   },
 
   computed: {
+    startDayOfRenderArea() {
+      return this.startTimeOfRenderArea.startOf("day");
+    },
+    endDayOfRenderArea() {
+      return this.endTimeOfRenderArea.endOf("day");
+    },
+    paddingWidth() {
+      const { allDayBlocks, scale, startDayOfRenderArea } = this;
+      const temp = allDayBlocks.find(day => {
+        if (
+          scale >= MINUTE_OF_ONE_DAY &&
+          startDayOfRenderArea.isBetween(
+            day,
+            day.add(scale / MINUTE_OF_ONE_DAY, "day")
+          )
+        ) {
+          return true;
+        } else {
+          return isSameDay(day, startDayOfRenderArea);
+        }
+      });
+      if (!temp || temp == allDayBlocks[0]) {
+        return 0;
+      } else {
+        return this.getPositonOffset(temp.toString());
+      }
+    },
+    isDayScale() {
+      const { scale } = this;
+      return isDayScale(scale);
+    },
     /**
      * 天列表
      * @returns {[dayjs]} 该data中所有需要渲染的数据
      */
-    getDays() {
+    allDayBlocks() {
       const temp = [];
-      let { start, end } = this;
-
-      for (; !isSameDay(start, end); start = start.add(1, "day")) {
-        temp.push(start);
+      let { start, end, scale, isDayScale } = this;
+      let tempStart = start.clone().startOf("day");
+      let addNum =
+        isDayScale && scale > MINUTE_OF_ONE_DAY ? scale / MINUTE_OF_ONE_DAY : 1;
+      while (tempStart.isSameOrBefore(end)) {
+        temp.push(tempStart);
+        tempStart = tempStart.add(addNum, "day");
       }
-      temp.push(start);
-
       return temp;
     },
     cellWidthStyle() {
@@ -78,13 +148,31 @@ export default {
     },
     heightStyle() {
       return {
-        height: this.titleHeight / 2 + "px",
-        "line-height": this.titleHeight / 2 + "px"
+        height: this.titleHeight / (this.isDayScale ? 1 : 2) + "px",
+        "line-height": this.titleHeight / (this.isDayScale ? 1 : 2) + "px"
       };
     }
   },
 
   methods: {
+    isInRenderingDayRange(day) {
+      const { startDayOfRenderArea, endDayOfRenderArea, scale } = this;
+      if (
+        scale >= MINUTE_OF_ONE_DAY &&
+        startDayOfRenderArea.isBetween(
+          day,
+          day.add(scale / MINUTE_OF_ONE_DAY, "day")
+        )
+      ) {
+        return true;
+      } else if (
+        isSameOrBetween(startDayOfRenderArea, endDayOfRenderArea, day)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     /**
      * 获取时间刻度数组
      *
@@ -134,11 +222,7 @@ export default {
           throw new TypeError("错误的计算类型");
       }
       while (!a.isAfter(b)) {
-        if (scale >= 60) {
-          totalblock.push(a.format("HH"));
-        } else {
-          totalblock.push(a.format("HH:mm"));
-        }
+        totalblock.push(a);
         a = a.add(scale, "minute");
       }
 

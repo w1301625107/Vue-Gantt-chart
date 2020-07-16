@@ -93,5 +93,10 @@ describe('测试timeLineUtils.js', function() {
         .to.be.true;
     });
 
+    it('大于一天正常值', function() {
+      expect(func.validateScale(4320))
+        .to.be.true;
+    })
+
   });
 });
