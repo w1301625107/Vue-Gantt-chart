@@ -96,7 +96,12 @@
               </template>
             </LeftBar>
           </div>
-          <div ref="blocksWrapper" class="gantt-blocks-wrapper">
+          <div
+            ref="blocksWrapper"
+            class="gantt-blocks-wrapper"
+            @mousedown="e => (enableGrab ? mouseDownHandle(e) : noop)"
+            @mouseup="e => (enableGrab ? mouseUpHandle(e) : noop)"
+          >
             <blocks
               :scrollTop="scrollTop"
               :scrollLeft="scrollLeft"
@@ -184,7 +189,7 @@ import {
   getBeginTimeOfTimeLine,
   calcScalesAbout2Times
 } from "./utils/timeLineUtils.js";
-import { isDef, warn } from "./utils/tool.js";
+import { isDef, warn, noop } from "./utils/tool.js";
 import {
   getPositonOffset as _getPositonOffset,
   getWidthAbout2Times as _getWidthAbout2Times
@@ -217,6 +222,10 @@ export default {
         if (!ok) warn(`非法的结束时间 ${date}`);
         return ok;
       }
+    },
+    enableGrab: {
+      type: Boolean,
+      default: true
     },
     cellWidth: {
       type: Number,
@@ -324,6 +333,7 @@ export default {
       widthOfBlocksWrapper: 0,
       scrollBarWitdh: 17,
       dayjs,
+      noop,
       preTouchPosition: {
         x: 0,
         y: 0
@@ -482,6 +492,27 @@ export default {
   },
 
   methods: {
+    mouseDownHandle() {
+      this.$refs.blocksWrapper.style.cursor = "grabbing";
+      this.$refs.blocksWrapper.addEventListener(
+        "mousemove",
+        this.mouseMoveHandle
+      );
+    },
+    mouseMoveHandle(e) {
+      const { movementX, movementY } = e;
+      this.wheelHandle({
+        deltaX: -movementX,
+        deltaY: -movementY
+      });
+    },
+    mouseUpHandle() {
+      this.$refs.blocksWrapper.style.cursor = "default";
+      this.$refs.blocksWrapper.removeEventListener(
+        "mousemove",
+        this.mouseMoveHandle
+      );
+    },
     touchMoveHandle(e) {
       const finger = e.touches[0];
       this.wheelHandle({
