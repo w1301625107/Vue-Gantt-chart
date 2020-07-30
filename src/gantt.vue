@@ -441,33 +441,13 @@ export default {
   watch: {
     scrollToTime: {
       handler(newV) {
-        if (!newV) {
-          return;
-        }
-        const { start, end } = this;
-        const time = dayjs(newV);
-        if (!(time.isAfter(start) && time.isBefore(end))) {
-          warn(`当前滚动至${newV}不在${start}和${end}的范围之内`);
-          return;
-        }
-        const offset = this.getPositonOffset(newV);
-        this.$nextTick(this.manualScroll(offset));
+        this.scrollToTimehandle(newV);
       },
       immediate: true
     },
     scrollToPostion: {
       handler(newV) {
-        if (!newV) {
-          return;
-        }
-        const x = Number.parseFloat(newV.x);
-        const y = Number.parseFloat(newV.y);
-        if (!Number.isNaN(x) && x !== this.scrollLeft) {
-          this.$nextTick(this.manualScroll(x));
-        }
-        if (!Number.isNaN(y) && y !== this.scrollTop) {
-          this.$nextTick(this.manualScroll(undefined, y));
-        }
+        this.scrollToPostionHandle(newV);
       },
       immediate: true
     }
@@ -492,6 +472,32 @@ export default {
   },
 
   methods: {
+    scrollToTimehandle(newV) {
+      if (!newV) {
+        return;
+      }
+      const { start, end } = this;
+      const time = dayjs(newV);
+      if (!(time.isAfter(start) && time.isBefore(end))) {
+        warn(`当前滚动至${newV}不在${start}和${end}的范围之内`);
+        return;
+      }
+      const offset = this.getPositonOffset(newV);
+      this.$nextTick(this.manualScroll(offset));
+    },
+    scrollToPostionHandle(newV) {
+      if (!newV) {
+        return;
+      }
+      const x = Number.parseFloat(newV.x);
+      const y = Number.parseFloat(newV.y);
+      if (!Number.isNaN(x) && x !== this.scrollLeft) {
+        this.$nextTick(this.manualScroll(x));
+      }
+      if (!Number.isNaN(y) && y !== this.scrollTop) {
+        this.$nextTick(this.manualScroll(undefined, y));
+      }
+    },
     mouseDownHandle() {
       this.$refs.blocksWrapper.style.cursor = "grabbing";
       this.$refs.blocksWrapper.addEventListener(
