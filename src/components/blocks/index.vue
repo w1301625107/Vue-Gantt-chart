@@ -92,6 +92,18 @@ export default {
         backgroundSize: `${this.cellWidth}px ${this.cellHeight}px`,
         height: `${this.cellHeight}px`
       };
+    },
+    precondition() {
+      if (this.heightOfBlocksWrapper === 0) {
+        return false;
+      }
+      if (
+        isUndef(this.startTimeOfRenderArea) ||
+        isUndef(this.endTimeOfRenderArea)
+      ) {
+        return false;
+      }
+      return true;
     }
   },
 
@@ -119,35 +131,20 @@ export default {
      * @returns {boolean}
      */
     isInRenderingTimeRangeOrIsAcrossRenderingTimeRange(timeStart, timeEnd) {
-      if (this.heightOfBlocksWrapper === 0) {
+      if (!this.precondition) {
         return false;
       }
 
       const { startTimeOfRenderArea, endTimeOfRenderArea } = this;
-      if (isUndef(startTimeOfRenderArea) || isUndef(endTimeOfRenderArea)) {
-        return false;
-      }
-
       const timeStartToMs = new Date(timeStart).getTime();
       const timeEndToMs = new Date(timeEnd).getTime();
       if (
-        startTimeOfRenderArea >= timeStartToMs &&
-        timeEndToMs >= endTimeOfRenderArea
+        timeStartToMs <= endTimeOfRenderArea &&
+        timeEndToMs >= startTimeOfRenderArea
       ) {
         return true;
       }
-      if (
-        startTimeOfRenderArea <= timeStartToMs &&
-        timeStartToMs <= endTimeOfRenderArea
-      ) {
-        return true;
-      }
-      if (
-        startTimeOfRenderArea <= timeEndToMs &&
-        timeEndToMs <= endTimeOfRenderArea
-      ) {
-        return true;
-      }
+
       return false;
     },
     /**
@@ -157,15 +154,11 @@ export default {
      * @returns {boolean}
      */
     isInRenderingTimeRange(time) {
-      if (this.heightOfBlocksWrapper === 0) {
+      if (!this.precondition) {
         return false;
       }
 
       const { startTimeOfRenderArea, endTimeOfRenderArea } = this;
-      if (isUndef(startTimeOfRenderArea) || isUndef(endTimeOfRenderArea)) {
-        return false;
-      }
-
       const timeToMs = new Date(time).getTime();
       if (
         startTimeOfRenderArea <= timeToMs &&
@@ -183,14 +176,10 @@ export default {
      * @returns {boolean}
      */
     isAcrossRenderingTimeRange(timeStart, timeEnd) {
-      if (this.heightOfBlocksWrapper === 0) {
+      if (!this.precondition) {
         return false;
       }
-
       const { startTimeOfRenderArea, endTimeOfRenderArea } = this;
-      if (isUndef(startTimeOfRenderArea) || isUndef(endTimeOfRenderArea)) {
-        return false;
-      }
 
       const timeStartToMs = new Date(timeStart).getTime();
       const timeEndToMs = new Date(timeEnd).getTime();
