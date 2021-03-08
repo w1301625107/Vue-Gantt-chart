@@ -31,7 +31,8 @@
     - [timeline 行名slot](#timeline-时间轴slot)       
     - [title 标题slot](#title-标题slot)  
 - [API](#api)    
-  - [Param](#param)    
+  - [Param](#param) 
+  - [Method](#method)  
   - [Event](#event)  
 - [Run Demo](#run-demo)    
 - [Caution](#caution)  
@@ -387,6 +388,43 @@ export default {
 	width: 300px;
 }
 </style>
+
+
+
+### Method
+
+通过使用`vue`的`ref`来调用组件内部的方法，`params`中的`scrollToTime`和`scrollToPostion`可能会择机废弃，最好使用下方的方法替代。
+
+<div class="event">
+
+| method | args | describle|
+| :---  |:-----:|:---------|
+| scrollToPostionHandle|positon:{x:number,y:number} | 滚动到指定位置|
+| scrollToTimehandle | time:string | 滚动到指定时间|
+
+</div>
+
+#### example
+
+```html
+<template>
+  <v-gantt-chart ref="gantt"></v-gantt-chart>
+</template>
+```
+```js
+export default {
+  methods:{
+    doScrollToPostion(){
+      this.$refs.gantt.scrollToPostionHandle({x:100,y:100})
+    },
+    doScrollToTime(){
+      this.$refs.gantt.scrollToTimehandle("Fri, 31 Jul 2020 12:41:39 GMT")
+    }
+  }
+};
+```
+
+
 
 
 

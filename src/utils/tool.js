@@ -23,3 +23,7 @@ export function warn(str) {
   // eslint-disable-next-line
   console.warn(str)
 }
+
+export function noop() {
+  console.log("do nothing");
+}
