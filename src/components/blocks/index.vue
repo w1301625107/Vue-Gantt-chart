@@ -1,12 +1,12 @@
 <template>
-  <div class="gantt-blocks" :style="{ height: blockHeight + 'px' }">
+  <div class="gantt-blocks" :style="blocksStyle">
     <div
       class="gantt-block gantt-block-top-space"
       :style="{ height: topSpace + 'px' }"
     ></div>
     <div
       class="gantt-block"
-      :style="blockStyle"
+      :style="{ height: `${cellHeight}px` }"
       v-for="(data, index) in showDatas"
       :key="dataKey ? data[dataKey] : index"
     >
@@ -87,10 +87,10 @@ export default {
       }
       return ["gtArray"];
     },
-    blockStyle() {
+    blocksStyle() {
       return {
         backgroundSize: `${this.cellWidth}px ${this.cellHeight}px`,
-        height: `${this.cellHeight}px`
+        height: `${this.blockHeight}px`
       };
     },
     precondition() {

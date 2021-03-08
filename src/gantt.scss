@@ -4,6 +4,8 @@ $font-gray:#777;
 
 .gantt {
   &-chart {
+    will-change: transform;
+
     position: relative;
     overflow: hidden;
     height: 100%;
@@ -117,6 +119,8 @@ $font-gray:#777;
   }
 
   &-blocks {
+    background-image: linear-gradient(rgba(236, 236, 236) 1px, transparent 0),
+    linear-gradient(90deg, rgba(236, 236, 236) 1px, transparent 0);
     &-wrapper {
       overflow: hidden;
     }
@@ -124,8 +128,6 @@ $font-gray:#777;
 
   &-block {
     position: relative;
-    background-image: url('./assets/block.png');
-    background-repeat: repeat;
 
     &-container {
       position: relative;
