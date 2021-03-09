@@ -369,6 +369,7 @@ export default {
 | hideHeader |    ❌     | boolean  |   false   | 隐藏时间轴和表头 |
 | hideXScrollBar |    ❌     | boolean  |   false   | 隐藏横向滚动轴 |
 | hideYScrollBar |    ❌     | boolean  |   false   | 隐藏纵向滚动轴 |
+| enableGrab |    ❌     | boolean  |   true   | 启动按住拖拽 |
 | customGenerateBlocks |    ❌     | boolean  |   false | 开启自定义生成渲染块，具体使用见说明 |
 | timeRangeCorrection |    ❌     | boolean  |   false | 时间矫正，默认开启。关闭后时间轴不会自动填充剩余空间，错误的先后时间会引起错误 |
 | preload |    ❌     | number  |   1 | 可视范围外渲染行数。如值为1时，屏幕只能显示10条，但是会顶部，底部会多渲染一条，避免滚动时出现空白。当值为0，渲染全部数据 |
