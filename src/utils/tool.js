@@ -24,6 +24,4 @@ export function warn(str) {
   console.warn(str)
 }
 
-export function noop() {
-  console.log("do nothing");
-}
+export function noop() {}

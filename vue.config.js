@@ -1,5 +1,5 @@
-const webpack = require('webpack');
-const config = require('./package.json')
+const webpack = require("webpack");
+const config = require("./package.json");
 
 module.exports = {
   publicPath: "",
@@ -8,7 +8,7 @@ module.exports = {
   configureWebpack: {
     plugins: [
       new webpack.DefinePlugin({
-        __VERSION__:JSON.stringify(config.version)
+        __VERSION__: JSON.stringify(config.version)
       })
     ]
   }
