@@ -457,6 +457,7 @@ yarn serve
 
 ## Caution
 - IE 需要自己处理一些ployfill,应该是promise
+- IE 浏览器内无法使用yyyy-MM-dd hh:mm:ss的字符串形式初始化,需要注意时间的格式
 - MacOS 系统需要在偏好设置中的通用开启始终显示滚动条，否则可能会看不到滚动条
 - 注意查看vue 版本，不是2.6以上vue版本，不能直接使用demo中的v-slot的语法，需要使用旧的slot 语法[2.6之前的slot 语法](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%BA%9F%E5%BC%83%E4%BA%86%E7%9A%84%E8%AF%AD%E6%B3%95)
 	```js
