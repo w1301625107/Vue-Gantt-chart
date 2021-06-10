@@ -1,18 +1,5 @@
 import gantt from "./gantt.vue";
 
-// 定义我们的插件
-// const myPlugin = {
-//   // eslint-disable-next-line
-//   version:__VERSION__,
-//   // 该插件有一个install方法
-//   // 方法的第一个参数是传入的Vue，第二个参数可以插件的自定义参数
-//   // eslint-disable-next-line
-//   install(Vue, options) {
-//     // 将其注册为vue的组件，'gantt'是组件名
-//     Vue.component("v-gantt-chart", gantt);
-//   }
-// };
-
 gantt.version = "__VERSION__";
 gantt.install = function(Vue) {
   //     // 将其注册为vue的组件，'gantt'是组件名

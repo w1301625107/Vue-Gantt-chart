@@ -70,7 +70,7 @@ Vue.use(vGanttChart);
 
 ### 使用链接引入
 ```html
-<script src="https://unpkg.com/v-gantt-chart/dist/v-gantt-chart.js"></script>
+<script src="https://unpkg.com/v-gantt-chart/dist/v-gantt-chart.umd.min.js"></script>
 ```
 
 ```html
@@ -371,7 +371,7 @@ export default {
 | hideYScrollBar |    ❌     | boolean  |   false   | 隐藏纵向滚动轴 |
 | enableGrab |    ❌     | boolean  |   true   | 启动按住拖拽 |
 | customGenerateBlocks |    ❌     | boolean  |   false | 开启自定义生成渲染块，具体使用见说明 |
-| timeRangeCorrection |    ❌     | boolean  |   false | 时间矫正，默认开启。关闭后时间轴不会自动填充剩余空间，错误的先后时间会引起错误 |
+| timeRangeCorrection |    ❌     | boolean  |   true | 时间矫正，默认开启。关闭后时间轴不会自动填充剩余空间，错误的先后时间会引起错误 |
 | preload |    ❌     | number  |   1 | 可视范围外渲染行数。如值为1时，屏幕只能显示10条，但是会顶部，底部会多渲染一条，避免滚动时出现空白。当值为0，渲染全部数据 |
 
 
@@ -489,6 +489,10 @@ yarn serve
 
 
 ## Update
+1.5.2
+- 修复文档中的错误的默认值
+- 修改导出的内容，支持页面单独引入
+
 1.5.1
 - 使用css来绘制网格获取更好的显示效果
 - 优化一点点性能

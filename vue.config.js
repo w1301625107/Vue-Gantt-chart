@@ -11,5 +11,6 @@ module.exports = {
         __VERSION__: JSON.stringify(config.version)
       })
     ]
-  }
+  },
+  productionSourceMap: false
 };
