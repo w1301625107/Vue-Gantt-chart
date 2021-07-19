@@ -1,15 +1,3 @@
-<template>
-  <div
-    v-show="visible"
-    class="gantt-markline"
-    :style="{ 'background-color': color, left: getPosition() + 'px' }"
-  >
-    <div class="gantt-markline-label" :style="{ 'background-color': color }">
-      {{ dayjs(markLineTime).format("HH:mm:ss") }}
-    </div>
-  </div>
-</template>
-
 <script>
 import dayjs from "dayjs";
 export default {
@@ -31,20 +19,47 @@ export default {
   },
   data() {
     return {
-      visible: false,
       dayjs: dayjs
     };
+  },
+  computed: {
+    visible() {
+      return this.markLineTime == null ? false : true;
+    }
   },
   methods: {
     getPosition() {
       if (this.markLineTime == null) {
-        this.visible = false;
         return 0;
       } else {
-        this.visible = true;
         return this.getPositonOffset(this.markLineTime);
       }
     }
+  },
+  // eslint-disable-next-line
+  render: function(h) {
+    const { visible, getPosition, color, markLineTime } = this;
+    if (!visible) {
+      return null;
+    }
+    let vnode =
+      this.$scopedSlots.default &&
+      this.$scopedSlots.default({ markLineTime, getPosition });
+
+    const px = getPosition();
+
+    return !vnode ? (
+      <div
+        class="gantt-markline"
+        style={{ "background-color": color, left: px + "px" }}
+      >
+        <div class="gantt-markline-label" style={{ "background-color": color }}>
+          {dayjs(markLineTime).format("HH:mm:ss")}
+        </div>
+      </div>
+    ) : (
+      vnode
+    );
   }
 };
 </script>

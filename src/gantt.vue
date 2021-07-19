@@ -72,7 +72,15 @@
               :markLineTime="times.time"
               :getPositonOffset="getPositonOffset"
               :color="times.color"
-            ></mark-line>
+            >
+              <template v-slot="{ markLineTime, getPosition }">
+                <slot
+                  name="markLine"
+                  :markLineTime="markLineTime"
+                  :getPosition="getPosition"
+                ></slot>
+              </template>
+            </mark-line>
           </div>
           <div
             ref="leftbarWrapper"
@@ -99,8 +107,8 @@
           <div
             ref="blocksWrapper"
             class="gantt-blocks-wrapper"
-            @mousedown="e => (enableGrab ? mouseDownHandle(e) : noop)"
-            @mouseup="e => (enableGrab ? mouseUpHandle(e) : noop)"
+            @mousedown="(e) => (enableGrab ? mouseDownHandle(e) : noop)"
+            @mouseup="(e) => (enableGrab ? mouseUpHandle(e) : noop)"
           >
             <blocks
               :scrollTop="scrollTop"
@@ -456,8 +464,8 @@ export default {
   mounted() {
     this.cacheSelector();
     // 计算准确的渲染区域范围
-    const observeContainer = throttle(entries => {
-      entries.forEach(entry => {
+    const observeContainer = throttle((entries) => {
+      entries.forEach((entry) => {
         const cr = entry.contentRect;
         this.heightOfBlocksWrapper = cr.height;
         this.widthOfBlocksWrapper = cr.width;
