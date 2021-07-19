@@ -166,6 +166,9 @@
         <template v-slot:title>
           铁胆火车侠日程表
         </template>
+        <template v-slot:markLine="{markLineTime, getPosition}" >
+          <TestMarkline :markLineTime="markLineTime" :getPosition="getPosition"></TestMarkline>
+        </template>
       </v-gantt-chart>
     </div>
     <footer class="main-footer">
@@ -180,6 +183,8 @@
 import Test from "./components/test.vue"
 import TestLeft from "./components/test-left.vue"
 import TestTimeline from "./components/test-timeline.vue"
+import TestMarkline from "./components/test-markline.vue"
+
 import { mockDatas } from "./mock/index.js"
 import dayjs from "dayjs"
 
@@ -202,7 +207,7 @@ const scaleList = `1,2,3,4,5,6,10,12,15,20,30,60,120,180,240,360,720,1440,2880,4
   })
 export default {
   name: "App",
-  components: { Test, TestLeft,TestTimeline },
+  components: { Test, TestLeft,TestTimeline,TestMarkline },
   data() {
     return {
       timeLines: [

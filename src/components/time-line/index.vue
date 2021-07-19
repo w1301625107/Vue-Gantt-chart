@@ -102,7 +102,7 @@ export default {
     },
     paddingWidth() {
       const { allDayBlocks, scale, startDayOfRenderArea } = this;
-      const temp = allDayBlocks.find(day => {
+      const temp = allDayBlocks.find((day) => {
         if (
           scale >= MINUTE_OF_ONE_DAY &&
           startDayOfRenderArea.isBetween(

@@ -320,6 +320,20 @@ export default {
 </template>
 ```
 
+### markline 时间标记线slot
+```html
+<template v-slot:markLine="{markLineTime, getPosition}">
+    <!-- 你的时间标记线组件 -->
+    <TestMarkline :markLineTime="markLineTime" :getPosition="getPosition"></TestMarkline>
+</template>
+```
+
+`markLineTime` 为 传人的`timelines`的每一个值
+
+`getPosition(day:string):number` 
+计算当前时间的偏移值，参数为day,返回偏移值
+
+
 ### title 标题slot
 
 ```html
@@ -489,6 +503,9 @@ yarn serve
 
 
 ## Update
+1.6.0
+- 添加markline slot 支持
+
 1.5.2
 - 修复文档中的错误的默认值
 - 修改导出的内容，支持页面单独引入

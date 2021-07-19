@@ -34,5 +34,5 @@ Vue.use(Option);
 Vue.use(Checkbox);
 
 new Vue({
-  render: h => h(App)
+  render: (h) => h(App)
 }).$mount("#app");
