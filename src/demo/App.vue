@@ -166,8 +166,8 @@
         <template v-slot:title>
           铁胆火车侠日程表
         </template>
-        <template v-slot:markLine="{markLineTime, getPosition}" >
-          <TestMarkline :markLineTime="markLineTime" :getPosition="getPosition"></TestMarkline>
+        <template v-slot:markLine="{timeConfig, getPosition}" >
+          <TestMarkline :timeConfig="timeConfig" :getPosition="getPosition"></TestMarkline>
         </template>
       </v-gantt-chart>
     </div>
@@ -214,12 +214,14 @@ export default {
         {
           time: dayjs()
             .add(2, "hour")
-            .toString()
+            .toString(),
+          text:'~~',
         },
         {
           time: dayjs()
             .add(5, "hour")
             .toString(),
+          text:'try',
           color: "#747e80"
         }
       ],
@@ -275,10 +277,12 @@ export default {
     updateTimeLines(timeA, timeB) {
       this.timeLines = [
         {
-          time: timeA
+          time: timeA,
+          text:'自定义'
         },
         {
           time: timeB,
+          text:'测试',
           color: "#747e80"
         }
       ];

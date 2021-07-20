@@ -4,7 +4,7 @@
     :style="{  left: getPosition() + 'px' }"
   >
     <div class="markline-label">
-      自定义{{ dayjs(markLineTime).format("HH:mm:ss") }}
+      {{timeConfig.text}}{{ dayjs(timeConfig.time).format("HH:mm:ss") }}
     </div>
   </div>
 </template>
@@ -13,7 +13,7 @@
 import dayjs from "dayjs"
 export default {
   name: "TestMarkLine",
-	props:['getPosition','markLineTime'],
+	props:['getPosition','timeConfig'],
 	data(){
 		return {
 			dayjs

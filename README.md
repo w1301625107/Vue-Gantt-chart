@@ -28,6 +28,7 @@
       - [⭐️ `customGenerateBlocks` 为 `false`（默认值） 的情况](#⭐️-customgenerateblocks-为-false默认值-的情况)      
       - [⭐️ `customGenerateBlocks` 为 `true` 的情况](#⭐️-customgenerateblocks-为-true-的情况)    
     - [left 行名slot](#left-行名slot) 
+    - [markline 时间标记线slot](#markline 时间标记线slot) 
     - [timeline 行名slot](#timeline-时间轴slot)       
     - [title 标题slot](#title-标题slot)  
 - [API](#api)    
@@ -322,13 +323,13 @@ export default {
 
 ### markline 时间标记线slot
 ```html
-<template v-slot:markLine="{markLineTime, getPosition}">
+<template v-slot:markLine="{timeConfig, getPosition}">
     <!-- 你的时间标记线组件 -->
-    <TestMarkline :markLineTime="markLineTime" :getPosition="getPosition"></TestMarkline>
+    <TestMarkline :timeConfig="timeConfig" :getPosition="getPosition"></TestMarkline>
 </template>
 ```
 
-`markLineTime` 为 传人的`timelines`的每一个值
+`timeConfig` 为 传入的`timelines`的每一个值
 
 `getPosition(day:string):number` 
 计算当前时间的偏移值，参数为day,返回偏移值
@@ -503,6 +504,9 @@ yarn serve
 
 
 ## Update
+1.6.1
+- markline slot 字段调整
+
 1.6.0
 - 添加markline slot 支持
 
