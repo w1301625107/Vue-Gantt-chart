@@ -67,16 +67,15 @@
               :getPositonOffset="getPositonOffset"
             />
             <mark-line
-              v-for="(times, index) in timeLines"
+              v-for="(timeConfig, index) in timeLines"
               :key="index"
-              :markLineTime="times.time"
+              :timeConfig="timeConfig"
               :getPositonOffset="getPositonOffset"
-              :color="times.color"
             >
-              <template v-slot="{ markLineTime, getPosition }">
+              <template v-slot="{ timeConfig, getPosition }">
                 <slot
                   name="markLine"
-                  :markLineTime="markLineTime"
+                  :timeConfig="timeConfig"
                   :getPosition="getPosition"
                 ></slot>
               </template>

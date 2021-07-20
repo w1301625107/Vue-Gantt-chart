@@ -1,8 +1,7 @@
 <template>
   <mark-line
-    :markLineTime="currentTime"
+    :timeConfig="{ time: currentTime, color: 'rgba(255,0,0,.4)' }"
     :getPositonOffset="getPositonOffset"
-    color="rgba(255,0,0,.4)"
   ></mark-line>
 </template>
 

@@ -3,14 +3,9 @@ import dayjs from "dayjs";
 export default {
   name: "MarkLine",
   props: {
-    markLineTime: {
-      validator(date) {
-        return dayjs(date).isValid();
-      }
-    },
-    color: {
-      type: String,
-      default: "#0ca30a"
+    timeConfig: {
+      type: Object,
+      required: true
     },
     getPositonOffset: {
       type: Function,
@@ -24,37 +19,45 @@ export default {
   },
   computed: {
     visible() {
-      return this.markLineTime == null ? false : true;
+      return this.timeConfig.time == null || this.timeConfig.time == undefined
+        ? false
+        : true;
     }
   },
   methods: {
     getPosition() {
-      if (this.markLineTime == null) {
+      if (!this.visible) {
         return 0;
       } else {
-        return this.getPositonOffset(this.markLineTime);
+        return this.getPositonOffset(this.timeConfig.time);
       }
     }
   },
   // eslint-disable-next-line
   render: function(h) {
-    const { visible, getPosition, color, markLineTime } = this;
+    const { visible, getPosition, timeConfig } = this;
     if (!visible) {
       return null;
     }
     let vnode =
       this.$scopedSlots.default &&
-      this.$scopedSlots.default({ markLineTime, getPosition });
+      this.$scopedSlots.default({ timeConfig, getPosition });
 
     const px = getPosition();
 
     return !vnode ? (
       <div
         class="gantt-markline"
-        style={{ "background-color": color, left: px + "px" }}
+        style={{
+          "background-color": timeConfig.color || "#0ca30a",
+          left: px + "px"
+        }}
       >
-        <div class="gantt-markline-label" style={{ "background-color": color }}>
-          {dayjs(markLineTime).format("HH:mm:ss")}
+        <div
+          class="gantt-markline-label"
+          style={{ "background-color": timeConfig.color || "#0ca30a" }}
+        >
+          {dayjs(timeConfig.time).format("HH:mm:ss")}
         </div>
       </div>
     ) : (
