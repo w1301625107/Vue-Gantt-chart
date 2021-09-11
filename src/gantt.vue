@@ -476,10 +476,10 @@ export default {
     },
     mouseMoveHandle(e) {
       const { movementX, movementY } = e;
-      this.wheelHandle({
-        deltaX: -movementX,
-        deltaY: -movementY
-      });
+      this.manualScroll(
+        -movementX + this.scrollLeft,
+        -movementY + this.scrollTop
+      );
     },
     mouseUpHandle() {
       this.$refs.blocksWrapper.style.cursor = "default";
@@ -490,10 +490,10 @@ export default {
     },
     touchMoveHandle(e) {
       const finger = e.touches[0];
-      this.wheelHandle({
-        deltaX: this.preTouchPosition.x - finger.screenX,
-        deltaY: this.preTouchPosition.y - finger.screenY
-      });
+      this.manualScroll(
+        this.scrollLeft + (this.preTouchPosition.x - finger.screenX),
+        this.scrollTop + (this.preTouchPosition.y - finger.screenY)
+      );
       this.preTouchPosition.x = finger.screenX;
       this.preTouchPosition.y = finger.screenY;
     },
@@ -544,9 +544,8 @@ export default {
     },
     manualScroll(x, y) {
       const { gantt_table } = this.selector;
-
-      gantt_table.scrollLeft = x;
-      gantt_table.scrollTop = y;
+      if (x != undefined) gantt_table.scrollLeft = x;
+      if (y != undefined) gantt_table.scrollTop = y;
     },
     setScrollbarProps() {
       const { gantt_table } = this.selector;
