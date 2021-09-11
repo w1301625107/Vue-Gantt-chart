@@ -1,5 +1,6 @@
 <template>
-  <div class="gantt-timeline" :style="{ 'margin-left': -cellWidth / 2 + 'px' }">
+  <div class="gantt-timeline">
+    <!-- <div class="gantt-timeline" :style="{ 'margin-left': -cellWidth / 2 + 'px' }"> -->
     <div
       v-if="lazy"
       class="gantt-timeline-padding_block"
@@ -149,7 +150,8 @@ export default {
     heightStyle() {
       return {
         height: this.titleHeight / (this.isDayScale ? 1 : 2) + "px",
-        "line-height": this.titleHeight / (this.isDayScale ? 1 : 2) + "px"
+        "line-height": this.titleHeight / (this.isDayScale ? 1 : 2) + "px",
+        "margin-left": -this.cellWidth / 2 + "px"
       };
     }
   },

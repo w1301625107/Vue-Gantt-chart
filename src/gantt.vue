@@ -6,18 +6,8 @@
     @touchmove.passive="touchMoveHandle"
     @touchend.passive="touchEndHandle"
   >
-    <div
-      class="gantt-container"
-      :style="{
-        height: `calc(100% - ${scrollXBarHeight}px)`,
-        width: `calc(100% - ${scrollYBarWidth}px)`
-      }"
-    >
-      <div
-        v-show="!hideHeader"
-        class="gantt-header"
-        :style="{ width: `calc(100% + ${scrollYBarWidth}px)` }"
-      >
+    <div class="gantt-container">
+      <div v-show="!hideHeader" class="gantt-header">
         <div
           class="gantt-header-title"
           :style="{
@@ -31,7 +21,10 @@
         <div ref="headerTimeline" class="gantt-header-timeline">
           <div
             class="gantt-timeline-wrapper"
-            :style="{ width: totalWidth + scrollYBarWidth + 'px' }"
+            :style="{
+              width: totalWidth + 'px',
+              paddingRight: scrollYBarWidth + 'px'
+            }"
           >
             <timeline
               :start="start"
@@ -85,8 +78,7 @@
             ref="leftbarWrapper"
             class="gantt-leftbar-wrapper"
             :style="{
-              width: titleWidth + 'px',
-              height: `calc(100% + ${scrollXBarHeight}px)`
+              width: titleWidth + 'px'
             }"
           >
             <LeftBar
@@ -96,7 +88,10 @@
               :heightOfBlocksWrapper="heightOfBlocksWrapper"
               :cellHeight="cellHeight"
               :preload="preload"
-              :style="{ height: totalHeight + scrollXBarHeight + 'px' }"
+              :style="{
+                height: totalHeight + 'px',
+                paddingBottom: scrollXBarHeight + 'px'
+              }"
             >
               <template v-slot="{ data }">
                 <slot name="left" :data="data"> </slot>
@@ -106,6 +101,7 @@
           <div
             ref="blocksWrapper"
             class="gantt-blocks-wrapper"
+            @scroll.passive="wheelHandle"
             @mousedown="(e) => (enableGrab ? mouseDownHandle(e) : noop)"
             @mouseup="(e) => (enableGrab ? mouseUpHandle(e) : noop)"
           >
@@ -127,7 +123,11 @@
               :startTimeOfRenderArea="startTimeOfRenderArea"
               :endTimeOfRenderArea="endTimeOfRenderArea"
               :preload="preload"
-              :style="{ width: totalWidth + 'px' }"
+              :style="{
+                width: totalWidth + 'px',
+                paddingRight: !scrollYBarWidth ? scrollYBarWidth : 0 + 'px',
+                paddingBottom: !scrollXBarHeight ? scrollXBarHeight : 0 + 'px'
+              }"
             >
               <template v-if="!customGenerateBlocks" v-slot="{ data, item }">
                 <slot name="block" :data="data" :item="item"> </slot>
@@ -157,32 +157,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div
-      ref="scrollYBar"
-      class="gantt-scroll-y"
-      :style="{
-        width: `${scrollYBarWidth}px`,
-        height: `calc(100% - ${actualHeaderHeight}px`,
-        marginTop: `${actualHeaderHeight}px`
-      }"
-      @scroll.passive="syncScrollY"
-    >
-      <div :style="{ height: totalHeight + 'px' }"></div>
-    </div>
-
-    <div
-      ref="scrollXBar"
-      class="gantt-scroll-x"
-      :style="{
-        height: `${scrollXBarHeight}px`,
-        width: `calc(100% - ${titleWidth}px )`,
-        marginLeft: titleWidth + 'px'
-      }"
-      @scroll.passive="syncScrollX"
-    >
-      <div :style="{ width: totalWidth + 'px' }"></div>
     </div>
   </div>
 </template>
@@ -344,7 +318,9 @@ export default {
       preTouchPosition: {
         x: 0,
         y: 0
-      }
+      },
+      scrollXBarHeight: 0,
+      scrollYBarWidth: 0
     };
   },
 
@@ -392,21 +368,6 @@ export default {
     },
     beginTimeOfTimeLineToString() {
       return this.beginTimeOfTimeLine.toString();
-    },
-    avialableScrollLeft() {
-      // 不减这个1，滚动到时间轴尽头后继续滚动会慢慢的溢出
-      const { totalWidth, widthOfBlocksWrapper } = this;
-      return totalWidth - widthOfBlocksWrapper - 1;
-    },
-    avialableScrollTop() {
-      const { totalHeight, heightOfBlocksWrapper } = this;
-      return totalHeight - heightOfBlocksWrapper - 1;
-    },
-    scrollXBarHeight() {
-      return this.hideXScrollBar ? 0 : this.scrollBarWitdh;
-    },
-    scrollYBarWidth() {
-      return this.hideYScrollBar ? 0 : this.scrollBarWitdh;
     },
     actualHeaderHeight() {
       return this.hideHeader ? 0 : this.titleHeight;
@@ -468,6 +429,7 @@ export default {
         const cr = entry.contentRect;
         this.heightOfBlocksWrapper = cr.height;
         this.widthOfBlocksWrapper = cr.width;
+        this.setScrollbarProps();
       });
     });
     const observer = new ResizeObserver(observeContainer);
@@ -577,64 +539,40 @@ export default {
         this.selector[key] = null;
       }
     },
-    wheelHandle(event) {
-      const { deltaX, deltaY } = event;
-      const {
-        scrollTop,
-        scrollLeft,
-        avialableScrollLeft,
-        avialableScrollTop
-      } = this;
-
-      if (deltaY !== 0) {
-        if (
-          scrollTop + deltaY >= avialableScrollTop &&
-          scrollTop !== avialableScrollTop
-        ) {
-          this.manualScroll(undefined, avialableScrollTop);
-        } else if (scrollTop + deltaY < 0 && scrollTop !== 0 /*滚动为0限制*/) {
-          this.manualScroll(undefined, 0);
-        } else {
-          this.manualScroll(undefined, scrollTop + deltaY);
-        }
-      }
-      if (deltaX !== 0) {
-        if (
-          scrollLeft + deltaX >= avialableScrollLeft &&
-          scrollLeft !== avialableScrollLeft
-        ) {
-          this.manualScroll(avialableScrollLeft);
-        } else if (
-          scrollLeft + deltaX < 0 &&
-          scrollLeft !== 0 /*滚动为0限制*/
-        ) {
-          this.manualScroll(0);
-        } else {
-          this.manualScroll(scrollLeft + deltaX);
-        }
-      }
+    wheelHandle() {
+      this.syncScroll();
     },
     manualScroll(x, y) {
-      if (x != undefined) {
-        this.selector.gantt_scroll_x.scrollLeft = x;
-      }
-      if (y != undefined) {
-        this.selector.gantt_scroll_y.scrollTop = y;
-      }
+      const { gantt_table } = this.selector;
+
+      gantt_table.scrollLeft = x;
+      gantt_table.scrollTop = y;
     },
+    setScrollbarProps() {
+      const { gantt_table } = this.selector;
+      const ComputedStyle = window.getComputedStyle(gantt_table);
+      const computerdWidth = ComputedStyle.getPropertyValue("width");
+      this.scrollYBarWidth = gantt_table.offsetWidth - parseInt(computerdWidth);
+      const computerdHeight = ComputedStyle.getPropertyValue("height");
+      this.scrollXBarHeight =
+        gantt_table.offsetHeight - parseInt(computerdHeight);
+    },
+
     //同步fixleft和block的滚动
-    syncScrollY(event) {
-      const { gantt_leftbar, gantt_table } = this.selector;
-      const topValue = event.target.scrollTop;
-      this.scrollTop = gantt_table.scrollTop = gantt_leftbar.scrollTop = topValue;
-      this.$emit("scrollTop", topValue);
-    },
-    syncScrollX(event) {
-      const { gantt_table, gantt_timeline, gantt_markArea } = this.selector;
-      const leftValue = event.target.scrollLeft;
-      this.scrollLeft = gantt_timeline.scrollLeft = gantt_table.scrollLeft = leftValue;
+    syncScroll() {
+      const {
+        gantt_leftbar,
+        gantt_table,
+        gantt_timeline,
+        gantt_markArea
+      } = this.selector;
+      const topValue = gantt_table.scrollTop;
+
+      this.scrollTop = gantt_leftbar.scrollTop = topValue;
+      const leftValue = gantt_table.scrollLeft;
+      this.scrollLeft = gantt_timeline.scrollLeft = leftValue;
       gantt_markArea.style.left = -leftValue + "px";
-      this.$emit("scrollLeft", leftValue);
+      this.$emit("scroll", { scrollTop: topValue, scrollLeft: leftValue });
     }
   }
 };
