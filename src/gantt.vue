@@ -1,11 +1,5 @@
 <template>
-  <div
-    class="gantt-chart"
-    @wheel.passive="wheelHandle"
-    @touchstart.passive="touchStartHandle"
-    @touchmove.passive="touchMoveHandle"
-    @touchend.passive="touchEndHandle"
-  >
+  <div class="gantt-chart" @wheel.passive="wheelHandle">
     <div class="gantt-container">
       <div v-show="!hideHeader" class="gantt-header">
         <div
@@ -118,7 +112,6 @@
               :cellHeight="cellHeight"
               :scale="scale"
               :getPositonOffset="getPositonOffset"
-              :getWidthAbout2Times="getWidthAbout2Times"
               :customGenerateBlocks="customGenerateBlocks"
               :startTimeOfRenderArea="startTimeOfRenderArea"
               :endTimeOfRenderArea="endTimeOfRenderArea"
@@ -137,7 +130,6 @@
                 v-slot="{
                   data,
                   getPositonOffset,
-                  getWidthAbout2Times,
                   isInRenderingTimeRange,
                   isAcrossRenderingTimeRange
                 }"
@@ -146,7 +138,6 @@
                   name="block"
                   :data="data"
                   :getPositonOffset="getPositonOffset"
-                  :getWidthAbout2Times="getWidthAbout2Times"
                   :isInRenderingTimeRange="isInRenderingTimeRange"
                   :isAcrossRenderingTimeRange="isAcrossRenderingTimeRange"
                   :startTimeOfRenderArea="startTimeOfRenderArea"
@@ -171,10 +162,7 @@ import {
   calcScalesAbout2Times
 } from "./utils/timeLineUtils.js";
 import { isDef, warn, noop } from "./utils/tool.js";
-import {
-  getPositonOffset as _getPositonOffset,
-  getWidthAbout2Times as _getWidthAbout2Times
-} from "./utils/gtUtils.js";
+import { getPositionOffset as _getPositionOffset } from "./utils/gtUtils.js";
 import throttle from "./utils/throttle.js";
 import Timeline from "./components/time-line/index.vue";
 import CurrentTime from "./components/mark-line/current-time.vue";
@@ -403,24 +391,21 @@ export default {
         .add(((scrollLeft + renderWidth) / cellWidth) * scale, "minute")
         .toDate()
         .getTime();
-    }
-  },
-
-  watch: {
-    scrollToTime: {
-      handler(newV) {
-        this.scrollToTimehandle(newV);
-      },
-      immediate: true
     },
-    scrollToPostion: {
-      handler(newV) {
-        this.scrollToPostionHandle(newV);
-      },
-      immediate: true
+    /**
+     * 为时间线计算偏移
+     */
+    getPositonOffset() {
+      const options = {
+        scale: this.scale,
+        cellWidth: this.cellWidth,
+        beginTime: this.beginTimeOfTimeLineToString
+      };
+      let func = _getPositionOffset(options);
+      // let res = func(date);
+      return func;
     }
   },
-
   mounted() {
     this.cacheSelector();
     // 计算准确的渲染区域范围
@@ -452,20 +437,7 @@ export default {
         return;
       }
       const offset = this.getPositonOffset(newV);
-      this.$nextTick(this.manualScroll(offset));
-    },
-    scrollToPostionHandle(newV) {
-      if (!newV) {
-        return;
-      }
-      const x = Number.parseFloat(newV.x);
-      const y = Number.parseFloat(newV.y);
-      if (!Number.isNaN(x) && x !== this.scrollLeft) {
-        this.$nextTick(this.manualScroll(x));
-      }
-      if (!Number.isNaN(y) && y !== this.scrollTop) {
-        this.$nextTick(this.manualScroll(undefined, y));
-      }
+      this.manualScroll(offset);
     },
     mouseDownHandle() {
       this.$refs.blocksWrapper.style.cursor = "grabbing";
@@ -487,42 +459,6 @@ export default {
         "mousemove",
         this.mouseMoveHandle
       );
-    },
-    touchMoveHandle(e) {
-      const finger = e.touches[0];
-      this.manualScroll(
-        this.scrollLeft + (this.preTouchPosition.x - finger.screenX),
-        this.scrollTop + (this.preTouchPosition.y - finger.screenY)
-      );
-      this.preTouchPosition.x = finger.screenX;
-      this.preTouchPosition.y = finger.screenY;
-    },
-    touchStartHandle(e) {
-      const finger = e.touches[0];
-      this.preTouchPosition.x = finger.screenX;
-      this.preTouchPosition.y = finger.screenY;
-    },
-    touchEndHandle() {
-      this.preTouchPosition.x = 0;
-      this.preTouchPosition.y = 0;
-    },
-    getWidthAbout2Times(start, end) {
-      const options = {
-        scale: this.scale,
-        cellWidth: this.cellWidth
-      };
-      return _getWidthAbout2Times(start, end, options);
-    },
-    /**
-     * 为时间线计算偏移
-     */
-    getPositonOffset(date) {
-      const options = {
-        scale: this.scale,
-        cellWidth: this.cellWidth
-      };
-
-      return _getPositonOffset(date, this.beginTimeOfTimeLineToString, options);
     },
     //缓存节点
     cacheSelector() {

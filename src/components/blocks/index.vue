@@ -37,7 +37,6 @@
         <slot
           :data="data"
           :getPositonOffset="getPositonOffset"
-          :getWidthAbout2Times="getWidthAbout2Times"
           :isInRenderingTimeRange="isInRenderingTimeRange"
           :isAcrossRenderingTimeRange="isAcrossRenderingTimeRange"
           >need slot
@@ -76,7 +75,6 @@ export default {
     endTimeOfRenderArea: [Number, null],
     startTimeOfRenderArea: [Number, null],
     getPositonOffset: Function,
-    getWidthAbout2Times: Function,
     customGenerateBlocks: Boolean
   },
   computed: {
@@ -202,8 +200,9 @@ export default {
         // warn(`错误，该数据项不含start值 与 end 值 ${JSON.stringify(block)}，无法计算宽度值。`)
         return 0;
       }
-
-      return this.getWidthAbout2Times(block.start, block.end);
+      return (
+        this.getPositonOffset(block.end) - this.getPositonOffset(block.start)
+      );
     },
     /**
      * 计算时间块偏移
