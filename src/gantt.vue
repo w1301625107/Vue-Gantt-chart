@@ -1,5 +1,11 @@
 <template>
-  <div class="gantt-chart" @wheel.passive="wheelHandle">
+  <div
+    class="gantt-chart"
+    @wheel.passive="wheelHandle"
+    @touchstart.passive="touchStartHandle"
+    @touchmove.passive="touchMoveHandle"
+    @touchend.passive="touchEndHandle"
+  >
     <div class="gantt-container">
       <div v-show="!hideHeader" class="gantt-header">
         <div
@@ -95,7 +101,6 @@
           <div
             ref="blocksWrapper"
             class="gantt-blocks-wrapper"
-            @scroll.passive="wheelHandle"
             @mousedown="(e) => (enableGrab ? mouseDownHandle(e) : noop)"
             @mouseup="(e) => (enableGrab ? mouseUpHandle(e) : noop)"
           >
@@ -118,8 +123,8 @@
               :preload="preload"
               :style="{
                 width: totalWidth + 'px',
-                paddingRight: !scrollYBarWidth ? scrollYBarWidth : 0 + 'px',
-                paddingBottom: !scrollXBarHeight ? scrollXBarHeight : 0 + 'px'
+                paddingRight: scrollYBarWidth + 'px',
+                paddingBottom: scrollXBarHeight + 'px'
               }"
             >
               <template v-if="!customGenerateBlocks" v-slot="{ data, item }">
@@ -148,6 +153,33 @@
           </div>
         </div>
       </div>
+    </div>
+    <div
+      ref="scrollYBar"
+      class="gantt-scroll-y"
+      :style="{
+        height: `calc(100% - ${actualHeaderHeight + scrollXBarHeight}px`,
+        marginTop: `${actualHeaderHeight}px`
+      }"
+      @scroll.passive="syncScrollY"
+    >
+      <div
+        :style="{ width: `1px`, height: totalHeight + scrollXBarHeight + 'px' }"
+      ></div>
+    </div>
+
+    <div
+      ref="scrollXBar"
+      class="gantt-scroll-x"
+      :style="{
+        width: `calc(100% - ${titleWidth}px )`,
+        marginLeft: titleWidth + 'px'
+      }"
+      @scroll.passive="syncScrollX"
+    >
+      <div
+        :style="{ height: `1px`, width: totalWidth + scrollYBarWidth + 'px' }"
+      ></div>
     </div>
   </div>
 </template>
@@ -300,7 +332,6 @@ export default {
       //先渲染出空框架，在mounted后再得到真实的渲染范围，然后在根据范围渲染数据，比之前设置一个默认高度宽度，额外的渲染浪费更少了
       heightOfBlocksWrapper: 0,
       widthOfBlocksWrapper: 0,
-      scrollBarWitdh: 17,
       dayjs,
       noop,
       preTouchPosition: {
@@ -460,6 +491,24 @@ export default {
         this.mouseMoveHandle
       );
     },
+    touchMoveHandle(e) {
+      const finger = e.touches[0];
+      this.wheelHandle({
+        deltaX: this.preTouchPosition.x - finger.screenX,
+        deltaY: this.preTouchPosition.y - finger.screenY
+      });
+      this.preTouchPosition.x = finger.screenX;
+      this.preTouchPosition.y = finger.screenY;
+    },
+    touchStartHandle(e) {
+      const finger = e.touches[0];
+      this.preTouchPosition.x = finger.screenX;
+      this.preTouchPosition.y = finger.screenY;
+    },
+    touchEndHandle() {
+      this.preTouchPosition.x = 0;
+      this.preTouchPosition.y = 0;
+    },
     //缓存节点
     cacheSelector() {
       this.selector.gantt_leftbar = this.$refs.leftbarWrapper;
@@ -475,39 +524,46 @@ export default {
         this.selector[key] = null;
       }
     },
-    wheelHandle() {
-      this.syncScroll();
+    wheelHandle(event) {
+      const { deltaX, deltaY } = event;
+      const { scrollTop, scrollLeft } = this;
+      this.manualScroll(
+        deltaX !== 0 ? scrollLeft + deltaX : undefined,
+        deltaY !== 0 ? scrollTop + deltaY : undefined
+      );
     },
     manualScroll(x, y) {
-      const { gantt_table } = this.selector;
-      if (x != undefined) gantt_table.scrollLeft = x;
-      if (y != undefined) gantt_table.scrollTop = y;
+      if (x != undefined) {
+        this.selector.gantt_scroll_x.scrollLeft = x;
+      }
+      if (y != undefined) {
+        this.selector.gantt_scroll_y.scrollTop = y;
+      }
+    },
+    //同步fixleft和block的滚动
+    syncScrollY(event) {
+      const { gantt_leftbar, gantt_table } = this.selector;
+      const topValue = event.target.scrollTop;
+      this.scrollTop = gantt_table.scrollTop = gantt_leftbar.scrollTop = topValue;
+      this.$emit("scrollTop", topValue);
+    },
+    syncScrollX(event) {
+      const { gantt_table, gantt_timeline, gantt_markArea } = this.selector;
+      const leftValue = event.target.scrollLeft;
+      this.scrollLeft = gantt_timeline.scrollLeft = gantt_table.scrollLeft = leftValue;
+      gantt_markArea.style.left = -leftValue + "px";
+      this.$emit("scrollLeft", leftValue);
     },
     setScrollbarProps() {
-      const { gantt_table } = this.selector;
-      const ComputedStyle = window.getComputedStyle(gantt_table);
-      const computerdWidth = ComputedStyle.getPropertyValue("width");
-      this.scrollYBarWidth = gantt_table.offsetWidth - parseInt(computerdWidth);
-      const computerdHeight = ComputedStyle.getPropertyValue("height");
+      const { gantt_scroll_x, gantt_scroll_y } = this.selector;
+      const ComputedStyle = window.getComputedStyle(gantt_scroll_x);
+      const ComputedHeight = ComputedStyle.getPropertyValue("height");
       this.scrollXBarHeight =
-        gantt_table.offsetHeight - parseInt(computerdHeight);
-    },
-
-    //同步fixleft和block的滚动
-    syncScroll() {
-      const {
-        gantt_leftbar,
-        gantt_table,
-        gantt_timeline,
-        gantt_markArea
-      } = this.selector;
-      const topValue = gantt_table.scrollTop;
-
-      this.scrollTop = gantt_leftbar.scrollTop = topValue;
-      const leftValue = gantt_table.scrollLeft;
-      this.scrollLeft = gantt_timeline.scrollLeft = leftValue;
-      gantt_markArea.style.left = -leftValue + "px";
-      this.$emit("scroll", { scrollTop: topValue, scrollLeft: leftValue });
+        gantt_scroll_x.offsetHeight - parseInt(ComputedHeight);
+      const ComputedYStyle = window.getComputedStyle(gantt_scroll_y);
+      const computerdWidth = ComputedYStyle.getPropertyValue("width");
+      this.scrollYBarWidth =
+        gantt_scroll_y.offsetWidth - parseInt(computerdWidth);
     }
   }
 };
