@@ -36,7 +36,7 @@
       <template v-else>
         <slot
           :data="data"
-          :getPositonOffset="getPositonOffset"
+          :getPositionOffset="getPositionOffset"
           :isInRenderingTimeRange="isInRenderingTimeRange"
           :isAcrossRenderingTimeRange="isAcrossRenderingTimeRange"
           >need slot
@@ -74,7 +74,7 @@ export default {
     },
     endTimeOfRenderArea: [Number, null],
     startTimeOfRenderArea: [Number, null],
-    getPositonOffset: Function,
+    getPositionOffset: Function,
     customGenerateBlocks: Boolean
   },
   computed: {
@@ -201,7 +201,7 @@ export default {
         return 0;
       }
       return (
-        this.getPositonOffset(block.end) - this.getPositonOffset(block.start)
+        this.getPositionOffset(block.end) - this.getPositionOffset(block.start)
       );
     },
     /**
@@ -220,7 +220,7 @@ export default {
         return 0;
       }
 
-      return this.getPositonOffset(block.start);
+      return this.getPositionOffset(block.start);
     }
   }
 };

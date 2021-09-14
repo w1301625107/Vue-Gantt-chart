@@ -1,6 +1,5 @@
 <template>
   <div class="gantt-timeline">
-    <!-- <div class="gantt-timeline" :style="{ 'margin-left': -cellWidth / 2 + 'px' }"> -->
     <div
       v-if="lazy"
       class="gantt-timeline-padding_block"
@@ -10,7 +9,7 @@
       <div
         class="gantt-timeline-block"
         v-if="!lazy || isInRenderingDayRange(day)"
-        :style="{ width: getTimeScales(day).length * cellWidth + 'px' }"
+        :style="{ width: getDayWidth(day) * cellWidth + 'px' }"
         :key="index"
       >
         <slot :day="day" :getTimeScales="getTimeScales">
@@ -49,7 +48,8 @@ dayjs.extend(isBetween);
 import {
   isDayScale,
   MINUTE_OF_ONE_DAY,
-  getBeginTimeOfTimeLine
+  getBeginTimeOfTimeLine,
+  getEndTimeOfTimeLine
 } from "../../utils/timeLineUtils.js";
 
 const START_DAY = Symbol();
@@ -85,12 +85,12 @@ export default {
     },
     endTimeOfRenderArea: [dayjs, null],
     startTimeOfRenderArea: [dayjs, null],
-    getPositonOffset: {
+    getPositionOffset: {
       type: Function
     },
     lazy: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
 
@@ -119,7 +119,7 @@ export default {
       if (!temp || temp == allDayBlocks[0]) {
         return 0;
       } else {
-        return this.getPositonOffset(temp.toString());
+        return this.getPositionOffset(temp.toString());
       }
     },
     isDayScale() {
@@ -193,6 +193,35 @@ export default {
       }
     },
     /**
+     * 获取每天的宽度
+     *
+     * @param {dayjs} date
+     * @returns {number}
+     */
+    getDayWidth(date) {
+      const { start, end, scale } = this;
+      if (isSameDay(date, start)) {
+        let a = getBeginTimeOfTimeLine(start.valueOf(), scale);
+        let b;
+        //start和end同一天特殊处理
+        if (isSameDay(start, end)) {
+          b = getEndTimeOfTimeLine(end.valueOf(), scale);
+        } else {
+          b = start
+            .add(1, "day")
+            .startOf("day")
+            .valueOf();
+        }
+        return Math.ceil((b - a) / 60000 / scale);
+      } else if (isSameDay(date, end)) {
+        let a = end.startOf("day");
+        let b = getEndTimeOfTimeLine(end.valueOf(), scale);
+        return Math.ceil((b - a) / 60000 / scale);
+      } else {
+        return Math.ceil((24 * 60) / scale);
+      }
+    },
+    /**
      * 生成时间刻度数组
      *
      * @param {Symbol} type
@@ -204,7 +233,7 @@ export default {
       let a, b;
       switch (type) {
         case START_DAY: //和start同一天
-          a = getBeginTimeOfTimeLine(start, scale);
+          a = dayjs(getBeginTimeOfTimeLine(start.toString(), scale));
           //start和end同一天特殊处理
           if (isSameDay(start, end)) {
             b = end;

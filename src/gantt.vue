@@ -34,7 +34,7 @@
               :scale="scale"
               :startTimeOfRenderArea="dayjs(startTimeOfRenderArea)"
               :endTimeOfRenderArea="dayjs(endTimeOfRenderArea)"
-              :getPositonOffset="getPositonOffset"
+              :getPositionOffset="getPositionOffset"
             >
               <template v-slot="{ day, getTimeScales }">
                 <slot name="timeline" :day="day" :getTimeScales="getTimeScales">
@@ -57,13 +57,13 @@
           >
             <CurrentTime
               v-if="showCurrentTime"
-              :getPositonOffset="getPositonOffset"
+              :getPositionOffset="getPositionOffset"
             />
             <mark-line
               v-for="(timeConfig, index) in timeLines"
               :key="index"
               :timeConfig="timeConfig"
-              :getPositonOffset="getPositonOffset"
+              :getPositionOffset="getPositionOffset"
             >
               <template v-slot="{ timeConfig, getPosition }">
                 <slot
@@ -116,7 +116,7 @@
               :cellWidth="cellWidth"
               :cellHeight="cellHeight"
               :scale="scale"
-              :getPositonOffset="getPositonOffset"
+              :getPositionOffset="getPositionOffset"
               :customGenerateBlocks="customGenerateBlocks"
               :startTimeOfRenderArea="startTimeOfRenderArea"
               :endTimeOfRenderArea="endTimeOfRenderArea"
@@ -134,7 +134,7 @@
                 v-else
                 v-slot="{
                   data,
-                  getPositonOffset,
+                  getPositionOffset,
                   isInRenderingTimeRange,
                   isAcrossRenderingTimeRange
                 }"
@@ -142,7 +142,7 @@
                 <slot
                   name="block"
                   :data="data"
-                  :getPositonOffset="getPositonOffset"
+                  :getPositionOffset="getPositionOffset"
                   :isInRenderingTimeRange="isInRenderingTimeRange"
                   :isAcrossRenderingTimeRange="isAcrossRenderingTimeRange"
                   :startTimeOfRenderArea="startTimeOfRenderArea"
@@ -362,7 +362,7 @@ export default {
         timeRangeCorrection &&
         (start.isAfter(end) || totalWidth <= widthOfBlocksWrapper)
       ) {
-        end = getBeginTimeOfTimeLine(start, scale).add(
+        end = dayjs(getBeginTimeOfTimeLine(start.valueOf(), scale)).add(
           (widthOfBlocksWrapper / cellWidth) * scale,
           "minute"
         );
@@ -382,11 +382,10 @@ export default {
       return datas.length * cellHeight;
     },
     beginTimeOfTimeLine() {
-      const value = getBeginTimeOfTimeLine(this.start, this.scale);
+      const value = dayjs(
+        getBeginTimeOfTimeLine(this.start.valueOf(), this.scale)
+      );
       return value;
-    },
-    beginTimeOfTimeLineToString() {
-      return this.beginTimeOfTimeLine.toString();
     },
     actualHeaderHeight() {
       return this.hideHeader ? 0 : this.titleHeight;
@@ -426,15 +425,13 @@ export default {
     /**
      * 为时间线计算偏移
      */
-    getPositonOffset() {
+    getPositionOffset() {
       const options = {
         scale: this.scale,
         cellWidth: this.cellWidth,
-        beginTime: this.beginTimeOfTimeLineToString
+        beginTime: this.beginTimeOfTimeLine.valueOf()
       };
-      let func = _getPositionOffset(options);
-      // let res = func(date);
-      return func;
+      return _getPositionOffset(options);
     }
   },
   mounted() {
@@ -467,7 +464,7 @@ export default {
         warn(`当前滚动至${newV}不在${start}和${end}的范围之内`);
         return;
       }
-      const offset = this.getPositonOffset(newV);
+      const offset = this.getPositionOffset(newV);
       this.manualScroll(offset);
     },
     mouseDownHandle() {

@@ -7,7 +7,7 @@ export default {
       type: Object,
       required: true
     },
-    getPositonOffset: {
+    getPositionOffset: {
       type: Function,
       required: true
     }
@@ -29,7 +29,7 @@ export default {
       if (!this.visible) {
         return 0;
       } else {
-        return this.getPositonOffset(this.timeConfig.time);
+        return this.getPositionOffset(this.timeConfig.time);
       }
     }
   },
