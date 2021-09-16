@@ -490,7 +490,7 @@ export default {
         return;
       }
       const offset = this.getPositonOffset(newV);
-      this.$nextTick(this.manualScroll(offset));
+      this.$nextTick(_ => {this.manualScroll(offset)});
     },
     scrollToPostionHandle(newV) {
       if (!newV) {
@@ -499,10 +499,10 @@ export default {
       const x = Number.parseFloat(newV.x);
       const y = Number.parseFloat(newV.y);
       if (!Number.isNaN(x) && x !== this.scrollLeft) {
-        this.$nextTick(this.manualScroll(x));
+        this.$nextTick(_ => {this.manualScroll(x)});
       }
       if (!Number.isNaN(y) && y !== this.scrollTop) {
-        this.$nextTick(this.manualScroll(undefined, y));
+        this.$nextTick(_ => {this.manualScroll(undefined, y)});
       }
     },
     mouseDownHandle() {
