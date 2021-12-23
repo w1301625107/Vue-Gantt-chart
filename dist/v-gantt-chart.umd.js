@@ -3927,8 +3927,8 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"603732fe-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/gantt.vue?vue&type=template&id=665eaa46&
-var ganttvue_type_template_id_665eaa46_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"gantt-chart",on:{"&wheel":function($event){return _vm.wheelHandle($event)},"&touchstart":function($event){return _vm.touchStartHandle($event)},"&touchmove":function($event){return _vm.touchMoveHandle($event)},"&touchend":function($event){return _vm.touchEndHandle($event)}}},[_c('div',{staticClass:"gantt-container",style:({
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"603732fe-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/gantt.vue?vue&type=template&id=aba8616c&
+var ganttvue_type_template_id_aba8616c_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"gantt-chart",on:{"&wheel":function($event){return _vm.wheelHandle($event)},"&touchstart":function($event){return _vm.touchStartHandle($event)},"&touchmove":function($event){return _vm.touchMoveHandle($event)},"&touchend":function($event){return _vm.touchEndHandle($event)}}},[_c('div',{staticClass:"gantt-container",style:({
       height: ("calc(100% - " + _vm.scrollXBarHeight + "px)"),
       width: ("calc(100% - " + _vm.scrollYBarWidth + "px)")
     })},[_c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.hideHeader),expression:"!hideHeader"}],staticClass:"gantt-header",style:({ width: ("calc(100% + " + _vm.scrollYBarWidth + "px)") })},[_c('div',{staticClass:"gantt-header-title",style:({
@@ -3967,7 +3967,7 @@ return [_vm._t("block",null,{"data":data,"getPositonOffset":getPositonOffset,"ge
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/gantt.vue?vue&type=template&id=665eaa46&
+// CONCATENATED MODULE: ./src/gantt.vue?vue&type=template&id=aba8616c&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
@@ -5739,6 +5739,8 @@ var blocks_component = normalizeComponent(
   },
   methods: {
     scrollToTimehandle: function scrollToTimehandle(newV) {
+      var _this2 = this;
+
       if (!newV) {
         return;
       }
@@ -5753,9 +5755,13 @@ var blocks_component = normalizeComponent(
       }
 
       var offset = this.getPositonOffset(newV);
-      this.$nextTick(this.manualScroll(offset));
+      this.$nextTick(function () {
+        _this2.manualScroll(offset);
+      });
     },
     scrollToPositionHandle: function scrollToPositionHandle(newV) {
+      var _this3 = this;
+
       if (!newV) {
         return;
       }
@@ -5764,11 +5770,15 @@ var blocks_component = normalizeComponent(
       var y = Number.parseFloat(newV.y);
 
       if (!Number.isNaN(x) && x !== this.scrollLeft) {
-        this.$nextTick(this.manualScroll(x));
+        this.$nextTick(function () {
+          _this3.manualScroll(x);
+        });
       }
 
       if (!Number.isNaN(y) && y !== this.scrollTop) {
-        this.$nextTick(this.manualScroll(undefined, y));
+        this.$nextTick(function () {
+          _this3.manualScroll(undefined, y);
+        });
       }
     },
     scrollToPostionHandle: function scrollToPostionHandle(newV) {
@@ -5920,7 +5930,7 @@ var ganttvue_type_style_index_0_lang_scss_ = __webpack_require__("c3ab");
 
 var gantt_component = normalizeComponent(
   src_ganttvue_type_script_lang_js_,
-  ganttvue_type_template_id_665eaa46_render,
+  ganttvue_type_template_id_aba8616c_render,
   staticRenderFns,
   false,
   null,
