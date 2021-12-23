@@ -3918,8 +3918,8 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"a4b98aa6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/gantt.vue?vue&type=template&id=79b19ee6&
-var ganttvue_type_template_id_79b19ee6_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"gantt-chart",on:{"&wheel":function($event){return _vm.wheelHandle($event)},"&touchstart":function($event){return _vm.touchStartHandle($event)},"&touchmove":function($event){return _vm.touchMoveHandle($event)},"&touchend":function($event){return _vm.touchEndHandle($event)}}},[_c('div',{staticClass:"gantt-container",style:({
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"603732fe-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/gantt.vue?vue&type=template&id=665eaa46&
+var ganttvue_type_template_id_665eaa46_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"gantt-chart",on:{"&wheel":function($event){return _vm.wheelHandle($event)},"&touchstart":function($event){return _vm.touchStartHandle($event)},"&touchmove":function($event){return _vm.touchMoveHandle($event)},"&touchend":function($event){return _vm.touchEndHandle($event)}}},[_c('div',{staticClass:"gantt-container",style:({
       height: ("calc(100% - " + _vm.scrollXBarHeight + "px)"),
       width: ("calc(100% - " + _vm.scrollYBarWidth + "px)")
     })},[_c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.hideHeader),expression:"!hideHeader"}],staticClass:"gantt-header",style:({ width: ("calc(100% + " + _vm.scrollYBarWidth + "px)") })},[_c('div',{staticClass:"gantt-header-title",style:({
@@ -3958,7 +3958,7 @@ return [_vm._t("block",null,{"data":data,"getPositonOffset":getPositonOffset,"ge
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/gantt.vue?vue&type=template&id=79b19ee6&
+// CONCATENATED MODULE: ./src/gantt.vue?vue&type=template&id=665eaa46&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.concat.js
 var es_array_concat = __webpack_require__("99af");
@@ -4226,7 +4226,7 @@ function throttle(fn) {
     }, interval);
   };
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"a4b98aa6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/time-line/index.vue?vue&type=template&id=291bf896&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"603732fe-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/time-line/index.vue?vue&type=template&id=291bf896&
 var time_linevue_type_template_id_291bf896_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"gantt-timeline",style:({ 'margin-left': -_vm.cellWidth / 2 + 'px' })},[(_vm.lazy)?_c('div',{staticClass:"gantt-timeline-padding_block",style:({ width: _vm.paddingWidth + 'px' })}):_vm._e(),_vm._l((_vm.allDayBlocks),function(day,index){return [(!_vm.lazy || _vm.isInRenderingDayRange(day))?_c('div',{key:index,staticClass:"gantt-timeline-block",style:({ width: _vm.getTimeScales(day).length * _vm.cellWidth + 'px' })},[_vm._t("default",[_c('div',{staticClass:"gantt-timeline-day ",style:(_vm.heightStyle)},[_vm._v(" "+_vm._s(day.format("MM/DD"))+" ")]),(!_vm.isDayScale)?_c('div',{staticClass:"gantt-timeline-scale ",style:(_vm.heightStyle)},_vm._l((_vm.getTimeScales(day)),function(time,index){return _c('div',{key:index,style:(_vm.cellWidthStyle)},[_vm._v(" "+_vm._s(_vm.scale >= 60 ? time.format("HH") : time.format("HH:mm"))+" ")])}),0):_vm._e()],{"day":day,"getTimeScales":_vm.getTimeScales})],2):_vm._e()]})],2)}
 var time_linevue_type_template_id_291bf896_staticRenderFns = []
 
@@ -4610,7 +4610,7 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var time_line = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"a4b98aa6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/mark-line/current-time.vue?vue&type=template&id=3346f983&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"603732fe-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/mark-line/current-time.vue?vue&type=template&id=3346f983&
 var current_timevue_type_template_id_3346f983_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('mark-line',{attrs:{"timeConfig":{ time: _vm.currentTime, color: 'rgba(255,0,0,.4)' },"getPositonOffset":_vm.getPositonOffset}})}
 var current_timevue_type_template_id_3346f983_staticRenderFns = []
 
@@ -4762,7 +4762,7 @@ var current_time_component = normalizeComponent(
 )
 
 /* harmony default export */ var current_time = (current_time_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"a4b98aa6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/left-bar/index.vue?vue&type=template&id=a35951cc&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"603732fe-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/left-bar/index.vue?vue&type=template&id=a35951cc&
 var left_barvue_type_template_id_a35951cc_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"gantt-leftbar"},[_c('div',{staticClass:"gantt-leftbar-item gantt-block-top-space",style:({ height: _vm.topSpace + 'px' })}),_vm._l((_vm.showDatas),function(data,index){return _c('div',{key:_vm.dataKey ? data[_vm.dataKey] : index,staticClass:"gantt-leftbar-item",style:(_vm.cellHeightStyle)},[_vm._t("default",[_c('div',{staticClass:"gantt-leftbar-defalutItem"},[_vm._v("need slot")])],{"data":data})],2)})],2)}
 var left_barvue_type_template_id_a35951cc_staticRenderFns = []
 
@@ -4979,7 +4979,7 @@ var left_bar_component = normalizeComponent(
 )
 
 /* harmony default export */ var left_bar = (left_bar_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"a4b98aa6-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/blocks/index.vue?vue&type=template&id=342b08c8&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"603732fe-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/blocks/index.vue?vue&type=template&id=342b08c8&
 var blocksvue_type_template_id_342b08c8_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"gantt-blocks",style:(_vm.blocksStyle)},[_c('div',{staticClass:"gantt-block gantt-block-top-space",style:({ height: _vm.topSpace + 'px' })}),_vm._l((_vm.showDatas),function(data,index){return _c('div',{key:_vm.dataKey ? data[_vm.dataKey] : index,staticClass:"gantt-block",style:({ height: (_vm.cellHeight + "px") })},[(!_vm.customGenerateBlocks)?[_vm._l((_vm.concatArray(data)),function(item,index){return [(
             _vm.isInRenderingTimeRangeOrIsAcrossRenderingTimeRange(
               item.start,
@@ -5648,13 +5648,13 @@ var blocks_component = normalizeComponent(
     beginTimeOfTimeLineToString: function beginTimeOfTimeLineToString() {
       return this.beginTimeOfTimeLine.toString();
     },
-    avialableScrollLeft: function avialableScrollLeft() {
+    availableScrollLeft: function availableScrollLeft() {
       // 不减这个1，滚动到时间轴尽头后继续滚动会慢慢的溢出
       var totalWidth = this.totalWidth,
           widthOfBlocksWrapper = this.widthOfBlocksWrapper;
       return totalWidth - widthOfBlocksWrapper - 1;
     },
-    avialableScrollTop: function avialableScrollTop() {
+    availableScrollTop: function availableScrollTop() {
       var totalHeight = this.totalHeight,
           heightOfBlocksWrapper = this.heightOfBlocksWrapper;
       return totalHeight - heightOfBlocksWrapper - 1;
@@ -5703,7 +5703,7 @@ var blocks_component = normalizeComponent(
     },
     scrollToPostion: {
       handler: function handler(newV) {
-        this.scrollToPostionHandle(newV);
+        this.scrollToPositionHandle(newV);
       },
       immediate: true
     }
@@ -5746,7 +5746,7 @@ var blocks_component = normalizeComponent(
       var offset = this.getPositonOffset(newV);
       this.$nextTick(this.manualScroll(offset));
     },
-    scrollToPostionHandle: function scrollToPostionHandle(newV) {
+    scrollToPositionHandle: function scrollToPositionHandle(newV) {
       if (!newV) {
         return;
       }
@@ -5761,6 +5761,9 @@ var blocks_component = normalizeComponent(
       if (!Number.isNaN(y) && y !== this.scrollTop) {
         this.$nextTick(this.manualScroll(undefined, y));
       }
+    },
+    scrollToPostionHandle: function scrollToPostionHandle(newV) {
+      return this.scrollToPositionHandle(newV);
     },
     mouseDownHandle: function mouseDownHandle() {
       this.$refs.blocksWrapper.style.cursor = "grabbing";
@@ -5835,12 +5838,12 @@ var blocks_component = normalizeComponent(
           deltaY = event.deltaY;
       var scrollTop = this.scrollTop,
           scrollLeft = this.scrollLeft,
-          avialableScrollLeft = this.avialableScrollLeft,
-          avialableScrollTop = this.avialableScrollTop;
+          availableScrollLeft = this.availableScrollLeft,
+          availableScrollTop = this.availableScrollTop;
 
       if (deltaY !== 0) {
-        if (scrollTop + deltaY >= avialableScrollTop && scrollTop !== avialableScrollTop) {
-          this.manualScroll(undefined, avialableScrollTop);
+        if (scrollTop + deltaY >= availableScrollTop && scrollTop !== availableScrollTop) {
+          this.manualScroll(undefined, availableScrollTop);
         } else if (scrollTop + deltaY < 0 && scrollTop !== 0
         /*滚动为0限制*/
         ) {
@@ -5851,8 +5854,8 @@ var blocks_component = normalizeComponent(
       }
 
       if (deltaX !== 0) {
-        if (scrollLeft + deltaX >= avialableScrollLeft && scrollLeft !== avialableScrollLeft) {
-          this.manualScroll(avialableScrollLeft);
+        if (scrollLeft + deltaX >= availableScrollLeft && scrollLeft !== availableScrollLeft) {
+          this.manualScroll(availableScrollLeft);
         } else if (scrollLeft + deltaX < 0 && scrollLeft !== 0
         /*滚动为0限制*/
         ) {
@@ -5908,7 +5911,7 @@ var ganttvue_type_style_index_0_lang_scss_ = __webpack_require__("c3ab");
 
 var gantt_component = normalizeComponent(
   src_ganttvue_type_script_lang_js_,
-  ganttvue_type_template_id_79b19ee6_render,
+  ganttvue_type_template_id_665eaa46_render,
   staticRenderFns,
   false,
   null,

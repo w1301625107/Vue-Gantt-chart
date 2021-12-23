@@ -415,7 +415,7 @@ export default {
 
 | method | args | describle|
 | :---  |:-----:|:---------|
-| scrollToPostionHandle|positon:{x:number,y:number} | 滚动到指定位置|
+| scrollToPositionHandle|positon:{x:number,y:number} | 滚动到指定位置|
 | scrollToTimehandle | time:string | 滚动到指定时间|
 
 </div>

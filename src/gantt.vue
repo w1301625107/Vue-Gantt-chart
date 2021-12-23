@@ -393,12 +393,12 @@ export default {
     beginTimeOfTimeLineToString() {
       return this.beginTimeOfTimeLine.toString();
     },
-    avialableScrollLeft() {
+    availableScrollLeft() {
       // 不减这个1，滚动到时间轴尽头后继续滚动会慢慢的溢出
       const { totalWidth, widthOfBlocksWrapper } = this;
       return totalWidth - widthOfBlocksWrapper - 1;
     },
-    avialableScrollTop() {
+    availableScrollTop() {
       const { totalHeight, heightOfBlocksWrapper } = this;
       return totalHeight - heightOfBlocksWrapper - 1;
     },
@@ -454,7 +454,7 @@ export default {
     },
     scrollToPostion: {
       handler(newV) {
-        this.scrollToPostionHandle(newV);
+        this.scrollToPositionHandle(newV);
       },
       immediate: true
     }
@@ -492,7 +492,7 @@ export default {
       const offset = this.getPositonOffset(newV);
       this.$nextTick(this.manualScroll(offset));
     },
-    scrollToPostionHandle(newV) {
+    scrollToPositionHandle(newV) {
       if (!newV) {
         return;
       }
@@ -504,6 +504,9 @@ export default {
       if (!Number.isNaN(y) && y !== this.scrollTop) {
         this.$nextTick(this.manualScroll(undefined, y));
       }
+    },
+    scrollToPostionHandle(newV) {
+      return this.scrollToPositionHandle(newV);
     },
     mouseDownHandle() {
       this.$refs.blocksWrapper.style.cursor = "grabbing";
@@ -582,16 +585,16 @@ export default {
       const {
         scrollTop,
         scrollLeft,
-        avialableScrollLeft,
-        avialableScrollTop
+        availableScrollLeft,
+        availableScrollTop
       } = this;
 
       if (deltaY !== 0) {
         if (
-          scrollTop + deltaY >= avialableScrollTop &&
-          scrollTop !== avialableScrollTop
+          scrollTop + deltaY >= availableScrollTop &&
+          scrollTop !== availableScrollTop
         ) {
-          this.manualScroll(undefined, avialableScrollTop);
+          this.manualScroll(undefined, availableScrollTop);
         } else if (scrollTop + deltaY < 0 && scrollTop !== 0 /*滚动为0限制*/) {
           this.manualScroll(undefined, 0);
         } else {
@@ -600,10 +603,10 @@ export default {
       }
       if (deltaX !== 0) {
         if (
-          scrollLeft + deltaX >= avialableScrollLeft &&
-          scrollLeft !== avialableScrollLeft
+          scrollLeft + deltaX >= availableScrollLeft &&
+          scrollLeft !== availableScrollLeft
         ) {
-          this.manualScroll(avialableScrollLeft);
+          this.manualScroll(availableScrollLeft);
         } else if (
           scrollLeft + deltaX < 0 &&
           scrollLeft !== 0 /*滚动为0限制*/
