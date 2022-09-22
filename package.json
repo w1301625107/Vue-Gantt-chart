@@ -1,19 +1,19 @@
 {
-  "name": "v-gantt-chart",
-  "version": "1.6.3",
-  "description": "display gantt-like vaule,like use this to order bus schedule.",
-  "main": "dist/v-gantt-chart.umd.min.js",
-  "files": [
-    "dist"
-  ],
+  "name": "@mestamaster/v-gantt-chart",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/w1301625107/Vue-Gantt-chart.git"
+    "url": "https://github.com/mestamaster/Vue-Gantt-chart.git"
   },
+  "version": "1.6.4",
+  "description": "display gantt-like vaule,like use this to order bus schedule.",
+  "main": "dist/@mestamaster/v-gantt-chart.umd.min.js",
+  "files": [
+    "dist/@mestamaster"
+  ],
   "bugs": {
-    "url": "https://github.com/w1301625107/Vue-Gantt-chart/issues"
+    "url": "https://github.com/mestamaster/Vue-Gantt-chart/issues"
   },
-  "homepage": "https://github.com/w1301625107/Vue-Gantt-chart#readme",
+  "homepage": "https://github.com/mestamaster/Vue-Gantt-chart",
   "keywords": [
     "vue-gantt-chart",
     "gantt",
@@ -23,19 +23,18 @@
   "author": "wuchouchou",
   "license": "MIT",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "npm run lint --fix && NODE_ENV=DEMO vue-cli-service build ",
+    "serve-demo": "vue-cli-service serve",
+    "build-demo": "npm run lint --fix && NODE_ENV=DEMO vue-cli-service build ",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "libbuild": "npm run lint  --fix && vue-cli-service build --target lib --name v-gantt-chart src/index.js"
+    "build": "npm run lint --fix && vue-cli-service build --target lib --name @mestamaster/v-gantt-chart src/index.js"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*.{js,vue}": [
-      "vue-cli-service lint",
-      "git add"
+      "vue-cli-service lint"
     ]
   },
   "dependencies": {
