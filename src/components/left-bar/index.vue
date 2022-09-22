@@ -11,7 +11,7 @@
       :key="dataKey ? data[dataKey] : index"
     >
       <slot :data="data">
-        <div class="gantt-leftbar-defalutItem">need slot</div>
+        <div class="gantt-leftbar-defalutItem"></div>
       </slot>
     </div>
   </div>

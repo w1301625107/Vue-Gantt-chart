@@ -27,7 +27,7 @@
             }"
           >
             <slot :data="data" :item="item">
-              <div class="gantt-block-defaultBlock">need slot</div>
+              <div class="gantt-block-defaultBlock"></div>
             </slot>
           </div>
         </template>
@@ -40,7 +40,7 @@
           :getWidthAbout2Times="getWidthAbout2Times"
           :isInRenderingTimeRange="isInRenderingTimeRange"
           :isAcrossRenderingTimeRange="isAcrossRenderingTimeRange"
-          >need slot
+          >
         </slot>
       </template>
     </div>
