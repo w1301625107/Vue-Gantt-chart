@@ -40,7 +40,7 @@
           :getWidthAbout2Times="getWidthAbout2Times"
           :isInRenderingTimeRange="isInRenderingTimeRange"
           :isAcrossRenderingTimeRange="isAcrossRenderingTimeRange"
-          >
+        >
         </slot>
       </template>
     </div>
@@ -49,8 +49,7 @@
 
 <script>
 import dr from "../dynamic-render.js";
-import { isUndef, warn } from "../../utils/tool.js";
-
+import { isUndef, error } from "../../utils/tool.js";
 export default {
   name: "Blocks",
   mixins: [dr],
@@ -199,7 +198,7 @@ export default {
      */
     getWidth(block) {
       if (isUndef(block.start) || isUndef(block.end)) {
-        // warn(`错误，该数据项不含start值 与 end 值 ${JSON.stringify(block)}，无法计算宽度值。`)
+        // warn(`Error, the data item does not contain start value and end value ${JSON.stringify(block)}, the width value cannot be calculated.`)
         return 0;
       }
 
@@ -213,10 +212,8 @@ export default {
      */
     getPosition(block) {
       if (isUndef(block.start)) {
-        warn(
-          `错误，该数据项不含start 值 ${JSON.stringify(
-            block
-          )}，无法计算偏移值。`
+        error(
+          `The data item does not have a start value, the offset value cannot be calculated.`
         );
         return 0;
       }

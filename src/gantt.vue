@@ -196,7 +196,7 @@ import {
   getBeginTimeOfTimeLine,
   calcScalesAbout2Times
 } from "./utils/timeLineUtils.js";
-import { isDef, warn, noop } from "./utils/tool.js";
+import { isDef, debug, error, noop } from "./utils/tool.js";
 import {
   getPositonOffset as _getPositonOffset,
   getWidthAbout2Times as _getWidthAbout2Times
@@ -218,7 +218,7 @@ export default {
       default: () => dayjs(),
       validator(date) {
         const ok = dayjs(date).isValid();
-        if (!ok) warn(`非法的开始时间 ${date}`);
+        if (!ok) error(`Invalid startTime ${date}`);
         return ok;
       }
     },
@@ -226,7 +226,7 @@ export default {
       default: () => dayjs(),
       validator(date) {
         const ok = dayjs(date).isValid();
-        if (!ok) warn(`非法的结束时间 ${date}`);
+        if (!ok) error(`Invalid endTime ${date}`);
         return ok;
       }
     },
@@ -290,7 +290,7 @@ export default {
         const validX = isDef(obj.x) ? !Number.isNaN(obj.x) : true;
         const validY = isDef(obj.y) ? !Number.isNaN(obj.y) : true;
         if (!validX && !validY) {
-          warn("scrollToPostion x或y 有值为非Number类型");
+          debug("scrollToPostion x or y are invalid (other than number)");
           return false;
         }
         return true;
@@ -486,7 +486,9 @@ export default {
       const { start, end } = this;
       const time = dayjs(newV);
       if (!(time.isAfter(start) && time.isBefore(end))) {
-        warn(`当前滚动至${newV}不在${start}和${end}的范围之内`);
+        debug(
+          `The current scroll to ${newV} is not within the bounds of ${start} and ${end}`
+        );
         return;
       }
       const offset = this.getPositonOffset(newV);

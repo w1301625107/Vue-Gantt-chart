@@ -24,4 +24,14 @@ export function warn(str) {
   console.warn(str)
 }
 
+export function error(str) {
+  // eslint-disable-next-line
+  console.error(str)
+}
+
+export function debug(str) {
+  // eslint-disable-next-line
+  console.debug(str)
+}
+
 export function noop() {}
